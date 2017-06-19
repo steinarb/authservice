@@ -29,8 +29,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.realm.jdbc.JdbcRealm;
-import org.apache.shiro.realm.jdbc.JdbcRealm.SaltStyle;
 import org.apache.shiro.subject.Subject;
 import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
 import org.osgi.service.jdbc.DataSourceFactory;
@@ -68,12 +66,10 @@ public class AuthserviceServletProvider extends HttpServlet implements Provider<
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logService;
     private DataSourceFactory dataSourceFactory;
-    JdbcRealm realm;
+    UkelonnRealm realm;
 
     public AuthserviceServletProvider() {
-        realm = new JdbcRealm();
-        realm.setSaltStyle(SaltStyle.COLUMN);
-        realm.setAuthenticationQuery("select password, salt from users where username = ?");
+        realm = new UkelonnRealm();
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
         credentialsMatcher.setStoredCredentialsHexEncoded(false);
         credentialsMatcher.setHashIterations(1024);
