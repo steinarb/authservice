@@ -61,14 +61,14 @@ import org.rendersnake.ext.servlet.HtmlServletCanvas;
 @ServiceProperties({
     @ServiceProperty( name = ExtenderConstants.PROPERTY_URL_PATTERNS, values = {"/login/*"}),
     @ServiceProperty( name = ExtenderConstants.PROPERTY_HTTP_CONTEXT_PATH, value = "/login/"),
-	@ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "login")})
-public class AuthserviceServletProvider extends HttpServlet implements Provider<Servlet> {
+    @ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "login")})
+public class LoginserviceServletProvider extends HttpServlet implements Provider<Servlet> {
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logService;
     private DataSourceFactory dataSourceFactory;
     UkelonnRealm realm;
 
-    public AuthserviceServletProvider() {
+    public LoginserviceServletProvider() {
         realm = new UkelonnRealm();
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
         credentialsMatcher.setStoredCredentialsHexEncoded(false);
@@ -79,13 +79,13 @@ public class AuthserviceServletProvider extends HttpServlet implements Provider<
     }
 
     @Override
-	public Servlet get() {
-		return this;
-	}
+    public Servlet get() {
+        return this;
+    }
 
     @Inject
     public void setLogService(LogService logService) {
-    	this.logService = logService;
+        this.logService = logService;
     }
 
     @Inject

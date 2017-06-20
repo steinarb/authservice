@@ -31,13 +31,13 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-public class AuthserviceServletProviderTest {
+public class LoginserviceServletProviderTest {
 
     abstract class MockLogService implements LogService {
 
         @Override
         public void log(int level, String message, Throwable exception) {
-            Logger logger = LoggerFactory.getLogger(AuthserviceServletProvider.class);
+            Logger logger = LoggerFactory.getLogger(LoginserviceServletProvider.class);
             if (level == LOG_DEBUG) {
                 logger.debug(message, exception);
             } else if (level == LOG_INFO) {
@@ -70,7 +70,7 @@ public class AuthserviceServletProviderTest {
         LogService logservice = mock(LogService.class);
         DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
 
-        AuthserviceServletProvider provider = new AuthserviceServletProvider();
+        LoginserviceServletProvider provider = new LoginserviceServletProvider();
         provider.setLogService(logservice);
         provider.setDataSourceFactory(datasourceFactory);
         Servlet servlet = provider.get();
@@ -92,7 +92,7 @@ public class AuthserviceServletProviderTest {
         DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
         when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
 
-        AuthserviceServletProvider provider = new AuthserviceServletProvider();
+        LoginserviceServletProvider provider = new LoginserviceServletProvider();
         provider.setLogService(logservice);
         provider.setDataSourceFactory(datasourceFactory);
         Servlet servlet = provider.get();

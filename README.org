@@ -1,5 +1,7 @@
 * A shiro-based login page
 
-This is a webapp that is meant to provide forms authentication for use with nginx.  The nginx frontend server will reverse proxy to the login page, and get the authentication cookie set for future access.
+This is a webapp that offers two URLs for use by the [[http://nginx.org/en/docs/http/ngx_http_auth_request_module.html][NGINX auth_request module]]:
+ - /auth which will just check the login state of Apache Shiro, returning the status code 401 for failure and 200 for success
+ - /login which contains a login form and will authenticate against Apache Shiro
 
-All traffic will be redirected via this webapp with a redirect, and the shiro login will determine if the redirect will be affected or not.
+The webapp is implemented as two servlets exposed as OSGi services, that will be picked up by the [[http://ops4j.github.io/pax/web/4.x/index.html#_whiteboard_extender][pax web whiteboard extender]].

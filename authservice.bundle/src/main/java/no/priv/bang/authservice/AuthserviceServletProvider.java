@@ -1,11 +1,6 @@
 package no.priv.bang.authservice;
 
-import static org.rendersnake.HtmlAttributesFactory.action;
 import static org.rendersnake.HtmlAttributesFactory.align;
-import static org.rendersnake.HtmlAttributesFactory.dataRole;
-import static org.rendersnake.HtmlAttributesFactory.for_;
-import static org.rendersnake.HtmlAttributesFactory.type;
-
 import java.io.IOException;
 import java.util.Properties;
 
@@ -21,15 +16,9 @@ import no.steria.osgi.jsr330activator.ServiceProperties;
 import no.steria.osgi.jsr330activator.ServiceProperty;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.subject.Subject;
 import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
@@ -39,29 +28,17 @@ import org.rendersnake.ext.servlet.HtmlServletCanvas;
  * This class will show ups a {@link Servlet} OSGi service, and will be picked
  * up by the pax web whiteboard.
  *
- * The web page provided by the servlet service is intended to be used as a login
- * page by nginx, and will add a Shiro auth token to the cookie collection of the
- * web page.
- *
- * The web page will be accessed with the path "/login/".
- *
- * The servlet won't be started until a {@link DataSourceFactory} OSGi service
- * can be injected.
- *
- * The servlet will try a PostgreSQL JDBC connection to a database called
- * "ukelonn" on a local PostgreSQL server, and check username/password
- * against a table called "users" on that database.
- *
- * The table "users" is assumed to have the varchar columns "username", "password" and "salt", with
- * their Shiro meanings.
+ * The servlet implements an auth service used by the nginx_auth_request module.
+ * The servlet will return a 401 code if the request isn't authorized
+ * and a 200 OK code if the request is authorized.
  *
  * @author Steinar Bang
  *
  */
 @ServiceProperties({
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_URL_PATTERNS, values = {"/login/*"}),
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_HTTP_CONTEXT_PATH, value = "/login/"),
-	@ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "login")})
+    @ServiceProperty( name = ExtenderConstants.PROPERTY_URL_PATTERNS, values = {"/auth/*"}),
+    @ServiceProperty( name = ExtenderConstants.PROPERTY_HTTP_CONTEXT_PATH, value = "/auth/"),
+	@ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "auth")})
 public class AuthserviceServletProvider extends HttpServlet implements Provider<Servlet> {
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logService;
@@ -112,57 +89,32 @@ public class AuthserviceServletProvider extends HttpServlet implements Provider<
         response.setContentType("text/html");
 
         HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html);
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        checkLogin(request);
+        if (!isLoggedIn()) {
+            html
+                .html()
+                .head().title().content("Authentication failed: need login")._head()
+                .body(align("center"))
+                .h1().content("Authentication failed: need login")
+                ._body()
+                ._html();
 
-        response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } else {
+            html
+                .html()
+                .head().title().content("Successfully authenticated")._head()
+                .body(align("center"))
+                .h1().content("Successfully authenticated")
+                ._body()
+                ._html();
 
-        HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html);
-    }
-
-    private void checkLogin(HttpServletRequest request) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            subject.login(token);
-        } catch(UnknownAccountException e) {
-            logError("Login error: unknown account", e);
-        } catch (IncorrectCredentialsException  e) {
-            logError("Login error: wrong password", e);
-        } catch (LockedAccountException  e) {
-            logError("Login error: locked account", e);
-        } catch (AuthenticationException e) {
-            logError("Login error: unknown error", e);
-        } finally {
-            token.clear();
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
-    private void renderLoginForm(HtmlServletCanvas html) throws IOException {
-        html
-            .html()
-            .head().title().content("Login")._head()
-            .body(align("center"))
-            .h1().content("Login")
-            .form(action("/login").method("post").id("login-form"))
-            .fieldset()
-            .div(dataRole("fieldcontain")).label(for_("username")).content("Username")
-            .input(type("text").name("username").id("username"))._div()
-            .div(dataRole("fieldcontain")).label(for_("password")).content("Password")
-            .input(type("password").name("password").id("password"))
-            ._div()
-            .input(type("submit").value("Login"))
-            ._fieldset()
-            ._form()
-            ._body()
-            ._html();
+    private boolean isLoggedIn() {
+        return SecurityUtils.getSubject().isAuthenticated();
     }
 
     private void logError(String message, Exception exception) {

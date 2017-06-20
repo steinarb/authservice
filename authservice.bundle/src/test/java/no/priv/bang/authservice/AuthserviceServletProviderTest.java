@@ -1,9 +1,8 @@
 package no.priv.bang.authservice;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.containsString;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,14 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
@@ -33,20 +33,18 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 public class AuthserviceServletProviderTest {
 
-    abstract class MockLogService implements LogService {
+    abstract class HttpResponseForRecordingStatus implements HttpServletResponse {
+
+        private int status;
 
         @Override
-        public void log(int level, String message, Throwable exception) {
-            Logger logger = LoggerFactory.getLogger(AuthserviceServletProvider.class);
-            if (level == LOG_DEBUG) {
-                logger.debug(message, exception);
-            } else if (level == LOG_INFO) {
-                logger.info(message, exception);
-            } else if (level == LOG_WARNING) {
-                logger.warn(message, exception);
-            } else {
-                logger.error(message, exception);
-            }
+        public void setStatus(int sc) {
+            status = sc;
+        }
+
+        @Override
+        public int getStatus() {
+            return status;
         }
 
     }
@@ -66,7 +64,7 @@ public class AuthserviceServletProviderTest {
     }
 
     @Test
-    public void testGet() throws ServletException, IOException {
+    public void testAuthenticationFail() throws ServletException, IOException {
         LogService logservice = mock(LogService.class);
         DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
 
@@ -77,18 +75,21 @@ public class AuthserviceServletProviderTest {
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
         StringWriter bodyWriter = new StringWriter();
         PrintWriter responseWriter = new PrintWriter(bodyWriter);
         when(response.getWriter()).thenReturn(responseWriter);
+
+        // Ensure that we are logged out
+        SecurityUtils.getSubject().logout();
         servlet.service(request, response);
 
-        assertThat(bodyWriter.getBuffer().toString(), containsString("name=\"username\""));
+        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
     }
 
     @Test
-    public void testAuthenticate() throws ServletException, IOException, SQLException {
-        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
+    public void testAuthenticationSucceed() throws ServletException, IOException, SQLException {
+        LogService logservice = mock(LogService.class);
         DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
         when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
 
@@ -98,14 +99,19 @@ public class AuthserviceServletProviderTest {
         Servlet servlet = provider.get();
 
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getParameter("username")).thenReturn("admin");
-        when(request.getParameter("password")).thenReturn("admin");
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        when(request.getMethod()).thenReturn("GET");
+        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
         StringWriter bodyWriter = new StringWriter();
         PrintWriter responseWriter = new PrintWriter(bodyWriter);
         when(response.getWriter()).thenReturn(responseWriter);
+
+        // Ensure that we are logged in
+        UsernamePasswordToken token = new UsernamePasswordToken("admin", "admin".toCharArray(), true);
+        Subject subject = SecurityUtils.getSubject();
+        subject.login(token);
         servlet.service(request, response);
+
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
 
 }
