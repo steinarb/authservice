@@ -20,7 +20,7 @@ Instructions:
       cd ~/git/authservice/
       mvn clean install
     #+END_EXAMPLE
- 2. [[http://karaf.apache.org/download.html][Download, unpack and start apache karaf]]
+ 2. [[http://karaf.apache.org/download.html][Download the current version of apache karaf (currently karaf 4.1.1), unpack and start apache karaf]]
  3. In the karaf shell, install the authservice feature repository
     #+BEGIN_EXAMPLE
       feature:repo-add mvn:no.priv.bang.authservice/authservice.bundle/LATEST/xml/features
@@ -29,8 +29,8 @@ Instructions:
     #+BEGIN_EXAMPLE
       feature:install authservice
     #+END_EXAMPLE
- 5. Open a browser on the URL http://localhost:8181/authservice/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
- 6. Open a browser on the URL http://localhost:8181/authservice/auth and verify that it doesn't return a 401 HTTP code
+ 5. Open a browser on the URL http://localhost:8181/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
+ 6. Open a browser on the URL http://localhost:8181/auth and verify that it doesn't return a 401 HTTP code
 
 * License
 
