@@ -6,6 +6,32 @@ This is a webapp that offers two URLs for use by the [[http://nginx.org/en/docs/
 
 The webapp is implemented as two servlets exposed as OSGi services, that will be picked up by the [[http://ops4j.github.io/pax/web/4.x/index.html#_whiteboard_extender][pax web whiteboard extender]].
 
+* Installing on karaf
+/Note/: The instructions here don't describe a production enviroment, but they describe setting up something that will let the service be startet.
+
+The webapp needs PostgreSQL running, with a database named "ukelonn" containing the table users, and a no-password authentication scheme.
+
+Instructions:
+ 1. In bash, clone and build the authservice app:
+    #+BEGIN_EXAMPLE
+      mkdir -p ~/git/
+      cd ~/git/
+      git clone https://github.com/steinarb/authservice.git
+      cd ~/git/authservice/
+      mvn clean install
+    #+END_EXAMPLE
+ 2. [[http://karaf.apache.org/download.html][Download, unpack and start apache karaf]]
+ 3. In the karaf shell, install the authservice feature repository
+    #+BEGIN_EXAMPLE
+      feature:repo-add mvn:no.priv.bang.authservice/authservice.bundle/LATEST/xml/features
+    #+END_EXAMPLE
+ 4. In the karaf shell, install the authservice featire
+    #+BEGIN_EXAMPLE
+      feature:install authservice
+    #+END_EXAMPLE
+ 5. Open a browser on the URL http://localhost:8181/authservice/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
+ 6. Open a browser on the URL http://localhost:8181/authservice/auth and verify that it doesn't return a 401 HTTP code
+
 * License
 
 This software is licensed under Apache Public License v 2.0.
