@@ -29,6 +29,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.Subject;
 import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
 import org.osgi.service.jdbc.DataSourceFactory;
@@ -131,9 +132,12 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
         String bannerText = "Login successful";
         response.setStatus(HttpServletResponse.SC_OK);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
-        Subject subject = SecurityUtils.getSubject();
         try {
+            Subject subject = SecurityUtils.getSubject();
             subject.login(token);
+        } catch(UnknownSessionException e) {
+            logError("Login error: unknown session", e);
+            bannerText = e.getMessage();
         } catch(UnknownAccountException e) {
             logError("Login error: unknown account", e);
             bannerText = e.getMessage();
