@@ -30,6 +30,7 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import no.priv.bang.authservice.mocks.HttpResponseForRecordingStatus;
 
 public class LoginserviceServletProviderTest {
 
@@ -101,11 +102,61 @@ public class LoginserviceServletProviderTest {
         when(request.getMethod()).thenReturn("POST");
         when(request.getParameter("username")).thenReturn("admin");
         when(request.getParameter("password")).thenReturn("admin");
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
         StringWriter bodyWriter = new StringWriter();
         PrintWriter responseWriter = new PrintWriter(bodyWriter);
         when(response.getWriter()).thenReturn(responseWriter);
         servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertThat(bodyWriter.toString(), containsString("Login successful"));
+    }
+
+    @Test
+    public void testAuthenticateUnknownAccount() throws ServletException, IOException, SQLException {
+        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
+        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
+        when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
+
+        LoginserviceServletProvider provider = new LoginserviceServletProvider();
+        provider.setLogService(logservice);
+        provider.setDataSourceFactory(datasourceFactory);
+        Servlet servlet = provider.get();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("username")).thenReturn("jad");
+        when(request.getParameter("password")).thenReturn("admin");
+        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
+        StringWriter bodyWriter = new StringWriter();
+        PrintWriter responseWriter = new PrintWriter(bodyWriter);
+        when(response.getWriter()).thenReturn(responseWriter);
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+        assertThat(bodyWriter.toString(), containsString("Status: Username &quot;jad&quot; not found"));
+    }
+
+    @Test
+    public void testAuthenticateWrongPassword() throws ServletException, IOException, SQLException {
+        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
+        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
+        when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
+
+        LoginserviceServletProvider provider = new LoginserviceServletProvider();
+        provider.setLogService(logservice);
+        provider.setDataSourceFactory(datasourceFactory);
+        Servlet servlet = provider.get();
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("username")).thenReturn("admin");
+        when(request.getParameter("password")).thenReturn("wrongpass");
+        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
+        StringWriter bodyWriter = new StringWriter();
+        PrintWriter responseWriter = new PrintWriter(bodyWriter);
+        when(response.getWriter()).thenReturn(responseWriter);
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+        assertThat(bodyWriter.toString(), containsString("Status: Submitted credentials for token [org.apache.shiro.authc.UsernamePasswordToken - admin, rememberMe=true] did not match the expected credentials."));
     }
 
 }

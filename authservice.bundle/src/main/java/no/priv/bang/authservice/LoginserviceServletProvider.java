@@ -112,20 +112,22 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
         response.setContentType("text/html");
 
         HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html);
+        renderLoginForm(html, null);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        checkLogin(request);
+        String loginStatusBannerText = checkLogin(request, response);
 
         response.setContentType("text/html");
 
         HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html);
+        renderLoginForm(html, loginStatusBannerText);
     }
 
-    private void checkLogin(HttpServletRequest request) {
+    private String checkLogin(HttpServletRequest request, HttpServletResponse response) {
+        String bannerText = "Login successful";
+        response.setStatus(HttpServletResponse.SC_OK);
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
@@ -134,8 +136,11 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
             subject.login(token);
         } catch(UnknownAccountException e) {
             logError("Login error: unknown account", e);
+            bannerText = e.getMessage();
         } catch (IncorrectCredentialsException  e) {
             logError("Login error: wrong password", e);
+            bannerText = e.getMessage();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } catch (LockedAccountException  e) {
             logError("Login error: locked account", e);
         } catch (AuthenticationException e) {
@@ -143,14 +148,17 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
         } finally {
             token.clear();
         }
+
+        return bannerText;
     }
 
-    private void renderLoginForm(HtmlServletCanvas html) throws IOException {
+    private void renderLoginForm(HtmlServletCanvas html, String loginStatusBannerText) throws IOException {
+        String heading = loginStatusBannerText != null ? "Status: " + loginStatusBannerText : "Login";
         html
             .html()
-            .head().title().content("Login")._head()
+            .head().title().content(heading)._head()
             .body(align("center"))
-            .h1().content("Login")
+            .h1().content(heading)
             .form(action("/login").method("post").id("login-form"))
             .fieldset()
             .div(dataRole("fieldcontain")).label(for_("username")).content("Username")

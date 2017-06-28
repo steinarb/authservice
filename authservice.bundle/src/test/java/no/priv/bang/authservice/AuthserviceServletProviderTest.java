@@ -30,24 +30,9 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import no.priv.bang.authservice.mocks.HttpResponseForRecordingStatus;
 
 public class AuthserviceServletProviderTest {
-
-    abstract class HttpResponseForRecordingStatus implements HttpServletResponse {
-
-        private int status;
-
-        @Override
-        public void setStatus(int sc) {
-            status = sc;
-        }
-
-        @Override
-        public int getStatus() {
-            return status;
-        }
-
-    }
 
     private DataSource dataSource;
 
