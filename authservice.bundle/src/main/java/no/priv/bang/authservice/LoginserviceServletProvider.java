@@ -112,24 +112,24 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
         response.setContentType("text/html");
 
         HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html, null);
+        renderLoginForm(html, null, "", "");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String loginStatusBannerText = checkLogin(request, response);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String loginStatusBannerText = checkLogin(username, password, response);
 
         response.setContentType("text/html");
 
         HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html, loginStatusBannerText);
+        renderLoginForm(html, loginStatusBannerText, username, password);
     }
 
-    private String checkLogin(HttpServletRequest request, HttpServletResponse response) {
+    private String checkLogin(String username, String password, HttpServletResponse response) {
         String bannerText = "Login successful";
         response.setStatus(HttpServletResponse.SC_OK);
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
         UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -152,7 +152,7 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
         return bannerText;
     }
 
-    private void renderLoginForm(HtmlServletCanvas html, String loginStatusBannerText) throws IOException {
+    private void renderLoginForm(HtmlServletCanvas html, String loginStatusBannerText, String username, String password) throws IOException {
         String heading = loginStatusBannerText != null ? "Status: " + loginStatusBannerText : "Login";
         html
             .html()
@@ -162,9 +162,9 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
             .form(action("/login").method("post").id("login-form"))
             .fieldset()
             .div(dataRole("fieldcontain")).label(for_("username")).content("Username")
-            .input(type("text").name("username").id("username"))._div()
+            .input(type("text").name("username").id("username").value(username))._div()
             .div(dataRole("fieldcontain")).label(for_("password")).content("Password")
-            .input(type("password").name("password").id("password"))
+            .input(type("password").name("password").id("password").value(password))
             ._div()
             .input(type("submit").value("Login"))
             ._fieldset()
