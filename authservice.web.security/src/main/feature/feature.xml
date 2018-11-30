@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
+    <feature name="authservice">
+        <feature>pax-jdbc</feature>
+        <feature>pax-http-whiteboard</feature>
+    </feature>
+</features>
