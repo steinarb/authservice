@@ -1,133 +1,89 @@
-package no.priv.bang.authservice;
+/*
+ * Copyright 2018 Steinar Bang
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package no.priv.bang.authservice.web.security;
 
-import static org.rendersnake.HtmlAttributesFactory.action;
-import static org.rendersnake.HtmlAttributesFactory.align;
-import static org.rendersnake.HtmlAttributesFactory.dataRole;
-import static org.rendersnake.HtmlAttributesFactory.for_;
-import static org.rendersnake.HtmlAttributesFactory.type;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.util.Map;
+import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import no.steria.osgi.jsr330activator.ServiceProperties;
-import no.steria.osgi.jsr330activator.ServiceProperty;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.session.UnknownSessionException;
-import org.apache.shiro.subject.Subject;
-import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
-import org.osgi.service.jdbc.DataSourceFactory;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.servlet.ServletContainer;
+import org.glassfish.jersey.servlet.WebConfig;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
-import org.rendersnake.ext.servlet.HtmlServletCanvas;
 
 /***
  * This class will show ups a {@link Servlet} OSGi service, and will be picked
  * up by the pax web whiteboard.
  *
- * The web page provided by the servlet service is intended to be used as a login
- * page by nginx, and will add a Shiro auth token to the cookie collection of the
- * web page.
- *
- * The web page will be accessed with the path "/login/".
- *
- * The servlet won't be started until a {@link DataSourceFactory} OSGi service
- * can be injected.
- *
- * The servlet will try a PostgreSQL JDBC connection to a database called
- * "ukelonn" on a local PostgreSQL server, and check username/password
- * against a table called "users" on that database.
- *
- * The table "users" is assumed to have the varchar columns "username", "password" and "salt", with
- * their Shiro meanings.
+ * The servlet will respond to several URLs and will provide
+ * functionality both for checking the login state, and for
+ * logging in a user
  *
  * @author Steinar Bang
  *
  */
-@ServiceProperties({
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_URL_PATTERNS, values = {"/login/*"}),
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_HTTP_CONTEXT_PATH, value = "/login/"),
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "login")})
-public class LoginserviceServletProvider extends HttpServlet implements Provider<Servlet> {
+@Component(
+        property= {
+            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/*",
+            HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
+            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=authservice",
+            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX+ServerProperties.PROVIDER_PACKAGES+"=no.priv.bang.authservice.web.security.resources"},
+        service=Servlet.class,
+        immediate=true
+    )
+public class AuthserviceServlet extends ServletContainer {
     private static final long serialVersionUID = 6064420153498760622L;
-    private LogService logService;
-    private DataSourceFactory dataSourceFactory;
-    UkelonnRealm realm;
+    private LogService logservice;  // NOSONAR Value set by DS injection
 
-    public LoginserviceServletProvider() {
-        realm = new UkelonnRealm();
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
-        credentialsMatcher.setStoredCredentialsHexEncoded(false);
-        credentialsMatcher.setHashIterations(1024);
-        realm.setCredentialsMatcher(credentialsMatcher);
-        DefaultSecurityManager securityManager = new DefaultSecurityManager(realm);
-        SecurityUtils.setSecurityManager(securityManager);
+    @Reference
+    public void setLogservice(LogService logService) {
+        this.logservice = logService;
+    }
+
+    @Activate
+    public void activate() {
+        // This method is called after all injections have been satisfied
     }
 
     @Override
-    public Servlet get() {
-        return this;
+    protected void init(WebConfig webConfig) throws ServletException {
+        super.init(webConfig);
+        ResourceConfig copyOfExistingConfig = new ResourceConfig(getConfiguration());
+        copyOfExistingConfig.register(new AbstractBinder() {
+                @Override
+                protected void configure() {
+                    bind(logservice).to(LogService.class);
+                }
+            });
+        reload(copyOfExistingConfig);
+        Map<String, Object> configProperties = getConfiguration().getProperties();
+        Set<Class<?>> classes = getConfiguration().getClasses();
+        logservice.log(LogService.LOG_INFO, String.format("Ukelonn Jersey servlet initialized with WebConfig, with resources: %s  and config params: %s", classes.toString(), configProperties.toString()));
     }
 
-    @Inject
-    public void setLogService(LogService logService) {
-        this.logService = logService;
-    }
-
-    @Inject
-    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
-        this.dataSourceFactory = dataSourceFactory;
-        connectJdbcRealmToDatabase();
-    }
-
-    private void connectJdbcRealmToDatabase() {
-        if (dataSourceFactory != null) {
-            Properties properties = new Properties();
-            properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:postgresql:///ukelonn");
-            try {
-                DataSource dataSource = dataSourceFactory.createDataSource(properties);
-                realm.setDataSource(dataSource);
-            } catch (Exception e) {
-                logError("PostgreSQL database service failed to create connection to local DB server", e);
-            }
-        }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-
-        HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html, null, "", "");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String loginStatusBannerText = checkLogin(username, password, response);
-
-        response.setContentType("text/html");
-
-        HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-        renderLoginForm(html, loginStatusBannerText, username, password);
-    }
-
+    /*
     private String checkLogin(String username, String password, HttpServletResponse response) {
         String bannerText = "Login successful";
         response.setStatus(HttpServletResponse.SC_OK);
@@ -178,9 +134,10 @@ public class LoginserviceServletProvider extends HttpServlet implements Provider
     }
 
     private void logError(String message, Exception exception) {
-        if (logService != null) {
-            logService.log(LogService.LOG_ERROR, message, exception);
+        if (logservice != null) {
+            logservice.log(LogService.LOG_ERROR, message, exception);
         }
     }
+    */
 
 }

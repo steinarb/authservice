@@ -1,162 +1,185 @@
-package no.priv.bang.authservice;
+/*
+ * Copyright 2018 Steinar Bang
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package no.priv.bang.authservice.web.security;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.assertj.core.api.Assertions.*;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.SQLException;
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.Collections;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
-import org.osgi.service.jdbc.DataSourceFactory;
+import org.glassfish.jersey.server.ServerProperties;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.log.LogService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import liquibase.Liquibase;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import no.priv.bang.authservice.mocks.HttpResponseForRecordingStatus;
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockHttpSession;
 
-public class LoginserviceServletProviderTest {
+import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
-    abstract class MockLogService implements LogService {
+public class AuthserviceServletTest extends ShiroTestBase {
 
-        @Override
-        public void log(int level, String message, Throwable exception) {
-            Logger logger = LoggerFactory.getLogger(LoginserviceServletProvider.class);
-            if (level == LOG_DEBUG) {
-                logger.debug(message, exception);
-            } else if (level == LOG_INFO) {
-                logger.info(message, exception);
-            } else if (level == LOG_WARNING) {
-                logger.warn(message, exception);
-            } else {
-                logger.error(message, exception);
-            }
-        }
-
-    }
-
-    private DataSource dataSource;
-
-    @Before
-    public void setup() throws SQLException, LiquibaseException {
-        DerbyDataSourceFactory dataSourceFactory = new DerbyDataSourceFactory();
-        Properties properties = new Properties();
-        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
-        dataSource = dataSourceFactory.createDataSource(properties);
-        DatabaseConnection databaseConnection = new JdbcConnection(dataSource.getConnection());
-        ClassLoaderResourceAccessor classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
-        Liquibase liquibase = new Liquibase("db-changelog/db-changelog.xml", classLoaderResourceAccessor, databaseConnection);
-        liquibase.update("");
+    @BeforeClass()
+    static void setup() throws Exception {
+        setupBase();
     }
 
     @Test
-    public void testGet() throws ServletException, IOException {
-        LogService logservice = mock(LogService.class);
-        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
+    public void testGetRootIndexHtml() throws Exception {
+        MockLogService logservice = new MockLogService();
 
-        LoginserviceServletProvider provider = new LoginserviceServletProvider();
-        provider.setLogService(logservice);
-        provider.setDataSourceFactory(datasourceFactory);
-        Servlet servlet = provider.get();
+        HttpServletRequest request = buildGetRootUrl();
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getMethod()).thenReturn("GET");
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        StringWriter bodyWriter = new StringWriter();
-        PrintWriter responseWriter = new PrintWriter(bodyWriter);
-        when(response.getWriter()).thenReturn(responseWriter);
-        servlet.service(request, response);
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice);
 
-        assertThat(bodyWriter.getBuffer().toString(), containsString("name=\"username\""));
-    }
+        createSubjectAndBindItToThread(request, response);
 
-    @Test
-    public void testAuthenticate() throws ServletException, IOException, SQLException {
-        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
-        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
-        when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
-
-        LoginserviceServletProvider provider = new LoginserviceServletProvider();
-        provider.setLogService(logservice);
-        provider.setDataSourceFactory(datasourceFactory);
-        Servlet servlet = provider.get();
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getParameter("username")).thenReturn("admin");
-        when(request.getParameter("password")).thenReturn("admin");
-        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
-        StringWriter bodyWriter = new StringWriter();
-        PrintWriter responseWriter = new PrintWriter(bodyWriter);
-        when(response.getWriter()).thenReturn(responseWriter);
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        assertThat(bodyWriter.toString(), containsString("Login successful"));
+        assertThat(response.getOutputStreamContent()).contains("Authentication service home");
     }
 
     @Test
-    public void testAuthenticateUnknownAccount() throws ServletException, IOException, SQLException {
-        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
-        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
-        when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
+    public void testAuthenticate() throws Exception {
+        MockLogService logservice = new MockLogService();
 
-        LoginserviceServletProvider provider = new LoginserviceServletProvider();
-        provider.setLogService(logservice);
-        provider.setDataSourceFactory(datasourceFactory);
-        Servlet servlet = provider.get();
+        String originalRequestUrl = "https://myserver.com/someresource";
+        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
+        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+            .queryParam("username", "admin")
+            .queryParam("password", "admin")
+            .build().getQuery();
+        request.setBodyContent(body);
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getParameter("username")).thenReturn("jad");
-        when(request.getParameter("password")).thenReturn("admin");
-        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
-        StringWriter bodyWriter = new StringWriter();
-        PrintWriter responseWriter = new PrintWriter(bodyWriter);
-        when(response.getWriter()).thenReturn(responseWriter);
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice);
+
+        createSubjectAndBindItToThread(request, response);
+
         servlet.service(request, response);
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-        assertThat(bodyWriter.toString(), containsString("Status: Username &quot;jad&quot; not found"));
+        assertEquals(HttpServletResponse.SC_FOUND, response.getStatus());
+        assertThat(response.getOutputStreamContent()).contains("Login successful");
     }
 
     @Test
-    public void testAuthenticateWrongPassword() throws ServletException, IOException, SQLException {
-        LogService logservice = mock(MockLogService.class, Mockito.CALLS_REAL_METHODS);
-        DataSourceFactory datasourceFactory = mock(DataSourceFactory.class);
-        when(datasourceFactory.createDataSource(any(Properties.class))).thenReturn(dataSource);
+    public void testAuthenticateUnknownAccount() throws Exception {
+        MockLogService logservice = new MockLogService();
 
-        LoginserviceServletProvider provider = new LoginserviceServletProvider();
-        provider.setLogService(logservice);
-        provider.setDataSourceFactory(datasourceFactory);
-        Servlet servlet = provider.get();
+        String originalRequestUrl = "https://myserver.com/someresource";
+        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
+        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+            .queryParam("username", "jjd")
+            .queryParam("password", "admin")
+            .build().getQuery();
+        request.setBodyContent(body);
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getParameter("username")).thenReturn("admin");
-        when(request.getParameter("password")).thenReturn("wrongpass");
-        HttpResponseForRecordingStatus response = mock(HttpResponseForRecordingStatus.class, Mockito.CALLS_REAL_METHODS);
-        StringWriter bodyWriter = new StringWriter();
-        PrintWriter responseWriter = new PrintWriter(bodyWriter);
-        when(response.getWriter()).thenReturn(responseWriter);
+        // Emulate DS component setup
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice);
+
+        createSubjectAndBindItToThread(request, response);
+
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-        assertThat(bodyWriter.toString(), containsString("Status: Submitted credentials for token [org.apache.shiro.authc.UsernamePasswordToken - admin, rememberMe=true] did not match the expected credentials."));
+        assertThat(response.getOutputStreamContent()).contains("unknown user");
+    }
+
+    @Test
+    public void testAuthenticateWrongPassword() throws Exception {
+        MockLogService logservice = new MockLogService();
+
+        String originalRequestUrl = "https://myserver.com/someresource";
+        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
+        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+            .queryParam("username", "admin")
+            .queryParam("password", "wrongpass")
+            .build().getQuery();
+        request.setBodyContent(body);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice);
+
+        createSubjectAndBindItToThread(request, response);
+
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+        assertThat(response.getOutputStreamContent()).contains("Error: wrong password");
+    }
+
+    private HttpServletRequest buildGetRootUrl() {
+        MockHttpSession session = new MockHttpSession();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setProtocol("HTTP/1.1");
+        request.setMethod("GET");
+        request.setRequestURL("http://localhost:8181/authservice/");
+        request.setRequestURI("/authservice/");
+        request.setContextPath("/authservice");
+        request.setServletPath("");
+        request.setSession(session);
+        return request;
+    }
+
+    private MockHttpServletRequest buildPostToLoginUrl(String originalUrl) {
+        String contenttype = MediaType.APPLICATION_FORM_URLENCODED;
+        MockHttpSession session = new MockHttpSession();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setProtocol("HTTP/1.1");
+        request.setMethod("POST");
+        request.setRequestURL("http://localhost:8181/authservice/login");
+        request.setRequestURI("/authservice/login");
+        request.setContextPath("/authservice");
+        request.setServletPath("");
+        request.setContentType(contenttype);
+        request.addHeader("Content-Type", contenttype);
+        request.addCookie(new Cookie("NSREDIRECT", originalUrl));
+        request.addHeader("Cookie", "NSREDIRECT=" + originalUrl);
+        request.setSession(session);
+        return request;
+    }
+
+    private AuthserviceServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(LogService logservice) throws Exception {
+        AuthserviceServlet servlet = new AuthserviceServlet();
+        servlet.setLogservice(logservice);
+        servlet.activate();
+        ServletConfig config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
+        servlet.init(config);
+        return servlet;
+    }
+
+    private ServletConfig createServletConfigWithApplicationAndPackagenameForJerseyResources() {
+        ServletConfig config = mock(ServletConfig.class);
+        when(config.getInitParameterNames()).thenReturn(Collections.enumeration(Arrays.asList(ServerProperties.PROVIDER_PACKAGES)));
+        when(config.getInitParameter(eq(ServerProperties.PROVIDER_PACKAGES))).thenReturn("no.priv.bang.authservice.web.security.resources");
+        ServletContext servletContext = mock(ServletContext.class);
+        when(config.getServletContext()).thenReturn(servletContext);
+        when(servletContext.getAttributeNames()).thenReturn(Collections.emptyEnumeration());
+        return config;
     }
 
 }

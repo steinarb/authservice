@@ -20,15 +20,13 @@
             <column name="email" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="first_name" type="VARCHAR(256)">
+            <column name="firstname" type="VARCHAR(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="VARCHAR(256)">
+            <column name="lastname" type="VARCHAR(256)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-
-    <include file="db-changelog/sql/initial_users.sql"/>
 
 </databaseChangeLog>

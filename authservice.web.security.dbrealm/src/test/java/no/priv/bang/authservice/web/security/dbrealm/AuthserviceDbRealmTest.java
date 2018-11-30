@@ -1,6 +1,6 @@
-package no.priv.bang.authservice;
+package no.priv.bang.authservice.web.security.dbrealm;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
@@ -19,19 +19,17 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
+import no.priv.bang.osgi.service.database.DatabaseService;
+import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 /***
- * Tests for class {@link UkelonnRealm}.
+ * Tests for class {@link AuthserviceDbRealm}.
  *
  * @author Steinar Bang
  *
  */
-public class UkelonnRealmTest {
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+public class AuthserviceDbRealmTest {
 
     /***
      * Test a successful authentication.
@@ -49,9 +47,12 @@ public class UkelonnRealmTest {
         when(statement.executeQuery()).thenReturn(resultset);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
+        DatabaseService database = mock(DatabaseService.class);
+        when(database.getDatasource()).thenReturn(dataSource);
 
-        UkelonnRealm realm = new UkelonnRealm();
-        realm.setDataSource(dataSource);
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        realm.setDatabaseService(database);
+        realm.activate();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
         AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
@@ -74,15 +75,19 @@ public class UkelonnRealmTest {
         when(statement.executeQuery()).thenReturn(resultset);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
+        DatabaseService database = mock(DatabaseService.class);
+        when(database.getDatasource()).thenReturn(dataSource);
 
-        UkelonnRealm realm = new UkelonnRealm();
-        realm.setDataSource(dataSource);
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        realm.setDatabaseService(database);
+        realm.activate();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = new UsernamePasswordToken("jad", "1add".toCharArray());
 
-        exception.expect(IncorrectCredentialsException.class);
-        AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-        assertEquals(1, authInfo.getPrincipals().asList().size());
+        assertThrows(IncorrectCredentialsException.class, () -> {
+                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
+                assertEquals(1, authInfo.getPrincipals().asList().size());
+            });
     }
 
     /***
@@ -92,6 +97,7 @@ public class UkelonnRealmTest {
      */
     @Test
     public void testGetAuthenticationInfoWrongUsername() throws SQLException {
+        MockLogService logservice = new MockLogService();
         DataSource dataSource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         PreparedStatement statement = mock(PreparedStatement.class);
@@ -100,15 +106,21 @@ public class UkelonnRealmTest {
         when(statement.executeQuery()).thenReturn(resultset);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
+        DatabaseService database = mock(DatabaseService.class);
+        when(database.getDatasource()).thenReturn(dataSource);
 
-        UkelonnRealm realm = new UkelonnRealm();
-        realm.setDataSource(dataSource);
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        realm.setLogservice(logservice);
+        realm.setDatabaseService(database);
+        realm.activate();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
-        exception.expect(IncorrectCredentialsException.class);
-        AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-        assertEquals(1, authInfo.getPrincipals().asList().size());
+        assertThrows(IncorrectCredentialsException.class, () -> {
+                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
+                assertEquals(1, authInfo.getPrincipals().asList().size());
+            });
+        assertEquals(1, logservice.getLogmessages().size());
     }
 
     /***
@@ -116,7 +128,7 @@ public class UkelonnRealmTest {
      */
     @Test
     public void testGetAuthenticationInfoWrongTokenType() {
-        UkelonnRealm realm = new UkelonnRealm();
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = mock(AuthenticationToken.class);
         String username = "jad";
@@ -124,9 +136,10 @@ public class UkelonnRealmTest {
         when(token.getPrincipal()).thenReturn(username);
         when(token.getCredentials()).thenReturn(password);
 
-        exception.expect(AuthenticationException.class);
-        AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-        assertEquals(1, authInfo.getPrincipals().asList().size());
+        assertThrows(AuthenticationException.class, () -> {
+                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
+                assertEquals(1, authInfo.getPrincipals().asList().size());
+            });
     }
 
     /***
@@ -152,9 +165,12 @@ public class UkelonnRealmTest {
         when(statement.executeQuery(eq("select * from administrators_view"))).thenReturn(resultset2);
         when(connection.createStatement()).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
+        DatabaseService database = mock(DatabaseService.class);
+        when(database.getDatasource()).thenReturn(dataSource);
 
-        UkelonnRealm realm = new UkelonnRealm();
-        realm.setDataSource(dataSource);
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        realm.setDatabaseService(database);
+        realm.activate();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
         AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);
@@ -189,9 +205,12 @@ public class UkelonnRealmTest {
         when(statement.executeQuery(eq("select * from administrators_view"))).thenReturn(resultset2);
         when(connection.createStatement()).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
+        DatabaseService database = mock(DatabaseService.class);
+        when(database.getDatasource()).thenReturn(dataSource);
 
-        UkelonnRealm realm = new UkelonnRealm();
-        realm.setDataSource(dataSource);
+        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        realm.setDatabaseService(database);
+        realm.activate();
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         AuthenticationToken token = new UsernamePasswordToken("on", "ola12".toCharArray());
         AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);

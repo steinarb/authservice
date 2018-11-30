@@ -1,126 +1,102 @@
-package no.priv.bang.authservice;
+/*
+ * Copyright 2018 Steinar Bang
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package no.priv.bang.authservice.web.security;
 
-import static org.rendersnake.HtmlAttributesFactory.align;
-import java.io.IOException;
-import java.util.Properties;
+import javax.servlet.Filter;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.web.config.IniFilterChainResolverFactory;
+import org.apache.shiro.web.config.WebIniSecurityManagerFactory;
+import org.apache.shiro.web.filter.authc.AnonymousFilter;
+import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
+import org.apache.shiro.web.filter.authc.UserFilter;
+import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
+import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.AbstractShiroFilter;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import no.steria.osgi.jsr330activator.ServiceProperties;
-import no.steria.osgi.jsr330activator.ServiceProperty;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
-import org.osgi.service.jdbc.DataSourceFactory;
-import org.osgi.service.log.LogService;
-import org.rendersnake.ext.servlet.HtmlServletCanvas;
 
 /***
- * This class will show ups a {@link Servlet} OSGi service, and will be picked
+ * This class will show ups a {@link Filter} OSGi service, and will be picked
  * up by the pax web whiteboard.
  *
- * The servlet implements an auth service used by the nginx_auth_request module.
- * The servlet will return a 401 code if the request isn't authorized
- * and a 200 OK code if the request is authorized.
+ * The filter maps URLs in the webapp to users and roles.
  *
  * @author Steinar Bang
  *
  */
-@ServiceProperties({
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_URL_PATTERNS, values = {"/auth/*"}),
-    @ServiceProperty( name = ExtenderConstants.PROPERTY_HTTP_CONTEXT_PATH, value = "/auth/"),
-	@ServiceProperty( name = ExtenderConstants.PROPERTY_SERVLET_NAMES, value = "auth")})
-public class AuthserviceServletProvider extends HttpServlet implements Provider<Servlet> {
-    private static final long serialVersionUID = 6064420153498760622L;
-    private LogService logService;
-    private DataSourceFactory dataSourceFactory;
-    UkelonnRealm realm;
+@Component(
+    property= {
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN+"=/*",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
+        "servletNames=authservice"},
+    service=Filter.class,
+    immediate=true
+)
+public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
-    public AuthserviceServletProvider() {
-        realm = new UkelonnRealm();
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
-        credentialsMatcher.setStoredCredentialsHexEncoded(false);
-        credentialsMatcher.setHashIterations(1024);
-        realm.setCredentialsMatcher(credentialsMatcher);
-        DefaultSecurityManager securityManager = new DefaultSecurityManager(realm);
-        SecurityUtils.setSecurityManager(securityManager);
+    private Realm realm;
+    private SessionDAO session;
+    private static final Ini INI_FILE = new Ini();
+    static {
+        // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
+        INI_FILE.load(AuthserviceShiroFilter.class.getClassLoader().getResourceAsStream("shiro.ini"));
     }
 
-    @Override
-	public Servlet get() {
-		return this;
-	}
-
-    @Inject
-    public void setLogService(LogService logService) {
-    	this.logService = logService;
+    @Reference
+    public void setRealm(Realm realm) {
+        this.realm = realm;
     }
 
-    @Inject
-    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
-        this.dataSourceFactory = dataSourceFactory;
-        connectJdbcRealmToDatabase();
+    @Reference
+    public void setSession(SessionDAO session) {
+        this.session = session;
     }
 
-    private void connectJdbcRealmToDatabase() {
-        if (dataSourceFactory != null) {
-            Properties properties = new Properties();
-            properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:postgresql:///ukelonn");
-            try {
-                DataSource dataSource = dataSourceFactory.createDataSource(properties);
-                realm.setDataSource(dataSource);
-            } catch (Exception e) {
-                logError("PostgreSQL database service failed to create connection to local DB server", e);
-            }
-        }
-    }
+    @Activate
+    public void activate() {
+        WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(INI_FILE);
+        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) securityManagerFactory.createInstance();
+        DefaultWebSessionManager sessionmanager = new DefaultWebSessionManager();
+        sessionmanager.setSessionDAO(session);
+        sessionmanager.setSessionIdUrlRewritingEnabled(false);
+        securityManager.setSessionManager(sessionmanager);
+        setSecurityManager(securityManager);
+        securityManager.setRealm(realm);
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
+        DefaultFilterChainManager filterchainmanager = new DefaultFilterChainManager();
+        // Using the PassThruAuthenticationFilter instead of the default authc FormAuthenticationFilter
+        // to be able to do a redirect back "out of" authservice to the originalUrl
+        PassThruAuthenticationFilter authc = new PassThruAuthenticationFilter();
+        AnonymousFilter anon = new AnonymousFilter();
+        UserFilter user = new UserFilter();
+        filterchainmanager.addFilter("authc", authc);
+        filterchainmanager.addFilter("anon", anon);
+        filterchainmanager.addFilter("user", user);
 
-        HtmlServletCanvas html = new HtmlServletCanvas(request, response, response.getWriter());
-
-        if (!isLoggedIn()) {
-            html
-                .html()
-                .head().title().content("Authentication failed: need login")._head()
-                .body(align("center"))
-                .h1().content("Authentication failed: need login")
-                ._body()
-                ._html();
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
-            html
-                .html()
-                .head().title().content("Successfully authenticated")._head()
-                .body(align("center"))
-                .h1().content("Successfully authenticated")
-                ._body()
-                ._html();
-
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-    }
-
-    private boolean isLoggedIn() {
-        return SecurityUtils.getSubject().isAuthenticated();
-    }
-
-    private void logError(String message, Exception exception) {
-        if (logService != null) {
-            logService.log(LogService.LOG_ERROR, message, exception);
-        }
+        IniFilterChainResolverFactory filterChainResolverFactory = new IniFilterChainResolverFactory(INI_FILE, securityManagerFactory.getBeans());
+        PathMatchingFilterChainResolver resolver = (PathMatchingFilterChainResolver) filterChainResolverFactory.createInstance();
+        resolver.setFilterChainManager(filterchainmanager);
+        setFilterChainResolver(resolver);
     }
 
 }
