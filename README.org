@@ -32,6 +32,49 @@ Instructions:
  5. Open a browser on the URL http://localhost:8181/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
  6. Open a browser on the URL http://localhost:8181/auth and verify that it doesn't return a 401 HTTP code
 
+* Installing and configuring nginx
+
+Instructions:
+ 1. Install nginx with the auth module.  On debian this is done with the command
+    #+BEGIN_EXAMPLE
+      apt-get update
+      apt-get install nginx-extras
+    #+END_EXAMPLE
+ 2. Add the following to the /etc/nginx/sites-available/default (adapt this to the actual server/site in use):
+    #+BEGIN_SRC conf
+      server {
+              listen 80 default_server;
+              listen [::]:80 default_server;
+
+              root /var/www/html;
+
+              # Add index.php to the list if you are using PHP
+              index index.html index.htm index.nginx-debian.html;
+
+              server_name _;
+
+              location /authservice {
+                      proxy_pass http://localhost:8181/authservice;
+                      proxy_cookie_path ~^/authservice.*$ /;
+              }
+
+              location /authservice/login {
+                      auth_request off;
+                      proxy_pass http://localhost:8181/authservice/login;
+                      proxy_cookie_path ~^/authservice.*$ /;
+              }
+
+              location / {
+                      # First attempt to serve request as file, then
+                      # as directory, then fall back to displaying a 404.
+                      try_files $uri $uri/ =404;
+              }
+
+              # Auth configuration
+              auth_request /authservice/check;
+              error_page 401 = @error401;
+      }
+    #+END_SRC
 * License
 
 This software is licensed under Apache Public License v 2.0.
