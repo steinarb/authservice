@@ -36,14 +36,16 @@ class DerbyTestDatabaseTest {
         database.setDataSourceFactory(derbyDataSourceFactory);
         database.activate();
 
-        try(PreparedStatement statment = database.prepareStatement("select * from users")) {
-            ResultSet results = statment.executeQuery();
-            int usercount = 0;
-            while(results.next()) {
-                ++usercount;
-            }
+        try(Connection connection = database.getConnection()) {
+            try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
+                ResultSet results = statment.executeQuery();
+                int usercount = 0;
+                while(results.next()) {
+                    ++usercount;
+                }
 
-            assertEquals(1, usercount);
+                assertEquals(5, usercount);
+            }
         }
     }
 

@@ -107,7 +107,7 @@ public class AuthserviceDbRealm extends AuthorizingRealm {
 
                 if (passwordResultSet.next()) {
                     String password = passwordResultSet.getString("password");
-                    String salt = passwordResultSet.getString("salt");
+                    String salt = passwordResultSet.getString("password_salt");
                     ByteSource decodedSalt = Util.bytes(Base64.getDecoder().decode(salt));
                     return new SimpleAuthenticationInfo(principal, password, decodedSalt, getName());
                 } else {

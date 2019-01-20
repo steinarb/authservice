@@ -43,7 +43,7 @@ public class AuthserviceDbRealmTest {
         ResultSet resultset = mock(ResultSet.class);
         when(resultset.next()).thenReturn(true).thenReturn(false);
         when(resultset.getString(eq("password"))).thenReturn("adEp0s7cQHrJcIsDTDoFQK8eUAIFGh23wew7Klis1sk=");
-        when(resultset.getString(eq("salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
+        when(resultset.getString(eq("password_salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
         when(statement.executeQuery()).thenReturn(resultset);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -71,7 +71,7 @@ public class AuthserviceDbRealmTest {
         ResultSet resultset = mock(ResultSet.class);
         when(resultset.next()).thenReturn(true).thenReturn(false);
         when(resultset.getString(eq("password"))).thenReturn("adEp0s7cQHrJcIsDTDoFQK8eUAIFGh23wew7Klis1sk=");
-        when(resultset.getString(eq("salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
+        when(resultset.getString(eq("password_salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
         when(statement.executeQuery()).thenReturn(resultset);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -154,7 +154,7 @@ public class AuthserviceDbRealmTest {
         ResultSet resultset1 = mock(ResultSet.class);
         when(resultset1.next()).thenReturn(true).thenReturn(false);
         when(resultset1.getString(eq("password"))).thenReturn("adEp0s7cQHrJcIsDTDoFQK8eUAIFGh23wew7Klis1sk=");
-        when(resultset1.getString(eq("salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
+        when(resultset1.getString(eq("password_salt"))).thenReturn("78dCvMDECA47YMdtCkgkwQ==");
         when(preparedStatement.executeQuery()).thenReturn(resultset1);
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         Statement statement = mock(Statement.class);
@@ -194,7 +194,7 @@ public class AuthserviceDbRealmTest {
         ResultSet resultset1 = mock(ResultSet.class);
         when(resultset1.next()).thenReturn(true).thenReturn(false);
         when(resultset1.getString(eq("password"))).thenReturn("6VuUrsvVkZfxtKwt4tdCmOdXtXCuIbgWhcURzeRpT/g=");
-        when(resultset1.getString(eq("salt"))).thenReturn("snKBcs4FMoGZHQlNY2kz5w==");
+        when(resultset1.getString(eq("password_salt"))).thenReturn("snKBcs4FMoGZHQlNY2kz5w==");
         when(preparedStatement.executeQuery()).thenReturn(resultset1);
         when(connection.prepareStatement(eq("select * from users where username=?"))).thenReturn(preparedStatement);
         Statement statement = mock(Statement.class);

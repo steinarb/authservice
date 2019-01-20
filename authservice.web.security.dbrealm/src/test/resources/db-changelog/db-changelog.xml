@@ -14,7 +14,7 @@
             <column name="password" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="salt" type="VARCHAR(64)">
+            <column name="password_salt" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(64)">

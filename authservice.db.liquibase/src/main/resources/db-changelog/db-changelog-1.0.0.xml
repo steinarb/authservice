@@ -9,12 +9,12 @@
                 <constraints primaryKey="true" primaryKeyName="SQL170518210719000"/>
             </column>
             <column name="username" type="VARCHAR(64)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="password" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="salt" type="VARCHAR(64)">
+            <column name="password_salt" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(64)">
@@ -27,6 +27,100 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <createIndex indexName="ix_users_id" tableName="users">
+            <column name="user_id" type="INTEGER" />
+        </createIndex>
+
+        <createIndex indexName="ix_users_username" tableName="users">
+            <column name="username" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="roleidprimarykey"/>
+            </column>
+            <column name="role_name" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(128)">
+            </column>
+        </createTable>
+
+        <createIndex indexName="ix_roles_id" tableName="roles">
+            <column name="role_id" type="INTEGER" />
+        </createIndex>
+
+        <createIndex indexName="ix_roles_rolename" tableName="roles">
+            <column name="role_name" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createTable tableName="user_roles">
+            <column autoIncrement="true" name="user_role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="userroleidprimarykey"/>
+            </column>
+            <column name="role_name" type="VARCHAR(64)">
+                <constraints nullable="false" foreignKeyName="fk_user_roles_role_name" references="roles(role_name)"/>
+            </column>
+            <column name="username" type="VARCHAR(64)">
+                <constraints nullable="false"  foreignKeyName="fk_user_roles_username" references="users(username)"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="ix_user_roles_id" tableName="user_roles">
+            <column name="user_role_id" type="INTEGER" />
+        </createIndex>
+
+        <createIndex indexName="ix_user_roles_rolename" tableName="user_roles">
+            <column name="role_name" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createIndex indexName="ix_user_roles_username" tableName="user_roles">
+            <column name="username" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createTable tableName="permissions">
+            <column autoIncrement="true" name="permission_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="permissionidprimarykey"/>
+            </column>
+            <column name="permission_name" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(128)">
+            </column>
+        </createTable>
+
+        <createIndex indexName="ix_permissions_id" tableName="permissions">
+            <column name="permission_id" type="INTEGER" />
+        </createIndex>
+
+        <createIndex indexName="ix_permissions_permissionname" tableName="permissions">
+            <column name="permission_name" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createTable tableName="roles_permissions">
+            <column autoIncrement="true" name="user_role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="rolepermissionidprimarykey"/>
+            </column>
+            <column name="role_name" type="VARCHAR(64)">
+                <constraints nullable="false" foreignKeyName="fk_roles_permissions_role_name" references="roles(role_name)"/>
+            </column>
+            <column name="permission_name" type="VARCHAR(64)">
+                <constraints nullable="false"  foreignKeyName="fk_roles_permissions_username" references="permissions(permission_name)"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="ix_roles_permissions_id" tableName="roles_permissions">
+            <column name="user_role_id" type="INTEGER" />
+        </createIndex>
+
+        <createIndex indexName="ix_roles_permissions_rolename" tableName="roles_permissions">
+            <column name="role_name" type="VARCHAR(64)" />
+        </createIndex>
+
+        <createIndex indexName="ix_roles_permissions_username" tableName="roles_permissions">
+            <column name="permission_name" type="VARCHAR(64)" />
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

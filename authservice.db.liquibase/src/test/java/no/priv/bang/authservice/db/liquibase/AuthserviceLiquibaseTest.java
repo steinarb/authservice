@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -46,6 +47,25 @@ class AuthserviceLiquibaseTest {
         String lastname = "Doe";
         addUser(connection, username, password, salt, email, firstname, lastname);
         assertUser(connection, username, password, salt);
+        String rolename = "admin";
+        addRole(connection, rolename, "Test role");
+        addUserRole(connection, rolename, username);
+        assertUserRole(connection, rolename, username);
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+                addUserRole(connection, "notarole", username);
+            });
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+                addUserRole(connection, rolename, "notauser");
+            });
+        String permission = "user_admin_api_write";
+        addPermission(connection, permission, "User admin REST API write access");
+        addRolePermission(connection, rolename, permission);
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+                addRolePermission(connection, "notarole", permission);
+            });
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
+                addRolePermission(connection, rolename, "notapermission");
+            });
     }
 
     @Test
@@ -57,7 +77,7 @@ class AuthserviceLiquibaseTest {
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("insert into users (username, password, salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
+        try (PreparedStatement statement = connection.prepareStatement("insert into users (username, password, password_salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
             statement.setString(1, username);
             statement.setString(2, password);
             statement.setString(3, salt);
@@ -68,12 +88,52 @@ class AuthserviceLiquibaseTest {
         }
     }
 
+    private void addRole(Connection connection, String rolename, String description) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
+            statement.setString(1, rolename);
+            statement.setString(2, description);
+            statement.executeUpdate();
+        }
+    }
+
+    private void addUserRole(Connection connection, String rolename, String username) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
+            statement.setString(1, rolename);
+            statement.setString(2, username);
+            statement.executeUpdate();
+        }
+    }
+
     private void assertUser(Connection connection, String username, String password, String salt) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("select * from users where username=?")) {
             statement.setString(1, username);
             ResultSet results = statement.executeQuery();
             assertTrue(results.next(), "Expected at least one match");
+        }
+    }
 
+    private void assertUserRole(Connection connection, String rolename, String username) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement("select * from user_roles where role_name=? and username=?")) {
+            statement.setString(1, rolename);
+            statement.setString(2, username);
+            ResultSet results = statement.executeQuery();
+            assertTrue(results.next(), "Expected at least one match");
+        }
+    }
+
+    private void addPermission(Connection connection, String permission, String description) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
+            statement.setString(1, permission);
+            statement.setString(2, description);
+            statement.executeUpdate();
+        }
+    }
+
+    private void addRolePermission(Connection connection, String rolename, String permission) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
+            statement.setString(1, rolename);
+            statement.setString(2, permission);
+            statement.executeUpdate();
         }
     }
 
