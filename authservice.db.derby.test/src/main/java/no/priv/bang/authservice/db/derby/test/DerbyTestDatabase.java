@@ -30,7 +30,7 @@ import org.osgi.service.log.LogService;
 
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgi.service.database.DatabaseService;
+import no.priv.bang.osgiservice.database.DatabaseService;
 
 @Component(immediate=true)
 public class DerbyTestDatabase implements DatabaseService {

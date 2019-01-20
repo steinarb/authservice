@@ -16,9 +16,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.priv.bang.osgi.service</groupId>
-            <artifactId>osgi.service.database</artifactId>
-            <version>${osgi.service.database.version}</version>
+            <groupId>no.priv.bang.osgiservice</groupId>
+            <artifactId>osgiservice.database</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

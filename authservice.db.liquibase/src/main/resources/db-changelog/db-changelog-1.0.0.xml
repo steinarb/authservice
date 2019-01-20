@@ -106,7 +106,7 @@
                 <constraints nullable="false" foreignKeyName="fk_roles_permissions_role_name" references="roles(role_name)"/>
             </column>
             <column name="permission_name" type="VARCHAR(64)">
-                <constraints nullable="false"  foreignKeyName="fk_roles_permissions_username" references="permissions(permission_name)"/>
+                <constraints nullable="false"  foreignKeyName="fk_roles_permissions_permission_name" references="permissions(permission_name)"/>
             </column>
         </createTable>
 
