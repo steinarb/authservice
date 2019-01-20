@@ -102,7 +102,7 @@ public class AuthserviceResource {
         Subject subject = SecurityUtils.getSubject();
 
         subject.logout();
-        String redirectUrl = httpHeaders.getHeaderString("Refererer");
+        String redirectUrl = httpHeaders.getHeaderString("Referer");
         return Response.status(Response.Status.FOUND).location(URI.create(redirectUrl)).entity("Login successful!").build();
     }
 
