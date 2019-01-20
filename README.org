@@ -6,6 +6,14 @@ This is a webapp that offers two URLs for use by the [[http://nginx.org/en/docs/
 
 The webapp is implemented as two servlets exposed as OSGi services, that will be picked up by the [[http://ops4j.github.io/pax/web/4.x/index.html#_whiteboard_extender][pax web whiteboard extender]].
 
+** Status of the project
+
+[[https://travis-ci.org/steinarb/authservice][file:https://travis-ci.org/steinarb/authservice.svg?branch=master]] [[https://coveralls.io/r/steinarb/authservice][file:https://coveralls.io/repos/steinarb/authservice/badge.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.sonar.osgi.service%3Aosgi.service][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=alert_status#.svg]] [[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]] [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
+
+*** SonarCloud
+
+[[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=ncloc#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=bugs#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=vulnerabilities#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=code_smells#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=coverage#.svg]]
+
 * Installing on karaf
 /Note/: The instructions here don't describe a production enviroment, but they describe setting up something that will let the service be startet.
 
