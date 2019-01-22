@@ -1,4 +1,4 @@
-* A shiro-based login page
+* Forms based login for nginx
 
 This is a webapp that offers two URLs for use by the [[http://nginx.org/en/docs/http/ngx_http_auth_request_module.html][NGINX auth_request module]]:
  - /auth which will just check the login state of Apache Shiro, returning the status code 401 for failure and 200 for success
@@ -14,7 +14,7 @@ The webapp is implemented as two servlets exposed as OSGi services, that will be
 
 [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=ncloc#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=bugs#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=vulnerabilities#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=code_smells#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=coverage#.svg]]
 
-* Installing on karaf
+** Installing on karaf
 /Note/: The instructions here don't describe a production enviroment, but they describe setting up something that will let the service be startet.
 
 The webapp needs PostgreSQL running, with a database named "ukelonn" containing the table users, and a no-password authentication scheme.
@@ -40,7 +40,7 @@ Instructions:
  5. Open a browser on the URL http://localhost:8181/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
  6. Open a browser on the URL http://localhost:8181/auth and verify that it doesn't return a 401 HTTP code
 
-* Installing and configuring nginx
+** Installing and configuring nginx
 
 Instructions:
  1. Install nginx with the auth module.  On debian this is done with the command
@@ -83,7 +83,7 @@ Instructions:
               error_page 401 = @error401;
       }
     #+END_SRC
-* License
+** License
 
 This software is licensed under Apache Public License v 2.0.
 
