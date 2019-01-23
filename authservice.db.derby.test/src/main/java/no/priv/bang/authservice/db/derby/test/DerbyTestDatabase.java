@@ -16,7 +16,6 @@
 package no.priv.bang.authservice.db.derby.test;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -38,7 +37,6 @@ public class DerbyTestDatabase implements DatabaseService {
     private LogService logservice;
     private DataSourceFactory dataSourceFactory;
     private DataSource datasource;
-    private Connection connection;
 
     @Reference
     public void setLogservice(LogService logservice) {
@@ -54,11 +52,12 @@ public class DerbyTestDatabase implements DatabaseService {
     public void activate() {
         try {
             datasource = createDatasource();
-            connection = datasource.getConnection();
-            AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
-            liquibase.createInitialSchema(connection);
-            liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
-            liquibase.updateSchema(connection);
+            try(Connection connection = datasource.getConnection()) {
+                AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
+                liquibase.createInitialSchema(connection);
+                liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
+                liquibase.updateSchema(connection);
+            }
         } catch (Exception e) {
             String message = "Failed to activate authservice Derby test database component";
             logservice.log(LogService.LOG_ERROR, message, e);
@@ -72,13 +71,8 @@ public class DerbyTestDatabase implements DatabaseService {
     }
 
     @Override
-    public Connection getConnection() {
-        return connection;
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return connection.prepareStatement(sql);
+    public Connection getConnection() throws SQLException {
+        return datasource.getConnection();
     }
 
     private DataSource createDatasource() throws SQLException {

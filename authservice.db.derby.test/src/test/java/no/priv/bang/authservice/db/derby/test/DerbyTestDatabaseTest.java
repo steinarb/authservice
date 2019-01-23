@@ -16,13 +16,20 @@
 package no.priv.bang.authservice.db.derby.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
+import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class DerbyTestDatabaseTest {
@@ -47,6 +54,35 @@ class DerbyTestDatabaseTest {
                 assertEquals(5, usercount);
             }
         }
+
+        try(Connection connection = database.getDatasource().getConnection()) {
+            try(PreparedStatement statment = connection.prepareStatement("select * from roles")) {
+                ResultSet results = statment.executeQuery();
+                int rolecount = 0;
+                while(results.next()) {
+                    ++rolecount;
+                }
+
+                assertEquals(3, rolecount);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testCreateWhenSQLExceptionIsThrown() throws Exception {
+        MockLogService logservice = new MockLogService();
+        DerbyTestDatabase database = new DerbyTestDatabase();
+        database.setLogservice(logservice);
+        DataSourceFactory factory = mock(DataSourceFactory.class);
+        DataSource datasource = mock(DataSource.class);
+        when(datasource.getConnection()).thenThrow(SQLException.class);
+        when(factory.createDataSource(any())).thenReturn(datasource);
+        database.setDataSourceFactory(factory);
+
+        assertThrows(AuthserviceException.class, () -> {
+                database.activate();
+            });
     }
 
 }
