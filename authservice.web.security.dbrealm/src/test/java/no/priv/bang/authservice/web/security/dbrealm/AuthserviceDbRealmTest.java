@@ -25,9 +25,6 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 /***
  * Tests for class {@link AuthserviceDbRealm}.
- *
- * @author Steinar Bang
- *
  */
 public class AuthserviceDbRealmTest {
 

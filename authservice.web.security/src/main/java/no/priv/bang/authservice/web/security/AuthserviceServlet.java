@@ -40,9 +40,6 @@ import org.osgi.service.log.LogService;
  * The servlet will respond to several URLs and will provide
  * functionality both for checking the login state, and for
  * logging in a user
- *
- * @author Steinar Bang
- *
  */
 @Component(
         property= {

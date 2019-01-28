@@ -40,9 +40,6 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  * up by the pax web whiteboard.
  *
  * The filter maps URLs in the webapp to users and roles.
- *
- * @author Steinar Bang
- *
  */
 @Component(
     property= {

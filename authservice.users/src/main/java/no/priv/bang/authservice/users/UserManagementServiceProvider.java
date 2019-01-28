@@ -52,9 +52,6 @@ import no.priv.bang.osgiservice.users.UserRoles;
 
 /***
  * A DS component that implements a {@link UserManagementService}
- *
- * @author Steinar Bang
- *
  */
 @Component(service=UserManagementService.class, immediate=true)
 public class UserManagementServiceProvider implements UserManagementService {
