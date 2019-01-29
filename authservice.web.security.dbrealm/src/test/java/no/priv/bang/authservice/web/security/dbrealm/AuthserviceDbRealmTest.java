@@ -20,7 +20,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.junit.jupiter.api.Test;
-import no.priv.bang.osgi.service.database.DatabaseService;
+import no.priv.bang.osgiservice.database.DatabaseService;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 /***

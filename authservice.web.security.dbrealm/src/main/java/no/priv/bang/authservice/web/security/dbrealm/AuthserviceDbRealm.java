@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
 
-import no.priv.bang.osgi.service.database.DatabaseService;
+import no.priv.bang.osgiservice.database.DatabaseService;
 
 @Component( service=Realm.class, immediate=true )
 public class AuthserviceDbRealm extends AuthorizingRealm {
