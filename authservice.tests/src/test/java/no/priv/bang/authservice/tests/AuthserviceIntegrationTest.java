@@ -54,7 +54,7 @@ public class AuthserviceIntegrationTest {
             vmOptions("-Dtest-jmx-port=" + jmxPort),
             junitBundles(),
             features(paxJdbcRepo),
-            features(authserviceFeatureRepo, "authservice-with-derby-dbrealm-and-session"));
+            features(authserviceFeatureRepo, "user-admin-with-derby"));
     }
 
     @Test
