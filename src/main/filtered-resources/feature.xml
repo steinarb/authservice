@@ -19,10 +19,16 @@
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.dbrealm/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.memorysession/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
     <feature name="authservice-with-derby-dbrealm-and-session">
         <feature>authservice-db-derby-test</feature>
         <feature>authservice-web-security-dbrealm</feature>
         <feature>authservice-web-security-memorysession</feature>
         <feature>authservice-web-security</feature>
+    </feature>
+    <feature name="user-admin-with-derby">
+        <feature>authservice-with-derby-dbrealm-and-session</feature>
+        <feature>authservice-web-users-api</feature>
     </feature>
 </features>
