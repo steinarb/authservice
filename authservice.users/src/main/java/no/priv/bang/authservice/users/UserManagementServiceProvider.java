@@ -187,7 +187,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             throw new AuthserviceException(message, e);
         }
 
-        UserAndPasswords passwords = new UserAndPasswords(addedUser, newUserWithPasswords.getPassword1(), newUserWithPasswords.getPassword2());
+        UserAndPasswords passwords = new UserAndPasswords(addedUser, newUserWithPasswords.getPassword1(), newUserWithPasswords.getPassword2(), false);
         return updatePassword(passwords);
     }
 
@@ -320,11 +320,11 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<User, List<Role>> getUserRoles() {
+    public Map<String, List<Role>> getUserRoles() {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users join user_roles on user_roles.username=users.username join roles on roles.role_name=user_roles.role_name")) {
                 try(ResultSet results = statement.executeQuery()) {
-                    Map<User, List<Role>> userroles = new HashMap<>();
+                    Map<String, List<Role>> userroles = new HashMap<>();
                     while(results.next()) {
                         User user = unpackUser(results);
                         int id = results.getInt(11);
@@ -345,7 +345,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<User, List<Role>> addUserRoles(UserRoles userroles) {
+    public Map<String, List<Role>> addUserRoles(UserRoles userroles) {
         User user = userroles.getUser();
         List<Role> roles = userroles.getRoles();
         Set<String> existingRoles = findExistingRolesForUser(user);
@@ -368,7 +368,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<User, List<Role>> removeUserRoles(UserRoles userroles) {
+    public Map<String, List<Role>> removeUserRoles(UserRoles userroles) {
         User user = userroles.getUser();
         List<Role> roles = userroles.getRoles();
         if (!roles.isEmpty()) {
@@ -390,11 +390,11 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<Role, List<Permission>> getRolesPermissions() {
+    public Map<String, List<Permission>> getRolesPermissions() {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from roles join roles_permissions on roles_permissions.role_name=roles.role_name join permissions on permissions.permission_name=roles_permissions.permission_name")) {
                 try(ResultSet results = statement.executeQuery()) {
-                    Map<Role, List<Permission>> rolespermissions = new HashMap<>();
+                    Map<String, List<Permission>> rolespermissions = new HashMap<>();
                     while(results.next()) {
                         int roleId = results.getInt(1);
                         String rolename = results.getString(2);
@@ -418,7 +418,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<Role, List<Permission>> addRolePermissions(RolePermissions rolepermissions) {
+    public Map<String, List<Permission>> addRolePermissions(RolePermissions rolepermissions) {
         Role role = rolepermissions.getRole();
         List<Permission> permissions = rolepermissions.getPermissions();
         Set<String> existingPermissions = findExistingPermissionsForRole(role);
@@ -441,7 +441,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public Map<Role, List<Permission>> removeRolePermissions(RolePermissions rolepermissions) {
+    public Map<String, List<Permission>> removeRolePermissions(RolePermissions rolepermissions) {
         Role role = rolepermissions.getRole();
         List<Permission> permissions = rolepermissions.getPermissions();
         if (!permissions.isEmpty()) {
@@ -462,17 +462,18 @@ public class UserManagementServiceProvider implements UserManagementService {
         return getRolesPermissions();
     }
 
-    void addRoleToMap(Map<User, List<Role>> userroles, User user, Role role) {
-        userroles.computeIfAbsent(user, s -> new ArrayList<>());
-        userroles.get(user).add(role);
+    void addRoleToMap(Map<String, List<Role>> userroles, User user, Role role) {
+        userroles.computeIfAbsent(user.getUsername(), s -> new ArrayList<>());
+        userroles.get(user.getUsername()).add(role);
     }
 
-    void addPermissionToMap(Map<Role, List<Permission>> rolespermissions, Role role, Permission permission) {
-        if (!rolespermissions.containsKey(role)) {
-            rolespermissions.put(role, new ArrayList<>());
+    void addPermissionToMap(Map<String, List<Permission>> rolespermissions, Role role, Permission permission) {
+    	String rolename = role.getRolename();
+        if (!rolespermissions.containsKey(rolename)) {
+            rolespermissions.put(rolename, new ArrayList<>());
         }
 
-        rolespermissions.get(role).add(permission);
+        rolespermissions.get(role.getRolename()).add(permission);
     }
 
     Set<String> findExistingRolesForUser(User user) {

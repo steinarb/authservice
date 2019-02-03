@@ -116,7 +116,7 @@ public class UsersResource {
 
     @GET
     @Path("/users/roles")
-    public Map<User, List<Role>> getUserRoles() {
+    public Map<String, List<Role>> getUserRoles() {
         try {
             return usermanagement.getUserRoles();
         } catch (AuthserviceException e) {
@@ -129,7 +129,7 @@ public class UsersResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/user/addroles")
-    public Map<User, List<Role>> addUserRole(UserRoles userroles) {
+    public Map<String, List<Role>> addUserRole(UserRoles userroles) {
         try {
             return usermanagement.addUserRoles(userroles);
         } catch (AuthserviceException e) {
@@ -142,7 +142,7 @@ public class UsersResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/user/removeroles")
-    public Map<User, List<Role>> removeUserRole(UserRoles userroles) {
+    public Map<String, List<Role>> removeUserRole(UserRoles userroles) {
         try {
             return usermanagement.removeUserRoles(userroles);
         } catch (AuthserviceException e) {

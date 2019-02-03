@@ -123,7 +123,7 @@ public class UserAdminWebApiServletTest {
         // Send a UserAndPasswords object where a User object is expected
         List<User> originalUsers = createUsers();
         User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
 
         MockHttpServletRequest request = buildPostUrl("/user/modify");
         String postBody = mapper.writeValueAsString(passwords);
@@ -144,7 +144,7 @@ public class UserAdminWebApiServletTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenReturn(originalUsers);
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
 
         MockHttpServletRequest request = buildPostUrl("/passwords/update");
         String postBody = mapper.writeValueAsString(passwords);
@@ -169,7 +169,7 @@ public class UserAdminWebApiServletTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenReturn(usersWithAddedUser);
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
 
         MockHttpServletRequest request = buildPostUrl("/user/add");
         String postBody = mapper.writeValueAsString(passwords);

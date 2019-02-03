@@ -136,7 +136,7 @@ public class UserManagementServiceProviderTest {
         List<User> users = provider.getUsers();
         User user = users.get(0);
         String newPassword = "zecret";
-        UserAndPasswords passwords = new UserAndPasswords(user, newPassword, newPassword);
+        UserAndPasswords passwords = new UserAndPasswords(user, newPassword, newPassword, false);
         List<User> updatedUsers = provider.updatePassword(passwords);
         assertEquals(users.size(), updatedUsers.size());
 
@@ -161,7 +161,7 @@ public class UserManagementServiceProviderTest {
 
         List<User> users = provider.getUsers();
         User user = users.get(0);
-        UserAndPasswords passwords = new UserAndPasswords(user, "not", "matching");
+        UserAndPasswords passwords = new UserAndPasswords(user, "not", "matching", false);
         assertThrows(AuthservicePasswordsNotIdenticalException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -178,7 +178,7 @@ public class UserManagementServiceProviderTest {
 
         List<User> users = provider.getUsers();
         User user = users.get(0);
-        UserAndPasswords passwords = new UserAndPasswords(user, null, null);
+        UserAndPasswords passwords = new UserAndPasswords(user, null, null, false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -195,7 +195,7 @@ public class UserManagementServiceProviderTest {
 
         List<User> users = provider.getUsers();
         User user = users.get(0);
-        UserAndPasswords passwords = new UserAndPasswords(user, "", null);
+        UserAndPasswords passwords = new UserAndPasswords(user, "", null, false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -211,7 +211,7 @@ public class UserManagementServiceProviderTest {
         provider.activate();
 
         List<User> users = provider.getUsers();
-        UserAndPasswords passwords = new UserAndPasswords(null, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(null, "secret", "secret", false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -233,7 +233,7 @@ public class UserManagementServiceProviderTest {
 
         List<User> users = Collections.emptyList();
         User user = new User(100, "notmatching", "nomatch@gmail.com", "Not", "Match");
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(AuthserviceException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -250,7 +250,7 @@ public class UserManagementServiceProviderTest {
 
         List<User> users = provider.getUsers();
         User user = new User(100, "notmatching", "nomatch@gmail.com", "Not", "Match");
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(AuthserviceException.class, () -> {
                 List<User> updatedUsers = provider.updatePassword(passwords);
                 assertEquals(users.size(), updatedUsers.size());
@@ -268,7 +268,7 @@ public class UserManagementServiceProviderTest {
         List<User> usersBeforeAddingOne = provider.getUsers();
         User newUser = new User(-1, "jsmith", "johnsmith31@gmail.com", "John", "Smith");
         String newUserPassword = "supersecret";
-        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword);
+        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword, false);
         List<User> users = provider.addUser(newUserWithPasswords);
         assertThat(users.size()).isGreaterThan(usersBeforeAddingOne.size());
 
@@ -294,7 +294,7 @@ public class UserManagementServiceProviderTest {
 
         User newUser = new User(-1, "admin", "admin@gmail.com", "Admin", "Istrator");
         String newUserPassword = "supersecret";
-        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword);
+        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword, false);
         assertThrows(AuthserviceException.class, () -> {
                 List<User> users = provider.addUser(newUserWithPasswords);
                 assertEquals(0, users.size());
@@ -318,7 +318,7 @@ public class UserManagementServiceProviderTest {
 
         User newUser = new User(-1, "jod", "jod31@gmail.com", "John", "Doe");
         String newUserPassword = "supersecret";
-        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword);
+        UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword, false);
         assertThrows(AuthserviceException.class, () -> {
                 List<User> users = provider.addUser(newUserWithPasswords);
                 assertEquals(0, users.size());
@@ -465,43 +465,43 @@ public class UserManagementServiceProviderTest {
         provider.setDatabase(database);
         provider.activate();
 
-        Map<User, List<Role>> originalUserRoles = provider.getUserRoles();
+        Map<String, List<Role>> originalUserRoles = provider.getUserRoles();
         assertThat(originalUserRoles.size()).isGreaterThan(0);
 
         // Add a new user role
         User user = provider.getUsers().get(0);
         Role newRole = provider.getRoles().stream().filter((r) -> "visitor".equals(r.getRolename())).findFirst().get();
-        List<Role> originalRolesForUser = originalUserRoles.get(user);
+        List<Role> originalRolesForUser = originalUserRoles.get(user.getUsername());
         UserRoles userroles = new UserRoles(user, Arrays.asList(newRole));
-        Map<User, List<Role>> userRolesAfterAddingRole = provider.addUserRoles(userroles );
-        assertThat(userRolesAfterAddingRole.get(user).size()).isGreaterThan(originalRolesForUser.size());
+        Map<String, List<Role>> userRolesAfterAddingRole = provider.addUserRoles(userroles );
+        assertThat(userRolesAfterAddingRole.get(user.getUsername()).size()).isGreaterThan(originalRolesForUser.size());
 
         // Add the same role again and verify that the role count doesn't increase
-        Map<User, List<Role>> userRolesAfterAddingRole2 = provider.addUserRoles(userroles);
-        assertEquals(userRolesAfterAddingRole.get(user).size(), userRolesAfterAddingRole2.get(user).size());
+        Map<String, List<Role>> userRolesAfterAddingRole2 = provider.addUserRoles(userroles);
+        assertEquals(userRolesAfterAddingRole.get(user.getUsername()).size(), userRolesAfterAddingRole2.get(user.getUsername()).size());
 
         // Try adding a non-existing role
         Role nonExistingRole = new Role(42, "notfound", "dummy");
         assertThrows(AuthserviceException.class, () -> {
-                Map<User, List<Role>> userRolesAfterAddingRole3 = provider.addUserRoles(new UserRoles(user, Arrays.asList(nonExistingRole)));
+                Map<String, List<Role>> userRolesAfterAddingRole3 = provider.addUserRoles(new UserRoles(user, Arrays.asList(nonExistingRole)));
                 assertEquals(0, userRolesAfterAddingRole3.size());
             });
 
         // Remove the role
-        Map<User, List<Role>> userRolesAfterRemovingRole = provider.removeUserRoles(new UserRoles(user, Arrays.asList(newRole)));
-        assertThat(userRolesAfterRemovingRole.get(user).size()).isLessThan(userRolesAfterAddingRole.get(user).size());
+        Map<String, List<Role>> userRolesAfterRemovingRole = provider.removeUserRoles(new UserRoles(user, Arrays.asList(newRole)));
+        assertThat(userRolesAfterRemovingRole.get(user.getUsername()).size()).isLessThan(userRolesAfterAddingRole.get(user.getUsername()).size());
 
         // Try removing the role again and observe that the count is the same
-        Map<User, List<Role>> userRolesAfterRemovingRole2 = provider.removeUserRoles(new UserRoles(user, Arrays.asList(newRole)));
-        assertEquals(userRolesAfterRemovingRole.get(user).size(), userRolesAfterRemovingRole2.get(user).size());
+        Map<String, List<Role>> userRolesAfterRemovingRole2 = provider.removeUserRoles(new UserRoles(user, Arrays.asList(newRole)));
+        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole2.get(user.getUsername()).size());
 
         // Try removing an empty role list and observe that the count is the same
-        Map<User, List<Role>> userRolesAfterRemovingRole3 = provider.removeUserRoles(new UserRoles(user, Collections.emptyList()));
-        assertEquals(userRolesAfterRemovingRole.get(user).size(), userRolesAfterRemovingRole3.get(user).size());
+        Map<String, List<Role>> userRolesAfterRemovingRole3 = provider.removeUserRoles(new UserRoles(user, Collections.emptyList()));
+        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole3.get(user.getUsername()).size());
 
         // Try removing a non-existing role and observe that the count is the same
-        Map<User, List<Role>> userRolesAfterRemovingRole4 = provider.removeUserRoles(new UserRoles(user, Arrays.asList(nonExistingRole)));
-        assertEquals(userRolesAfterRemovingRole.get(user).size(), userRolesAfterRemovingRole4.get(user).size());
+        Map<String, List<Role>> userRolesAfterRemovingRole4 = provider.removeUserRoles(new UserRoles(user, Arrays.asList(nonExistingRole)));
+        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole4.get(user.getUsername()).size());
     }
 
     @SuppressWarnings("unchecked")
@@ -518,7 +518,7 @@ public class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<User, List<Role>> userroles = provider.getUserRoles();
+                Map<String, List<Role>> userroles = provider.getUserRoles();
                 assertEquals(0, userroles.size());
             });
 
@@ -528,7 +528,7 @@ public class UserManagementServiceProviderTest {
             });
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<User, List<Role>> userroles = provider.removeUserRoles(new UserRoles(new User(), Arrays.asList(new Role())));
+                Map<String, List<Role>> userroles = provider.removeUserRoles(new UserRoles(new User(), Arrays.asList(new Role())));
                 assertEquals(0, userroles.size());
             });
     }
@@ -541,42 +541,42 @@ public class UserManagementServiceProviderTest {
         provider.setDatabase(database);
         provider.activate();
 
-        Map<Role, List<Permission>> originalRolesPermissions = provider.getRolesPermissions();
+        Map<String, List<Permission>> originalRolesPermissions = provider.getRolesPermissions();
         assertThat(originalRolesPermissions.size()).isGreaterThan(0);
 
         // Add a new role permission
         Role role = provider.getRoles().get(0);
         Permission newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.getPermissionname())).findFirst().get();
-        List<Permission> originalRolesForUser = originalRolesPermissions.get(role);
-        Map<Role, List<Permission>> rolesPermissionsAfterAddingRole = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
-        assertThat(rolesPermissionsAfterAddingRole.get(role).size()).isGreaterThan(originalRolesForUser.size());
+        List<Permission> originalRolesForUser = originalRolesPermissions.get(role.getRolename());
+        Map<String, List<Permission>> rolesPermissionsAfterAddingRole = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
+        assertThat(rolesPermissionsAfterAddingRole.get(role.getRolename()).size()).isGreaterThan(originalRolesForUser.size());
 
         // Add the same permission again and verify that the role count doesn't increase
-        Map<Role, List<Permission>> rolesPermissionsAfterAddingRole2 = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
-        assertEquals(rolesPermissionsAfterAddingRole.get(role).size(), rolesPermissionsAfterAddingRole2.get(role).size());
+        Map<String, List<Permission>> rolesPermissionsAfterAddingRole2 = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
+        assertEquals(rolesPermissionsAfterAddingRole.get(role.getRolename()).size(), rolesPermissionsAfterAddingRole2.get(role.getRolename()).size());
 
         // Try adding a non-existing role
         Permission nonExistingPermission = new Permission(42, "notfound", "dummy");
         assertThrows(AuthserviceException.class, () -> {
-                Map<Role, List<Permission>> rolesPermissionsAfterAddingRole3 = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(nonExistingPermission)));
+                Map<String, List<Permission>> rolesPermissionsAfterAddingRole3 = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(nonExistingPermission)));
                 assertEquals(0, rolesPermissionsAfterAddingRole3.size());
             });
 
         // Remove the role
-        Map<Role, List<Permission>> rolesPermissionsAfterRemovingRole = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
-        assertThat(rolesPermissionsAfterRemovingRole.get(role).size()).isLessThan(rolesPermissionsAfterAddingRole.get(role).size());
+        Map<String, List<Permission>> rolesPermissionsAfterRemovingRole = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
+        assertThat(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size()).isLessThan(rolesPermissionsAfterAddingRole.get(role.getRolename()).size());
 
         // Try removing the role again and observe that the count is the same
-        Map<Role, List<Permission>> rolesPermissionsAfterRemovingRole2 = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role).size(), rolesPermissionsAfterRemovingRole2.get(role).size());
+        Map<String, List<Permission>> rolesPermissionsAfterRemovingRole2 = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole2.get(role.getRolename()).size());
 
         // Try removing an empty role list and observe that the count is the same
-        Map<Role, List<Permission>> rolesPermissionsAfterRemovingRole3 = provider.removeRolePermissions(new RolePermissions(role, Collections.emptyList()));
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role).size(), rolesPermissionsAfterRemovingRole3.get(role).size());
+        Map<String, List<Permission>> rolesPermissionsAfterRemovingRole3 = provider.removeRolePermissions(new RolePermissions(role, Collections.emptyList()));
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole3.get(role.getRolename()).size());
 
         // Try removing a non-existing role and observe that the count is the same
-        Map<Role, List<Permission>> rolesPermissionsAfterRemovingRole4 = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(nonExistingPermission)));
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role).size(), rolesPermissionsAfterRemovingRole4.get(role).size());
+        Map<String, List<Permission>> rolesPermissionsAfterRemovingRole4 = provider.removeRolePermissions(new RolePermissions(role, Arrays.asList(nonExistingPermission)));
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole4.get(role.getRolename()).size());
     }
 
     @SuppressWarnings("unchecked")
@@ -593,7 +593,7 @@ public class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<Role, List<Permission>> rolesPermissions = provider.getRolesPermissions();
+                Map<String, List<Permission>> rolesPermissions = provider.getRolesPermissions();
                 assertEquals(0, rolesPermissions.size());
             });
 
@@ -603,7 +603,7 @@ public class UserManagementServiceProviderTest {
             });
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<Role, List<Permission>> rolespermissions = provider.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+                Map<String, List<Permission>> rolespermissions = provider.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
                 assertEquals(0, rolespermissions.size());
             });
     }

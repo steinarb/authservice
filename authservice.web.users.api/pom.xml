@@ -12,7 +12,7 @@
     <name>Authentication webapp user admin web API</name>
 
     <properties>
-        <karaf-feature-name>authservice-web-users-api</karaf-feature-name>
+        <karaf-feature-name>authservice-user-management-web-api</karaf-feature-name>
     </properties>
 
     <dependencies>

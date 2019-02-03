@@ -145,7 +145,7 @@ public class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<Role, List<Permission>> rolespermissions = resource.getRolesPermissions();
+        Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
         assertThat(rolespermissions.size()).isGreaterThan(0);
     }
 
@@ -160,7 +160,7 @@ public class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<Role, List<Permission>> rolespermissions = resource.getRolesPermissions();
+                Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
                 assertThat(rolespermissions.size()).isGreaterThan(0);
             });
     }
@@ -174,7 +174,7 @@ public class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<Role, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+        Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
         assertThat(rolespermissions.size()).isGreaterThan(0);
     }
 
@@ -189,7 +189,7 @@ public class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<Role, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+                Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
                 assertThat(rolespermissions.size()).isGreaterThan(0);
             });
     }
@@ -203,7 +203,7 @@ public class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<Role, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+        Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
         assertThat(rolespermissions.size()).isGreaterThan(0);
     }
 
@@ -218,7 +218,7 @@ public class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<Role, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+                Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
                 assertThat(rolespermissions.size()).isGreaterThan(0);
             });
     }
@@ -230,7 +230,7 @@ public class RolesResourceTest {
         return Arrays.asList(admin, caseworker, visitor);
     }
 
-    public static Map<Role, List<Permission>> createRolesPermissions() {
+    public static Map<String, List<Permission>> createRolesPermissions() {
         List<Role> roles = createRoles();
         Role admin = roles.get(0);
         Role caseworker = roles.get(1);
@@ -240,9 +240,9 @@ public class RolesResourceTest {
         Permission caseworker_read = permissions.get(2);
         Permission caseworker_write = permissions.get(3);
         Permission user_read = permissions.get(4);
-        Map<Role, List<Permission>> rolespermissions = new HashMap<>();
-        rolespermissions.put(admin, Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read));
-        rolespermissions.put(caseworker, Arrays.asList(caseworker_read, caseworker_write, user_read));
+        Map<String, List<Permission>> rolespermissions = new HashMap<>();
+        rolespermissions.put(admin.getRolename(), Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read));
+        rolespermissions.put(caseworker.getRolename(), Arrays.asList(caseworker_read, caseworker_write, user_read));
         return rolespermissions;
     }
 

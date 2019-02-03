@@ -85,7 +85,7 @@ public class RolesResource {
 
     @GET
     @Path("/roles/permissions")
-    public Map<Role, List<Permission>> getRolesPermissions() {
+    public Map<String, List<Permission>> getRolesPermissions() {
         try {
             return usermanagement.getRolesPermissions();
         } catch (AuthserviceException e) {
@@ -98,7 +98,7 @@ public class RolesResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/role/addpermissions")
-    public Map<Role, List<Permission>> addRolePermissions(RolePermissions rolepermissions) {
+    public Map<String, List<Permission>> addRolePermissions(RolePermissions rolepermissions) {
         try {
             return usermanagement.addRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {
@@ -111,7 +111,7 @@ public class RolesResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/role/removepermissions")
-    public Map<Role, List<Permission>> removeRolePermissions(RolePermissions rolepermissions) {
+    public Map<String, List<Permission>> removeRolePermissions(RolePermissions rolepermissions) {
         try {
             return usermanagement.removeRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {

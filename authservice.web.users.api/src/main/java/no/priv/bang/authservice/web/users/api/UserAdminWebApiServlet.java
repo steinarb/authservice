@@ -45,9 +45,9 @@ import no.priv.bang.osgiservice.users.UserManagementService;
  */
 @Component(
     property= {
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/useradmin/api*",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/useradmin/api/*",
         HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=authservice",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=useradminapi",
         HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX+ServerProperties.PROVIDER_PACKAGES+"=no.priv.bang.authservice.web.users.api.resources"},
     service=Servlet.class,
     immediate=true

@@ -114,7 +114,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         List<User> users = resource.updatePassword(passwords);
         assertEquals(originalUsers.size(), users.size());
     }
@@ -131,7 +131,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "zecret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "zecret", true);
         assertThrows(BadRequestException.class, () -> {
                 List<User> users = resource.updatePassword(passwords);
                 assertEquals(originalUsers.size(), users.size());
@@ -150,7 +150,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "", "");
+        UserAndPasswords passwords = new UserAndPasswords(user, "", "", false);
         assertThrows(BadRequestException.class, () -> {
                 List<User> users = resource.updatePassword(passwords);
                 assertEquals(originalUsers.size(), users.size());
@@ -169,7 +169,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "", "");
+        UserAndPasswords passwords = new UserAndPasswords(user, "", "", false);
         assertThrows(InternalServerErrorException.class, () -> {
                 List<User> users = resource.updatePassword(passwords);
                 assertEquals(originalUsers.size(), users.size());
@@ -189,7 +189,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         List<User> users = resource.addUser(passwords);
         assertThat(users.size()).isGreaterThan(originalUsers.size());
     }
@@ -205,7 +205,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(BadRequestException.class, () -> {
                 List<User> users = resource.addUser(passwords);
                 assertEquals(0, users.size());
@@ -223,7 +223,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(BadRequestException.class, () -> {
                 List<User> users = resource.addUser(passwords);
                 assertEquals(0, users.size());
@@ -241,7 +241,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret");
+        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(InternalServerErrorException.class, () -> {
                 List<User> users = resource.addUser(passwords);
                 assertEquals(0, users.size());
@@ -257,7 +257,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<User, List<Role>> userroles = resource.getUserRoles();
+        Map<String, List<Role>> userroles = resource.getUserRoles();
         assertThat(userroles.size()).isGreaterThan(0);
     }
 
@@ -272,7 +272,7 @@ public class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<User, List<Role>> userroles = resource.getUserRoles();
+                Map<String, List<Role>> userroles = resource.getUserRoles();
                 assertThat(userroles.size()).isGreaterThan(0);
             });
     }
@@ -286,7 +286,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<User, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+        Map<String, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
         assertThat(userroles.size()).isGreaterThan(0);
     }
 
@@ -301,7 +301,7 @@ public class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<User, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+                Map<String, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
                 assertThat(userroles.size()).isGreaterThan(0);
             });
     }
@@ -315,7 +315,7 @@ public class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<User, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+        Map<String, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
         assertThat(userroles.size()).isGreaterThan(0);
     }
 
@@ -330,7 +330,7 @@ public class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<User, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+                Map<String, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
                 assertThat(userroles.size()).isGreaterThan(0);
             });
     }
@@ -344,7 +344,7 @@ public class UsersResourceTest {
         return Arrays.asList(admin, on, kn, jad, jod);
     }
 
-    public static Map<User, List<Role>> createUserroles() {
+    public static Map<String, List<Role>> createUserroles() {
         List<User> users = createUsers();
         User admin = users.get(0);
         User on = users.get(1);
@@ -354,12 +354,12 @@ public class UsersResourceTest {
         List<Role> roles = RolesResourceTest.createRoles();
         Role adminrole = roles.get(0);
         Role caseworker = roles.get(1);
-        Map<User, List<Role>> userroles = new HashMap<>();
-        userroles.put(admin, Arrays.asList(adminrole, caseworker));
-        userroles.put(on, Arrays.asList(adminrole, caseworker));
-        userroles.put(kn, Arrays.asList(adminrole, caseworker));
-        userroles.put(jad, Arrays.asList(caseworker));
-        userroles.put(jod, Arrays.asList(caseworker));
+        Map<String, List<Role>> userroles = new HashMap<>();
+        userroles.put(admin.getUsername(), Arrays.asList(adminrole, caseworker));
+        userroles.put(on.getUsername(), Arrays.asList(adminrole, caseworker));
+        userroles.put(kn.getUsername(), Arrays.asList(adminrole, caseworker));
+        userroles.put(jad.getUsername(), Arrays.asList(caseworker));
+        userroles.put(jod.getUsername(), Arrays.asList(caseworker));
         return userroles;
     }
 
