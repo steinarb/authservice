@@ -87,6 +87,23 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
+    void testPostLoginWithNullRedirectUrl() {
+        MockLogService logservice = new MockLogService();
+        HttpSession session = mock(HttpSession.class);
+        MockHttpServletRequest dummyrequest = new MockHttpServletRequest();
+        dummyrequest.setSession(session);
+        MockHttpServletResponse dummyresponse = new MockHttpServletResponse();
+        createSubjectAndBindItToThread(dummyrequest, dummyresponse);
+        AuthserviceResource resource = new AuthserviceResource();
+        resource.logservice = logservice;
+        String username = "admin";
+        String password = "admin";
+        Response response = resource.postLogin(username, password, null);
+        assertEquals(302, response.getStatus());
+        assertEquals("", response.getLocation().toString());
+    }
+
+    @Test
     void testPostLoginWithUnknownUser() {
         MockLogService logservice = new MockLogService();
         MockHttpServletRequest dummyrequest = new MockHttpServletRequest();

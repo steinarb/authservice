@@ -74,7 +74,7 @@ public class AuthserviceResource {
         try {
             subject.login(token);
 
-            return Response.status(Response.Status.FOUND).location(URI.create(redirectUrl)).entity("Login successful!").build();
+            return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(redirectUrl))).entity("Login successful!").build();
         } catch(UnknownAccountException e) {
             logservice.log(LogService.LOG_WARNING, "Login error: unknown account", e);
             return Response.status(Response.Status.UNAUTHORIZED).entity(getClass().getClassLoader().getResourceAsStream("web/login_unknown_account.html")).build();
@@ -104,6 +104,14 @@ public class AuthserviceResource {
         subject.logout();
         String redirectUrl = httpHeaders.getHeaderString("Referer");
         return Response.status(Response.Status.FOUND).location(URI.create(redirectUrl)).entity("Login successful!").build();
+    }
+
+    String notNullUrl(String redirectUrl) {
+        if (redirectUrl == null) {
+            return "";
+        }
+
+        return redirectUrl;
     }
 
     URI findRedirectLocation() {
