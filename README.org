@@ -28,17 +28,22 @@ Instructions:
       cd ~/git/authservice/
       mvn clean install
     #+END_EXAMPLE
- 2. [[http://karaf.apache.org/download.html][Download the current version of apache karaf (currently karaf 4.1.1), unpack and start apache karaf]]
+ 2. [[https://karaf.apache.org/manual/latest/quick-start.html][Follow the quick start guide to downloading, unpacking and starting apache karaf]]
  3. In the karaf shell, install the authservice feature repository
     #+BEGIN_EXAMPLE
-      feature:repo-add mvn:no.priv.bang.authservice/authservice.bundle/LATEST/xml/features
+      feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
     #+END_EXAMPLE
- 4. In the karaf shell, install the authservice featire
+ 4. In the karaf shell, install the feature that installs the authorization service that is used by nginx (this feature installs a set of test users, roles and features)
     #+BEGIN_EXAMPLE
-      feature:install authservice
+      feature:install authservice-with-derby-dbrealm-and-session
     #+END_EXAMPLE
- 5. Open a browser on the URL http://localhost:8181/login and do a login with a valid username/password combination from the users table in the PostgreSQL database named "ukelonn"
- 6. Open a browser on the URL http://localhost:8181/auth and verify that it doesn't return a 401 HTTP code
+ 5. Open a browser on the URL http://localhost:8181/authservice and do a login with a valid username/password combination (e.g. "admin/admin")
+ 6. Open a browser on the URL http://localhost:8181/authservice/check and verify that it doesn't return a 401 HTTP code
+ 7. Optionally install the user administration UI (not needed for using this service with nginx, but needed for administrating the access)
+    #+BEGIN_EXAMPLE
+      feature:install user-admin-with-derby
+    #+END_EXAMPLE
+ 8. Open a browser on the URL http://localhost:8181/authservice/useradmin and test adding/modifying users, roles and permissions
 
 ** Installing and configuring nginx
 
