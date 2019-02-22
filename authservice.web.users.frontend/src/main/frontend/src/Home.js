@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
 
 class Home extends Component {
 
     render () {
         return (
             <div>
-                <h1>User administration</h1>
-                <br/>
-                <Link to="/authservice/useradmin/users">Adminstrate users</Link><br/>
-                <Link to="/authservice/useradmin/roles">Administrate roles</Link><br/>
-                <Link to="/authservice/useradmin/permissions">Administrate permissions</Link><br/>
-                <br/>
-                <a href="/authservice/">Up to authservice top</a><br/>
+                <Header>
+                    <h1>User administration</h1>
+                </Header>
+                <Container>
+                    <StyledLinkRight to="/authservice/useradmin/users">Adminstrate users</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/roles">Administrate roles</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/permissions">Administrate permissions</StyledLinkRight>
+                </Container>
+                <Container>
+                    <a href="/authservice/">Up to authservice top</a>
+                </Container>
             </div>
         );
     }

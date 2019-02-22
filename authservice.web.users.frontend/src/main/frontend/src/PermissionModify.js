@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, PERMISSION_UPDATE } from './actiontypes';
 import PermissionSelect from './components/PermissionSelect';
 import { emptyPermission } from './constants';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class PermissionModify extends Component {
     constructor(props) {
@@ -32,20 +37,34 @@ class PermissionModify extends Component {
 
         return (
             <div>
-                <h1>Modify permission information</h1>
-                <br/>
-                <Link to="/authservice/useradmin/permissions">Up to permission adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+                <Header>
+                    <h1>Modify permission information</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="permissions">Select permission</label>
-                    <PermissionSelect id="permissions" permissions={permissions} permissionsMap={permissionsMap} value={permission.permissionname} onPermissionsFieldChange={onPermissionsFieldChange} />
-                    <br/>
-                    <label htmlFor="permissionname">Permission name</label>
-                    <input id="permissionname" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
-                    <br/>
-                    <label htmlFor="email">Permission description</label>
-                    <input id="description" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
-                    <br/>
-                    <button onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="permissions">Select permission</FormLabel>
+                            <FormField>
+                                <PermissionSelect id="permissions" className="form-control" permissions={permissions} permissionsMap={permissionsMap} value={permission.permissionname} onPermissionsFieldChange={onPermissionsFieldChange} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="permissionname">Permission name</FormLabel>
+                            <FormField>
+                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="description">Permission description</FormLabel>
+                            <FormField>
+                                <input id="description" className="form-control" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <button className="form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

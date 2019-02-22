@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR } from './actiontypes';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
 
 class Permissions extends Component {
     constructor(props) {
@@ -23,11 +26,14 @@ class Permissions extends Component {
 
         return (
             <div>
-                <h1>Administrer tilganger</h1>
-                <br/>
-                <Link to="/authservice/useradmin/">Opp til toppen</Link><br/>
-                <Link to="/authservice/useradmin/permissions/modify">Modify permissions</Link><br/>
-                <Link to="/authservice/useradmin/permissions/add">Add permission</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
+                <Header>
+                    <h1>Administrate permissions</h1>
+                </Header>
+                <Container>
+                    <StyledLinkRight to="/authservice/useradmin/permissions/modify">Modify permissions</StyledLinkRight><br/>
+                    <StyledLinkRight to="/authservice/useradmin/permissions/add">Add permission</StyledLinkRight><br/>
+                </Container>
             </div>
         );
     }

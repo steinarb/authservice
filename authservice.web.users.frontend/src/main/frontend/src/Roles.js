@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { ROLES_RECEIVED, ROLES_ERROR } from './actiontypes';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
 
 class Roles extends Component {
     constructor(props) {
@@ -23,12 +26,15 @@ class Roles extends Component {
 
         return (
             <div>
-                <h1>Administrate roles</h1>
-                <br/>
-                <Link to="/authservice/useradmin/">Up to the main page</Link><br/>
-                <Link to="/authservice/useradmin/roles/modify">Modify roles</Link><br/>
-                <Link to="/authservice/useradmin/roles/permissions">Change role to permission mappings</Link><br/>
-                <Link to="/authservice/useradmin/roles/add">Add role</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
+                <Header>
+                    <h1>Administrate roles</h1>
+                </Header>
+                <Container>
+                    <StyledLinkRight to="/authservice/useradmin/roles/modify">Modify roles</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/roles/permissions">Change role to permission mappings</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/roles/add">Add role</StyledLinkRight>
+                </Container>
             </div>
         );
     }

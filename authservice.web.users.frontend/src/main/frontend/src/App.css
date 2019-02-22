@@ -1,0 +1,9 @@
+.left-align-cell {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.right-align-cell {
+    display: flex;
+    justify-content: flex-end;
+}

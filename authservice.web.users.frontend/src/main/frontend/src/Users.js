@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
 
 class Users extends Component {
 
     render () {
         return (
             <div>
-                <h1>Adminstrate users</h1>
-                <br/>
-                <Link to="/authservice/useradmin/">Up to the main page</Link><br/>
-                <Link to="/authservice/useradmin/users/modify">Modify existing users</Link><br/>
-                <Link to="/authservice/useradmin/users/roles">Modify users to role mappings</Link><br/>
-                <Link to="/authservice/useradmin/users/passwords">Change passwords</Link><br/>
-                <Link to="/authservice/useradmin/users/add">Add user</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
+                <Header>
+                    <h1>Adminstrate users</h1>
+                </Header>
+                <Container>
+                    <StyledLinkRight to="/authservice/useradmin/users/modify">Modify existing users</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/users/roles">Modify users to role mappings</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/users/passwords">Change passwords</StyledLinkRight>
+                    <StyledLinkRight to="/authservice/useradmin/users/add">Add user</StyledLinkRight>
+                </Container>
             </div>
         );
     }

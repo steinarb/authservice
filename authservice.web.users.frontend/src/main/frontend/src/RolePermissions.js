@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE, PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, ROLEPERMISSIONS_RECEIVED, ROLEPERMISSIONS_ERROR, FORMFIELD_UPDATE } from './actiontypes';
 import RoleSelect from './components/RoleSelect';
 import PermissionList from './components/PermissionList';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import { ChevronLeft } from './components/bootstrap/ChevronLeft';
+import { ChevronRight } from './components/bootstrap/ChevronRight';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class RolePermissions extends Component {
     constructor(props) {
@@ -51,22 +58,33 @@ class RolePermissions extends Component {
 
         return (
             <div>
-                <h1>Modify role information</h1>
-                <br/>
-                <Link to="/authservice/roleadmin/roles">Up to role adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft><br/>
+                <Header>
+                    <h1>Modify role to permission mappings</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="roles">Select role</label>
-                    <RoleSelect id="roles" roles={roles} rolesMap={rolesMap} value={role.fullname} onRolesFieldChange={onRolesFieldChange} />
-                    <br/>
-                    <label htmlFor="rolename">Permissions not on role</label>
-                    <PermissionList id="permissionsnotonrole" permissions={permissionsNotOnRole} permissionsMap={permissionsNotOnRoleMap} value={permissionsNotOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsNotOnRoleChange} />
-                    <br/>
-                    <button onClick={() => onAddPermission(role, permissionsOnRole, permissionsNotOnRoleSelected)}>Add permission</button>
-                    <br/>
-                    <button onClick={() => onRemovePermission(role, permissionsOnRoleSelected)}>Remove permission</button>
-                    <br/>
-                    <label htmlFor="email">Permission on role</label>
-                    <PermissionList id="permissionsnotonrole" permissions={permissionsOnRole} permissionsMap={permissionsOnRoleMap} value={permissionsOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsOnRoleChange} />
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="roles">Select role</FormLabel>
+                            <FormField>
+                                <RoleSelect id="roles" roles={roles} rolesMap={rolesMap} value={role.fullname} onRolesFieldChange={onRolesFieldChange} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <div className="no-gutters col-sm-4">
+                                <label htmlFor="permissionsnotonrole">Permissions not on role</label>
+                                <PermissionList id="permissionsnotonrole" className="form-control" permissions={permissionsNotOnRole} permissionsMap={permissionsNotOnRoleMap} value={permissionsNotOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsNotOnRoleChange} />
+                            </div>
+                            <div className="no-gutters col-sm-4">
+                                <button className="form-control" onClick={() => onAddPermission(role, permissionsOnRole, permissionsNotOnRoleSelected)}>Add permission &nbsp;<ChevronRight/></button>
+                                <button className="form-control" onClick={() => onRemovePermission(role, permissionsOnRoleSelected)}><ChevronLeft/>&nbsp; Remove permission</button>
+                            </div>
+                            <div className="no-gutters col-sm-4">
+                                <label htmlFor="permissionsonrole">Permission on role</label>
+                                <PermissionList id="permissionsonrole" className="form-control" permissions={permissionsOnRole} permissionsMap={permissionsOnRoleMap} value={permissionsOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsOnRoleChange} />
+                            </div>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

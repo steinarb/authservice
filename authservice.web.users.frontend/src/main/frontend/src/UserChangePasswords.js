@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { USERS_RECEIVED, USERS_ERROR, PASSWORDS_UPDATE } from './actiontypes';
 import UserSelect from './components/UserSelect';
 import { emptyUserAndPasswords } from './constants';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class UserChangePasswords extends Component {
     constructor(props) {
@@ -32,22 +37,38 @@ class UserChangePasswords extends Component {
         } = this.state;
 
         return (
-             <div>
-                <h1>Change password for user</h1>
-                <br/>
-                <Link to="/authservice/useradmin/users">Up to user adminstration</Link><br/>
+            <div>
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+                <Header>
+                    <h1>Change password for user</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="users">Select user</label>
-                    <UserSelect id="users" users={users} usersMap={usersMap} value={passwords.user.fullname} onUsersFieldChange={onUsersFieldChange} />
-                    <br/>
-                    <label htmlFor="password">Password:</label>
-                    <input id="password" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
-                    <br/>
-                    <label htmlFor="password2">Repeat password:</label>
-                    <input id="password2" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
-                    { passwordsNotIdentical && <span>Passordene er ikke identiske</span> }
-                    <br/>
-                    <button onClick={() => onSaveUpdatedPassword(passwords)}>Change password</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="users">Select user</FormLabel>
+                            <FormField>
+                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={passwords.user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="password">Password:</FormLabel>
+                            <FormField>
+                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="password2">Repeat password:</FormLabel>
+                            <FormField>
+                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
+                                { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormField>
+                                <button className="form-control" onClick={() => onSaveUpdatedPassword(passwords)}>Change password</button>
+                            </FormField>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

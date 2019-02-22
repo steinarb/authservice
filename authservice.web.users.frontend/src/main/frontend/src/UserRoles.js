@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE, ROLES_RECEIVED, ROLES_ERROR, USERROLES_RECEIVED, USERROLES_ERROR, FORMFIELD_UPDATE } from './actiontypes';
 import UserSelect from './components/UserSelect';
 import RoleList from './components/RoleList';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import { ChevronLeft } from './components/bootstrap/ChevronLeft';
+import { ChevronRight } from './components/bootstrap/ChevronRight';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class UserRoles extends Component {
     constructor(props) {
@@ -51,22 +58,33 @@ class UserRoles extends Component {
 
         return (
             <div>
-                <h1>Modify user information</h1>
-                <br/>
-                <Link to="/authservice/useradmin/users">Up to user adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
+                <Header>
+                    <h1>Modify user to role mappings</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="users">Select user</label>
-                    <UserSelect id="users" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
-                    <br/>
-                    <label htmlFor="username">Roles not on user</label>
-                    <RoleList id="rolesnotonuser" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
-                    <br/>
-                    <button onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role</button>
-                    <br/>
-                    <button onClick={() => onRemoveRole(user, rolesOnUserSelected)}>Remove role</button>
-                    <br/>
-                    <label htmlFor="email">Role on user</label>
-                    <RoleList id="rolesnotonuser" roles={rolesOnUser} rolesMap={rolesOnUserMap} value={rolesOnUserSelectedNames} onRolesFieldChange={onRolesOnUserChange} />
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="users">Select user</FormLabel>
+                            <FormField>
+                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <div className="no-gutters col-sm-4">
+                                <label htmlFor="username">Roles not on user</label>
+                                <RoleList id="rolesnotonuser" className="form-control" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
+                            </div>
+                            <div className="no-gutters col-sm-4">
+                                <button className="form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
+                                <button className="form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
+                            </div>
+                            <div className="no-gutters col-sm-4">
+                                <label htmlFor="email">Role on user</label>
+                                <RoleList id="rolesnotonuser" className="form-control" roles={rolesOnUser} rolesMap={rolesOnUserMap} value={rolesOnUserSelectedNames} onRolesFieldChange={onRolesOnUserChange} />
+                            </div>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE } from './actiontypes';
 import { emptyRole } from './constants';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class RoleAdd extends Component {
     constructor(props) {
@@ -24,17 +29,28 @@ class RoleAdd extends Component {
 
         return (
             <div>
-                <h1>Add role</h1>
-                <br/>
-                <Link to="/authservice/useradmin/roles">Up to role adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
+                <Header>
+                    <h1>Add role</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="rolename">Role name</label>
-                    <input id="rolename" type="text" value={role.rolename} onChange={(event) => onFieldChange({rolename: event.target.value}, role)} />
-                    <br/>
-                    <label htmlFor="email">Role description</label>
-                    <input id="description" type="text" value={role.description} onChange={(event) => onFieldChange({description: event.target.value}, role)} />
-                    <br/>
-                    <button onClick={() => onAddRole(role)}>Add new role</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="rolename">Role name</FormLabel>
+                            <FormField>
+                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={(event) => onFieldChange({rolename: event.target.value}, role)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="description">Role description</FormLabel>
+                            <FormField>
+                                <input id="description" className="form-control" type="text" value={role.description} onChange={(event) => onFieldChange({description: event.target.value}, role)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <button className="form-control" onClick={() => onAddRole(role)}>Add new role</button>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

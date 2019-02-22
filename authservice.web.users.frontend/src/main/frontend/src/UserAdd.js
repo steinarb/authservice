@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { USERS_RECEIVED, USERS_ERROR, PASSWORDS_UPDATE } from './actiontypes';
 import { emptyUserAndPasswords } from './constants';
 import UserSelect from './components/UserSelect';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class UserModify extends Component {
     constructor(props) {
@@ -27,30 +32,53 @@ class UserModify extends Component {
 
         return (
             <div>
-                <h1>Add user</h1>
-                <br/>
-                <Link to="/authservice/useradmin/users">Up to user adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+                <Header>
+                    <h1>Add user</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="username">Username</label>
-                    <input id="username" type="text" value={passwords.user.username} onChange={(event) => onUserFieldChange({username: event.target.value}, passwords)} />
-                    <br/>
-                    <label htmlFor="email">Email address</label>
-                    <input id="email" type="text" value={passwords.user.email} onChange={(event) => onUserFieldChange({email: event.target.value}, passwords)} />
-                    <br/>
-                    <label htmlFor="firstname">First name</label>
-                    <input id="firstname" type="text" value={passwords.user.firstname} onChange={(event) => onUserFieldChange({firstname: event.target.value}, passwords)} />
-                    <br/>
-                    <label htmlFor="lastname">Last name</label>
-                    <input id="lastname" type="text" value={passwords.user.lastname} onChange={(event) => onUserFieldChange({lastname: event.target.value}, passwords)} />
-                    <br/>
-                    <label htmlFor="password">Password:</label>
-                    <input id="password" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
-                    <br/>
-                    <label htmlFor="password2">Repeat password:</label>
-                    <input id="password2" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
-                    { passwordsNotIdentical && <span>Passordene er ikke identiske</span> }
-                    <br/>
-                    <button onClick={() => onAddUser(passwords)}>Opprett bruker</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="username">Username</FormLabel>
+                            <FormField>
+                                <input id="username" className="form-control" type="text" value={passwords.user.username} onChange={(event) => onUserFieldChange({username: event.target.value}, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="email">Email address</FormLabel>
+                            <FormField>
+                                <input id="email" className="form-control" type="text" value={passwords.user.email} onChange={(event) => onUserFieldChange({email: event.target.value}, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="firstname">First name</FormLabel>
+                            <FormField>
+                                <input id="firstname" className="form-control" type="text" value={passwords.user.firstname} onChange={(event) => onUserFieldChange({firstname: event.target.value}, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="lastname">Last name</FormLabel>
+                            <FormField>
+                                <input id="lastname" className="form-control" type="text" value={passwords.user.lastname} onChange={(event) => onUserFieldChange({lastname: event.target.value}, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="password">Password:</FormLabel>
+                            <FormField>
+                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="password2">Repeat password:</FormLabel>
+                            <FormField>
+                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
+                                { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <button className="form-control" onClick={() => onAddUser(passwords)}>Opprett bruker</button>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

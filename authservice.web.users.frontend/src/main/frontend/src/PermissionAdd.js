@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, PERMISSION_UPDATE } from './actiontypes';
 import { emptyPermission } from './constants';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class PermissionAdd extends Component {
     constructor(props) {
@@ -24,17 +29,28 @@ class PermissionAdd extends Component {
 
         return (
             <div>
-                <h1>Add permission</h1>
-                <br/>
-                <Link to="/authservice/useradmin/permissions">Up to permission adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+                <Header>
+                    <h1>Add permission</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="permissionname">Permission name</label>
-                    <input id="permissionname" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
-                    <br/>
-                    <label htmlFor="email">Permission description</label>
-                    <input id="description" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
-                    <br/>
-                    <button onClick={() => onAddPermission(permission)}>Add new permission</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="permissionname">Permission name</FormLabel>
+                            <FormField>
+                                <input id="permissionname" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="email">Permission description</FormLabel>
+                            <FormField>
+                                <input id="description" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <button onClick={() => onAddPermission(permission)}>Add new permission</button>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );

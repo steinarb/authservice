@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE } from './actiontypes';
 import UserSelect from './components/UserSelect';
+import { Header } from './components/bootstrap/Header';
+import { Container } from './components/bootstrap/Container';
+import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
+import {FormRow } from './components/bootstrap/FormRow';
+import {FormLabel } from './components/bootstrap/FormLabel';
+import {FormField } from './components/bootstrap/FormField';
 
 class UserModify extends Component {
     constructor(props) {
@@ -31,26 +36,49 @@ class UserModify extends Component {
 
         return (
             <div>
-                <h1>Modify user information</h1>
-                <br/>
-                <Link to="/authservice/useradmin/users">Up to user adminstration</Link><br/>
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+                <Header>
+                    <h1>Modify user information</h1>
+                </Header>
                 <form onSubmit={ e => { e.preventDefault(); }}>
-                    <label htmlFor="users">Select user</label>
-                    <UserSelect id="users" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
-                    <br/>
-                    <label htmlFor="username">Username</label>
-                    <input id="username" type="text" value={user.username} onChange={(event) => onFieldChange({username: event.target.value}, user)} />
-                    <br/>
-                    <label htmlFor="email">Email address</label>
-                    <input id="email" type="text" value={user.email} onChange={(event) => onFieldChange({email: event.target.value}, user)} />
-                    <br/>
-                    <label htmlFor="firstname">First name</label>
-                    <input id="firstname" type="text" value={user.firstname} onChange={(event) => onFieldChange({firstname: event.target.value}, user)} />
-                    <br/>
-                    <label htmlFor="lastname">Last name</label>
-                    <input id="lastname" type="text" value={user.lastname} onChange={(event) => onFieldChange({lastname: event.target.value}, user)} />
-                    <br/>
-                    <button onClick={() => onSaveUpdatedUser(user)}>Lagre endringer av bruker</button>
+                    <Container>
+                        <FormRow>
+                            <FormLabel htmlFor="users">Select user</FormLabel>
+                            <FormField>
+                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="username">Username</FormLabel>
+                            <FormField>
+                                <input id="username" className="form-control" type="text" value={user.username} onChange={(event) => onFieldChange({username: event.target.value}, user)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="email">Email address</FormLabel>
+                            <FormField>
+                                <input id="email" className="form-control" type="text" value={user.email} onChange={(event) => onFieldChange({email: event.target.value}, user)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="firstname">First name</FormLabel>
+                            <FormField>
+                                <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={(event) => onFieldChange({firstname: event.target.value}, user)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <FormLabel htmlFor="lastname">Last name</FormLabel>
+                            <FormField>
+                                <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={(event) => onFieldChange({lastname: event.target.value}, user)} />
+                            </FormField>
+                        </FormRow>
+                        <FormRow>
+                            <div className="col-5"/>
+                            <FormField>
+                                <button className="form-control" onClick={() => onSaveUpdatedUser(user)}>Lagre endringer av bruker</button>
+                            </FormField>
+                        </FormRow>
+                    </Container>
                 </form>
             </div>
         );
