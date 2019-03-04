@@ -2,7 +2,8 @@
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="sb" id="ukelonn-1.0.0">
+
+    <changeSet author="sb" id="authservice-users-table">
 
         <createTable tableName="users">
             <column autoIncrement="true" name="user_id" type="INTEGER">
@@ -36,6 +37,11 @@
             <column name="username" type="VARCHAR(64)" />
         </createIndex>
 
+    </changeSet>
+
+
+    <changeSet author="sb" id="authservice-roles-table">
+
         <createTable tableName="roles">
             <column autoIncrement="true" name="role_id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="roleidprimarykey"/>
@@ -54,6 +60,11 @@
         <createIndex indexName="ix_roles_rolename" tableName="roles">
             <column name="role_name" type="VARCHAR(64)" />
         </createIndex>
+
+    </changeSet>
+
+
+    <changeSet author="sb" id="authservice-userroles-table">
 
         <createTable tableName="user_roles">
             <column autoIncrement="true" name="user_role_id" type="INTEGER">
@@ -79,6 +90,11 @@
             <column name="username" type="VARCHAR(64)" />
         </createIndex>
 
+    </changeSet>
+
+
+    <changeSet author="sb" id="authservice-permissions-table">
+
         <createTable tableName="permissions">
             <column autoIncrement="true" name="permission_id" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="permissionidprimarykey"/>
@@ -97,6 +113,11 @@
         <createIndex indexName="ix_permissions_permissionname" tableName="permissions">
             <column name="permission_name" type="VARCHAR(64)" />
         </createIndex>
+
+    </changeSet>
+
+
+    <changeSet author="sb" id="authservice-rolespermissions-table">
 
         <createTable tableName="roles_permissions">
             <column autoIncrement="true" name="user_role_id" type="INTEGER">
@@ -121,6 +142,8 @@
         <createIndex indexName="ix_roles_permissions_username" tableName="roles_permissions">
             <column name="permission_name" type="VARCHAR(64)" />
         </createIndex>
+
     </changeSet>
+
 
 </databaseChangeLog>
