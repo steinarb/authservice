@@ -4,6 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="sb" id="authservice-users-table">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="users" />
+            </not>
+        </preConditions>
 
         <createTable tableName="users">
             <column autoIncrement="true" name="user_id" type="INTEGER">
@@ -41,6 +46,11 @@
 
 
     <changeSet author="sb" id="authservice-roles-table">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="roles" />
+            </not>
+        </preConditions>
 
         <createTable tableName="roles">
             <column autoIncrement="true" name="role_id" type="INTEGER">
@@ -65,6 +75,11 @@
 
 
     <changeSet author="sb" id="authservice-userroles-table">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="user_roles" />
+            </not>
+        </preConditions>
 
         <createTable tableName="user_roles">
             <column autoIncrement="true" name="user_role_id" type="INTEGER">
@@ -94,6 +109,11 @@
 
 
     <changeSet author="sb" id="authservice-permissions-table">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="permissions" />
+            </not>
+        </preConditions>
 
         <createTable tableName="permissions">
             <column autoIncrement="true" name="permission_id" type="INTEGER">
@@ -118,6 +138,11 @@
 
 
     <changeSet author="sb" id="authservice-rolespermissions-table">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="roles_permissions" />
+            </not>
+        </preConditions>
 
         <createTable tableName="roles_permissions">
             <column autoIncrement="true" name="user_role_id" type="INTEGER">
