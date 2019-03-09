@@ -76,7 +76,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<User> getUsers() {
         try(Connection connection = database.getConnection()) {
-            try(PreparedStatement statement = connection.prepareStatement("select * from users")) {
+            try(PreparedStatement statement = connection.prepareStatement("select * from users order by user_id")) {
                 List<User> users = new ArrayList<>();
                 try(ResultSet results = statement.executeQuery()) {
                     while(results.next()) {
@@ -171,7 +171,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.executeUpdate();
             }
 
-            try(PreparedStatement statement = connection.prepareStatement("select * from users where username=?")) {
+            try(PreparedStatement statement = connection.prepareStatement("select * from users where username=? order by user_id")) {
                 statement.setString(1, newUser.getUsername());
                 try (ResultSet results = statement.executeQuery()) {
                     if (results.next()) {
@@ -194,7 +194,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Role> getRoles() {
         try(Connection connection = database.getConnection()) {
-            try(PreparedStatement statement = connection.prepareStatement("select * from roles")) {
+            try(PreparedStatement statement = connection.prepareStatement("select * from roles order by role_id")) {
                 try(ResultSet results = statement.executeQuery()) {
                     List<Role> roles = new ArrayList<>();
                     while(results.next()) {
@@ -258,7 +258,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Permission> getPermissions() {
         try(Connection connection = database.getConnection()) {
-            try(PreparedStatement statement = connection.prepareStatement("select * from permissions")) {
+            try(PreparedStatement statement = connection.prepareStatement("select * from permissions order by permission_id")) {
                 try(ResultSet results = statement.executeQuery()) {
                     List<Permission> permissions = new ArrayList<>();
                     while(results.next()) {
