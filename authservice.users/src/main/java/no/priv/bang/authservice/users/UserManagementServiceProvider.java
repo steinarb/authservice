@@ -468,7 +468,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     void addPermissionToMap(Map<String, List<Permission>> rolespermissions, Role role, Permission permission) {
-    	String rolename = role.getRolename();
+        String rolename = role.getRolename();
         if (!rolespermissions.containsKey(rolename)) {
             rolespermissions.put(rolename, new ArrayList<>());
         }
