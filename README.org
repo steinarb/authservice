@@ -1,10 +1,8 @@
-* Forms based login for nginx
+* Forms based nginx login and pluggable shiro auth in karaf
 
-This is a webapp that offers two URLs for use by the [[http://nginx.org/en/docs/http/ngx_http_auth_request_module.html][NGINX auth_request module]]:
- - /auth which will just check the login state of Apache Shiro, returning the status code 401 for failure and 200 for success
- - /login which contains a login form and will authenticate against Apache Shiro
-
-The webapp is implemented as two servlets exposed as OSGi services, that will be picked up by the [[http://ops4j.github.io/pax/web/4.x/index.html#_whiteboard_extender][pax web whiteboard extender]].
+This project contains a set of [[https://karaf.apache.org/manual/latest/#_feature_and_resolver][apache karaf features]] that fills two purposes
+ 1. Providing a [[Forms based login for nginx][forms based login mechanism for nginx]] (Note: the webapp provides only authentication. No authorization of individual URLs. All authenticated users get in)
+ 2. Providing a "poor man's single sign-on" for web applications running in the same apache karaf instance
 
 ** Status of the project
 
@@ -45,7 +43,15 @@ Instructions:
     #+END_EXAMPLE
  8. Open a browser on the URL http://localhost:8181/authservice/useradmin and test adding/modifying users, roles and permissions
 
-** Installing and configuring nginx
+** Forms based login for nginx
+
+The webapp installed by the above installation instructions offers two URLs for use by the [[http://nginx.org/en/docs/http/ngx_http_auth_request_module.html][NGINX auth_request module]]:
+ - /auth which will just check the login state of Apache Shiro, returning the status code 401 for failure and 200 for success
+ - /login which contains a login form and will authenticate against Apache Shiro
+
+The webapp is implemented as two servlets exposed as OSGi services, that will be picked up by the [[http://ops4j.github.io/pax/web/4.x/index.html#_whiteboard_extender][pax web whiteboard extender]].
+
+*** Installing and configuring nginx
 
 Instructions:
  1. Install nginx with the auth module.  On debian this is done with the command
@@ -88,6 +94,15 @@ Instructions:
               error_page 401 = @error401;
       }
     #+END_SRC
+** Integrating with other webapps in karaf
+
+There are several ways for a webapp to interact with authservice:
+ 1. Install authservice separately and add OSGi service injections for shiro Realm and Session (all user administration done in the authservice webapplication)
+ 2. Add the features for the liquibase database setup and the shiro Realm and Session and provide the necessary tables from a different web application's database
+ 3. Add the features for the authservice UserManagementService implementation, as well as the features for Realm and Session and and implement a user management GUI and webservice on top of the UserManagementService
+
+...or various permutations of the above.  With [[https://github.com/steinarb/ukelonn][ukelonn]] I plan to add the authservice tables to the ukelonn database, and then let the ukelonn database provide the database for authservice itself.  I have made a first step in the direction of authservice integration by basing ukelonn's user management on the UserManagementService OSGi service, so that it later can be replaced by the authservice implementation of the service.
+
 ** License
 
 This software is licensed under Apache Public License v 2.0.
