@@ -42,14 +42,14 @@ import org.osgi.service.log.LogService;
  * logging in a user
  */
 @Component(
-        property= {
-            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/*",
-            HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
-            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=authservice",
-            HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX+ServerProperties.PROVIDER_PACKAGES+"=no.priv.bang.authservice.web.security.resources"},
-        service=Servlet.class,
-        immediate=true
-    )
+    property= {
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/*",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=authservice",
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX+ServerProperties.PROVIDER_PACKAGES+"=no.priv.bang.authservice.web.security.resources"},
+    service=Servlet.class,
+    immediate=true
+)
 public class AuthserviceServlet extends ServletContainer {
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logservice;  // NOSONAR Value set by DS injection
