@@ -26,6 +26,7 @@
         <feature>authservice-db-derby-test</feature>
         <feature>authservice-web-security-dbrealm</feature>
         <feature>authservice-web-security-memorysession</feature>
+        <feature>authservice-users</feature>
         <feature>authservice-web-security</feature>
     </feature>
     <feature name="user-admin-with-derby">

@@ -33,6 +33,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
 
+import no.priv.bang.osgiservice.users.UserManagementService;
+
 /***
  * This class will show ups a {@link Servlet} OSGi service, and will be picked
  * up by the pax web whiteboard.
@@ -53,10 +55,16 @@ import org.osgi.service.log.LogService;
 public class AuthserviceServlet extends ServletContainer {
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logservice;  // NOSONAR Value set by DS injection
+    private UserManagementService useradmin;
 
     @Reference
     public void setLogservice(LogService logService) {
         this.logservice = logService;
+    }
+
+    @Reference
+    public void setUserManagementService(UserManagementService useradmin) {
+        this.useradmin = useradmin;
     }
 
     @Activate
@@ -72,6 +80,7 @@ public class AuthserviceServlet extends ServletContainer {
                 @Override
                 protected void configure() {
                     bind(logservice).to(LogService.class);
+                    bind(useradmin).to(UserManagementService.class);
                 }
             });
         reload(copyOfExistingConfig);

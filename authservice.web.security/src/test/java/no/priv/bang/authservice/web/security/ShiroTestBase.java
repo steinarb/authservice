@@ -15,13 +15,17 @@
  */
 package no.priv.bang.authservice.web.security;
 
+import static org.mockito.Mockito.mock;
+
 import java.lang.reflect.Method;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -31,6 +35,9 @@ import org.apache.shiro.web.config.WebIniSecurityManagerFactory;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.shiro.web.subject.WebSubject;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+
 public class ShiroTestBase {
 
     private static WebSecurityManager securitymanager;
@@ -38,6 +45,40 @@ public class ShiroTestBase {
 
     public ShiroTestBase() {
         super();
+    }
+
+    protected void loginUser(String username, String password) {
+        HttpSession session = mock(HttpSession.class);
+        MockHttpServletRequest dummyrequest = new MockHttpServletRequest();
+        dummyrequest.setSession(session);
+        MockHttpServletResponse dummyresponse = new MockHttpServletResponse();
+        loginUser(dummyrequest, dummyresponse, username, password);
+    }
+
+    protected void loginUser(HttpServletRequest request, HttpServletResponse response, String username, String password) {
+        WebSubject subject = createSubjectAndBindItToThread(request, response);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
+        subject.login(token);
+    }
+
+    protected WebSubject createNullWebSubjectAndBindItToThread() {
+        WebSubject subject = null;
+        ThreadContext.bind(subject);
+        return subject;
+    }
+
+    protected WebSubject createSubjectWithNullPrincipalAndBindItToThread() {
+        WebSubject subject = mock(WebSubject.class);
+        ThreadContext.bind(subject);
+        return subject;
+    }
+
+    protected WebSubject createSubjectAndBindItToThread() {
+        HttpSession session = mock(HttpSession.class);
+        MockHttpServletRequest dummyrequest = new MockHttpServletRequest();
+        dummyrequest.setSession(session);
+        MockHttpServletResponse dummyresponse = new MockHttpServletResponse();
+        return createSubjectAndBindItToThread(dummyrequest, dummyresponse);
     }
 
     protected WebSubject createSubjectAndBindItToThread(HttpServletRequest request, HttpServletResponse response) {
