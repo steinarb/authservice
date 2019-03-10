@@ -32,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.server.ServerProperties;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 import org.osgi.service.log.LogService;
 
@@ -43,11 +42,6 @@ import com.mockrunner.mock.web.MockHttpSession;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 public class AuthserviceServletTest extends ShiroTestBase {
-
-    @BeforeClass()
-    static void setup() throws Exception {
-        setupBase();
-    }
 
     @Test
     public void testGetRootIndexHtml() throws Exception {

@@ -36,7 +36,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -46,11 +45,6 @@ import no.priv.bang.authservice.web.security.ShiroTestBase;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceResourceTest extends ShiroTestBase {
-
-    @BeforeClass()
-    static void setup() throws Exception {
-        setupBase();
-    }
 
     @Test
     void testGetIndex() {
