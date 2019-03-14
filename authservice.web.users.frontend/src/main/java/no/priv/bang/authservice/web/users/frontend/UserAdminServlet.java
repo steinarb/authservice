@@ -123,7 +123,7 @@ public class UserAdminServlet extends HttpServlet {
     }
 
     private void addSlashToServletPath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect(String.format("%s/", request.getServletPath()));
+        response.sendRedirect(String.format("%s/", request.getRequestURL().toString()));
     }
 
     private void copyStream(InputStream input, ServletOutputStream output) throws IOException {

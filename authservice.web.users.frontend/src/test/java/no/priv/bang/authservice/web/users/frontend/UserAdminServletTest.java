@@ -58,7 +58,7 @@ public class UserAdminServletTest {
     public void testDoGetAddTrailingSlash() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("http://localhost:8181/authservice/useradmin");
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost:8181/authservice/useradmin"));
         when(request.getServletPath()).thenReturn("/frontend-karaf-demo");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
