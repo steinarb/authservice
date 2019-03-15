@@ -73,14 +73,10 @@ Instructions:
               server_name _;
 
               location /authservice {
+                      auth_request off; # Necessary for REST API POST to work, shiro will handle authorization here
                       proxy_pass http://localhost:8181/authservice;
                       proxy_cookie_path ~^/authservice.*$ /;
-              }
-
-              location /authservice/login {
-                      auth_request off;
-                      proxy_pass http://localhost:8181/authservice/login;
-                      proxy_cookie_path ~^/authservice.*$ /;
+                      proxy_set_header Host $host;
               }
 
               location / {
@@ -92,6 +88,13 @@ Instructions:
               # Auth configuration
               auth_request /authservice/check;
               error_page 401 = @error401;
+
+              # If the user is not logged in, redirect to authservice login URL, with redirect information
+              location @error401 {
+                      add_header X-Original-URI "$scheme://$http_host$request_uri";
+                      add_header Set-Cookie "NSREDIRECT=$scheme://$http_host$request_uri";
+                      return 302 /authservice/login?originalUri=$scheme://$http_host$request_uri;
+              }
       }
     #+END_SRC
 ** Integrating with other webapps in karaf
