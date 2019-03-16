@@ -61,10 +61,8 @@ public class ShiroTestBase {
         subject.login(token);
     }
 
-    protected WebSubject createNullWebSubjectAndBindItToThread() {
-        WebSubject subject = null;
-        ThreadContext.bind(subject);
-        return subject;
+    protected void createNullWebSubjectAndBindItToThread() {
+        ThreadContext.remove(ThreadContext.SUBJECT_KEY);
     }
 
     protected WebSubject createSubjectWithNullPrincipalAndBindItToThread() {
