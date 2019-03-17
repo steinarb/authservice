@@ -6,7 +6,7 @@ This project contains a set of [[https://karaf.apache.org/manual/latest/#_featur
 
 ** Status of the project
 
-[[https://travis-ci.org/steinarb/authservice][file:https://travis-ci.org/steinarb/authservice.svg?branch=master]] [[https://coveralls.io/r/steinarb/authservice][file:https://coveralls.io/repos/steinarb/authservice/badge.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.sonar.osgi.service%3Aosgi.service][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=alert_status#.svg]] [[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]] [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
+[[https://travis-ci.org/steinarb/authservice][file:https://travis-ci.org/steinarb/authservice.svg?branch=master]] [[https://coveralls.io/r/steinarb/authservice][file:https://coveralls.io/repos/steinarb/authservice/badge.svg]] [[https://sonarcloud.io/dashboard?id=no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=alert_status#.svg]] [[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]] [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
 
 *** SonarCloud
 
