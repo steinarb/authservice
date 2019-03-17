@@ -132,7 +132,14 @@
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.definitions</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.priv.bang.authservice</groupId>
+            <artifactId>authservice.definitions</artifactId>
+            <version>${project.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
         </dependency>
     </dependencies>
 

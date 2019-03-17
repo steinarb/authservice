@@ -28,11 +28,11 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
 
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
+import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgiservice.database.DatabaseService;
 
 @Component(immediate=true)
-public class DerbyTestDatabase implements DatabaseService {
+public class DerbyTestDatabase implements AuthserviceDatabaseService {
 
     private LogService logservice;
     private DataSourceFactory dataSourceFactory;

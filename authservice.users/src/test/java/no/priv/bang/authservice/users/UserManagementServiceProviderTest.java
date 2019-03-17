@@ -42,11 +42,11 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import static org.assertj.core.api.Assertions.*;
 
 import no.priv.bang.authservice.db.derby.test.DerbyTestDatabase;
+import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordsNotIdenticalException;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
-import no.priv.bang.osgiservice.database.DatabaseService;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.Role;
@@ -74,7 +74,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -93,7 +93,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -224,7 +224,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -306,7 +306,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         PreparedStatement statement = mock(PreparedStatement.class);
         ResultSet results = mock(ResultSet.class);
@@ -378,7 +378,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -444,7 +444,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -510,7 +510,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);
@@ -585,7 +585,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        DatabaseService mockbase = mock(DatabaseService.class);
+        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockbase.getConnection()).thenReturn(connection);

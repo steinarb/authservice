@@ -37,10 +37,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
 
+import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordsNotIdenticalException;
-import no.priv.bang.osgiservice.database.DatabaseService;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.RolePermissions;
@@ -56,7 +56,7 @@ import no.priv.bang.osgiservice.users.UserRoles;
 @Component(service=UserManagementService.class, immediate=true)
 public class UserManagementServiceProvider implements UserManagementService {
     private LogService logservice;
-    private DatabaseService database;
+    private AuthserviceDatabaseService database;
 
     @Reference
     public void setLogservice(LogService logservice) {
@@ -64,7 +64,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Reference
-    public void setDatabase(DatabaseService database) {
+    public void setDatabase(AuthserviceDatabaseService database) {
         this.database = database;
     }
 
