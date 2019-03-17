@@ -40,7 +40,7 @@ import no.priv.bang.osgiservice.users.UserRoles;
 
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
-public class UsersResource {
+public class UsersResource extends ResourceBase {
 
     @Inject
     LogService logservice;
@@ -68,7 +68,7 @@ public class UsersResource {
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to modify user %s", user.getUsername());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message +". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -122,7 +122,7 @@ public class UsersResource {
         } catch (AuthserviceException e) {
             String message = "User management service failed to retrieve the user to roles mappings";
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message +". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -135,7 +135,7 @@ public class UsersResource {
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed add roles to user %s", userroles.getUser().getUsername());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message +". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -148,7 +148,7 @@ public class UsersResource {
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed remove roles to user %s", userroles.getUser().getUsername());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message +". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 

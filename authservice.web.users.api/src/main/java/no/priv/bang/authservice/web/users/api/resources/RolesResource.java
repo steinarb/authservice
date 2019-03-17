@@ -37,7 +37,7 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
-public class RolesResource {
+public class RolesResource extends ResourceBase {
 
     @Inject
     LogService logservice;
@@ -66,7 +66,7 @@ public class RolesResource {
         } catch (AuthserviceException e) {
             String message = String.format("Failed to modify role %s", role.getRolename());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See log file for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -79,7 +79,7 @@ public class RolesResource {
         } catch (AuthserviceException e) {
             String message = String.format("Failed to add role %s", role.getRolename());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See log file for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -91,7 +91,7 @@ public class RolesResource {
         } catch (AuthserviceException e) {
             String message = "Failed to get all role to permission mappings";
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See log file for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -104,7 +104,7 @@ public class RolesResource {
         } catch (AuthserviceException e) {
             String message = String.format("Failed to add permissions to role %s", rolepermissions.getRole().getRolename());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See log file for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -117,7 +117,7 @@ public class RolesResource {
         } catch (AuthserviceException e) {
             String message = String.format("Failed to remove permissions from role %s", rolepermissions.getRole().getRolename());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See log file for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 

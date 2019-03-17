@@ -34,7 +34,7 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
-public class PermissionsResource {
+public class PermissionsResource extends ResourceBase {
 
     @Inject
     LogService logservice;
@@ -50,7 +50,7 @@ public class PermissionsResource {
         } catch (AuthserviceException e) {
             String message = "User management service failed to get the list of permissions";
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -63,7 +63,7 @@ public class PermissionsResource {
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to modify permission %s", permission.getPermissionname());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
@@ -76,7 +76,7 @@ public class PermissionsResource {
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to add permission %s", permission.getPermissionname());
             logservice.log(LogService.LOG_ERROR, message, e);
-            throw new InternalServerErrorException(message + ". See the log for details");
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
 
