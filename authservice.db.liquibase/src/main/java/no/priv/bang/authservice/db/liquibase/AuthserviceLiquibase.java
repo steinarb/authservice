@@ -37,9 +37,10 @@ public class AuthserviceLiquibase {
         applyLiquibaseChangelist(connection, "db-changelog/db-changelog-1.1.0.xml");
     }
 
-    public void forceReleaseLocks(Connection connection) throws LiquibaseException {
+    public boolean forceReleaseLocks(Connection connection) throws LiquibaseException {
         Liquibase liquibase = createLiquibaseInstance(connection, "db-changelog/db-changelog-1.0.0.xml");
         liquibase.forceReleaseLocks();
+        return true;
     }
 
     private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {

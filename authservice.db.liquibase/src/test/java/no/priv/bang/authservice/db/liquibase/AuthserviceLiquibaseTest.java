@@ -72,8 +72,8 @@ class AuthserviceLiquibaseTest {
     void testForceReleaseLocks() throws Exception {
         Connection connection = createConnection();
         AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
-        handleregLiquibase.forceReleaseLocks(connection);
-        // Nothing to test for but if we get here, no exceptions have been thrown
+        boolean success = handleregLiquibase.forceReleaseLocks(connection);
+        assertTrue(success);
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
