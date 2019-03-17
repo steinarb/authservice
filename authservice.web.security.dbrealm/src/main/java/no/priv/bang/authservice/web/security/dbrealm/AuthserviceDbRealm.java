@@ -48,6 +48,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
         setCredentialsMatcher(credentialsMatcher);
     }
 
+    @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
         if (!(token instanceof UsernamePasswordToken)) {
             throw new AuthenticationException("UkelonnRealm shiro realm only accepts UsernamePasswordToken");
