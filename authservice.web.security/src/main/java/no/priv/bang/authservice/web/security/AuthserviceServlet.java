@@ -55,7 +55,7 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 public class AuthserviceServlet extends ServletContainer {
     private static final long serialVersionUID = 6064420153498760622L;
     private LogService logservice;  // NOSONAR Value set by DS injection
-    private UserManagementService useradmin;
+    private UserManagementService useradmin;  // NOSONAR Value set by DS injection
 
     @Reference
     public void setLogservice(LogService logService) {
