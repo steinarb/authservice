@@ -63,7 +63,7 @@ class DerbyTestDatabaseTest {
                     ++rolecount;
                 }
 
-                assertEquals(3, rolecount);
+                assertEquals(4, rolecount);
             }
         }
     }
