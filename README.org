@@ -79,7 +79,14 @@ Instructions:
                       proxy_set_header Host $host;
               }
 
-              location / {
+              # Avoid browser attempt at fetching favicon.ico triggering a login and redirecting
+              # a 404 Not Found when there is no favicon.ico on the site (which is perferctly OK
+              # for both the site and the browser)
+              location /favicon.ico {
+                      auth_request off;
+              }
+
+               location / {
                       # First attempt to serve request as file, then
                       # as directory, then fall back to displaying a 404.
                       try_files $uri $uri/ =404;
@@ -97,6 +104,56 @@ Instructions:
               }
       }
     #+END_SRC
+*** Installing and configuring postgresql
+/Note/: only command examples for debian/ubuntu/etc. are shown, but the overall steps should work on a lot of platforms
+ 1. Install PostgreSQL, as root do the following command:
+    #+BEGIN_EXAMPLE
+      apt-get install postgresql
+    #+END_EXAMPLE
+ 2. Add a PostgreSQL user named "karaf", as root do the following command
+    #+BEGIN_EXAMPLE
+      PGPASSWORD=karaf sudo -u postgres createuser karaf
+    #+END_EXAMPLE
+    /Note/: Replace the password in the PGPASSWORD environment variable with something other than the example and use that password in the karaf configuration
+ 3. Create an empty PostgreSQL database named "authservice" owned by user "karaf"
+    #+BEGIN_EXAMPLE
+      sudo -u postgres createdb -O karaf authservice
+    #+END_EXAMPLE
+*** Installing and configuring apache karaf
+Instructions:
+ 1. Install apache karaf as a service, either [[http://karaf.apache.org/manual/latest/#_service_script_templates][using the karaf installation scripts]] or by [[https://steinar.bang.priv.no/2018/01/23/installing-apache-karaf-on-debian/][using apt-get and the unofficial karaf deb package]]
+ 2. SSH in to the karaf console:
+    #+BEGIN_EXAMPLE
+       ssh -p 8101 karaf@localhost
+    #+END_EXAMPLE
+    The default password is "karaf" (without the quotes).  It might be a good idea to change this.  See the karaf documentation for how to change the password
+ 3. In the karaf console, do the following:
+    1. Add connection configuration for the postgresql database:
+       #+BEGIN_EXAMPLE
+         config:edit no.priv.bang.authservice.db.postgresql.PostgresqlDatabase
+         config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
+         config:property-set authservice.db.jdbc.user "karaf"
+         config:property-set authservice.db.jdbc.password "karaf"
+         config:update
+       #+END_EXAMPLE
+       /Note/: use the actual password given in the PGPASSWORD environment variable when creating the karaf user
+    2. Install authservice from maven central:
+       #+BEGIN_EXAMPLE
+         feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+         feature:install user-admin-with-postgresql
+       #+END_EXAMPLE
+ 4. Open a the nginx authservice URL in a web browser, e.g. https://myserver.com/authservice/ and:
+    1. Log in as user "admin" with password "admin" (without the quotes)
+    2. Click on the "User administration UI" link
+    3. In the administration UI:
+       1. Click on "Administrate users"
+       2. Change the password of user "admin"
+       3. Add users that are to be able to log in to nginx
+          /Note/: The nginx config provides only authentication for nginx, no authorization based on the combination of path and role or permission.  Therefore there is no need to add roles to users that only needs to log in
+          Users that need to administrate other users, should get the useradmin role
+    4. Add some links to the selfservice URLs from your website's top page (or whereever is convenient):
+       1. Change password: https://myserver.com/authservice/password/
+       2. Modify real namd and email: https://myserver.com/authservice/user
 ** Integrating with other webapps in karaf
 
 There are several ways for a webapp to interact with authservice:

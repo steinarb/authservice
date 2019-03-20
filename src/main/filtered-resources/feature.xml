@@ -16,21 +16,33 @@
     <repository>mvn:no.priv.bang.authservice/authservice.definitions/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.db.derby.test/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.db.postgresql/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.dbrealm/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.memorysession/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.frontend/${project.version}/xml/features</repository>
-    <feature name="authservice-with-derby-dbrealm-and-session">
-        <feature>authservice-db-derby-test</feature>
+    <feature name="authservice-with-dbrealm-and-session">
         <feature>authservice-web-security-dbrealm</feature>
         <feature>authservice-web-security-memorysession</feature>
         <feature>authservice-users</feature>
         <feature>authservice-web-security</feature>
     </feature>
+    <feature name="authservice-with-derby-dbrealm-and-session">
+        <feature>authservice-db-derby-test</feature>
+        <feature>authservice-with-dbrealm-and-session</feature>
+    </feature>
     <feature name="user-admin-with-derby">
         <feature>authservice-with-derby-dbrealm-and-session</feature>
+        <feature>authservice-user-management-frontend</feature>
+    </feature>
+    <feature name="authservice-with-postgresql-dbrealm-and-session">
+        <feature>authservice-db-postgresql</feature>
+        <feature>authservice-with-dbrealm-and-session</feature>
+    </feature>
+    <feature name="user-admin-with-postgresql">
+        <feature>authservice-with-postgresql-dbrealm-and-session</feature>
         <feature>authservice-user-management-frontend</feature>
     </feature>
 </features>
