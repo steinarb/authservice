@@ -68,6 +68,61 @@ public class UserManagementServiceProviderTest {
         database.activate();
     }
 
+    @Test
+    public void testGetUser() {
+        UserManagementServiceProvider provider = new UserManagementServiceProvider();
+        MockLogService logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        provider.setDatabase(database);
+        provider.activate();
+
+        String username = "jod";
+        User user = provider.getUser(username);
+        assertEquals(username, user.getUsername());
+    }
+
+    @Test
+    public void testGetUserWithEmptyResults() throws Exception {
+        UserManagementServiceProvider provider = new UserManagementServiceProvider();
+        MockLogService logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
+        Connection connection = mock(Connection.class);
+        PreparedStatement statement = mock(PreparedStatement.class);
+        ResultSet results = mock(ResultSet.class);
+        when(statement.executeQuery()).thenReturn(results);
+        when(connection.prepareStatement(anyString())).thenReturn(statement);
+        when(mockdatabase.getConnection()).thenReturn(connection);
+        provider.setDatabase(mockdatabase);
+        provider.activate();
+
+        String username = "jod";
+        assertThrows(AuthserviceException.class, () -> {
+                User user = provider.getUser(username);
+                assertNull(user);
+            });
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetUserWhenSQLExceptionIsThrown() throws Exception {
+        UserManagementServiceProvider provider = new UserManagementServiceProvider();
+        MockLogService logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
+        Connection connection = mock(Connection.class);
+        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
+        when(mockdatabase.getConnection()).thenReturn(connection);
+        provider.setDatabase(mockdatabase);
+        provider.activate();
+
+        String username = "jod";
+        assertThrows(AuthserviceException.class, () -> {
+                User user = provider.getUser(username);
+                assertNull(user);
+            });
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     void testListUsersWhenSQLExceptionIsThrown() throws Exception {

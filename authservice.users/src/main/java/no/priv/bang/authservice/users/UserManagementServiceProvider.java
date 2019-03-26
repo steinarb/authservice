@@ -74,6 +74,28 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
+    public User getUser(String username) {
+        try(Connection connection = database.getConnection()) {
+            try(PreparedStatement statement = connection.prepareStatement("select * from users where username=?")) {
+                statement.setString(1, username);
+                try(ResultSet results = statement.executeQuery()) {
+                    while(results.next()) {
+                        return unpackUser(results);
+                    }
+
+                    String message = String.format("User \"%s\" not found", username);
+                    logservice.log(LogService.LOG_WARNING, message);
+                    throw new AuthserviceException(message);
+                }
+            }
+        } catch (SQLException e) {
+            String message = String.format("Unable to fetch user \"%s\" from the database", username);
+            logservice.log(LogService.LOG_ERROR, message);
+            throw new AuthserviceException(message);
+        }
+    }
+
+    @Override
     public List<User> getUsers() {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users order by user_id")) {
