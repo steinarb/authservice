@@ -123,6 +123,37 @@ public class UserManagementServiceProviderTest {
             });
     }
 
+    @Test
+    public void testGetRolesForUser() {
+        UserManagementServiceProvider provider = new UserManagementServiceProvider();
+        MockLogService logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        provider.setDatabase(database);
+        provider.activate();
+
+        String username = "jod";
+        List<Role> roles = provider.getRolesForUser(username);
+        assertThat(roles.size()).isGreaterThan(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetRolesForUserWhenSqlExceptionIsThrown() throws Exception {
+        UserManagementServiceProvider provider = new UserManagementServiceProvider();
+        MockLogService logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
+        when(mockdatabase.getConnection()).thenThrow(AuthserviceException.class);
+        provider.setDatabase(mockdatabase);
+        provider.activate();
+
+        String username = "jod";
+        assertThrows(AuthserviceException.class, () -> {
+                List<Role> roles = provider.getRolesForUser(username);
+                assertThat(roles.size()).isGreaterThan(0);
+            });
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     void testListUsersWhenSQLExceptionIsThrown() throws Exception {
