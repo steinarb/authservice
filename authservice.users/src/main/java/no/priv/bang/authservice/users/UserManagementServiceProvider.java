@@ -121,6 +121,31 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
+    public List<Permission> getPermissionsForUser(String username) {
+        try(Connection connection = database.getConnection()) {
+            try(PreparedStatement statement = connection.prepareStatement("select distinct p.* from permissions p join roles_permissions rp on rp.permission_name=p.permission_name join user_roles up on rp.role_name=up.role_name where up.username=?")) {
+                statement.setString(1, username);
+                try(ResultSet results = statement.executeQuery()) {
+                    List<Permission> permissions = new ArrayList<>();
+                    while(results.next()) {
+                        int id = results.getInt(1);
+                        String permissionname = results.getString(2);
+                        String description = results.getString(3);
+                        Permission permission = new Permission(id, permissionname, description);
+                        permissions.add(permission);
+                    }
+
+                    return permissions;
+                }
+            }
+        } catch (SQLException e) {
+            String message = String.format("Unable to fetch roles for user \"%s\" from the database", username);
+            logservice.log(LogService.LOG_ERROR, message);
+            throw new AuthserviceException(message);
+        }
+    }
+
+    @Override
     public List<User> getUsers() {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users order by user_id")) {
