@@ -102,16 +102,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.ops4j.pax.jdbc</groupId>
-            <artifactId>pax-jdbc-derby</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>test</scope>
