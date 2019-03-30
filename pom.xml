@@ -571,7 +571,7 @@
                         <goals>
                             <goal>aggregate-jar</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>site</phase>
                         <configuration>
                         </configuration>
                     </execution>
