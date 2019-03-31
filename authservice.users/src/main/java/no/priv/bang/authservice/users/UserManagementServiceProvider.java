@@ -100,18 +100,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select distinct r.* from roles r join user_roles ur on ur.role_name=r.role_name where ur.username=?")) {
                 statement.setString(1, username);
-                try(ResultSet results = statement.executeQuery()) {
-                    List<Role> roles = new ArrayList<>();
-                    while(results.next()) {
-                        int id = results.getInt(1);
-                        String rolename = results.getString(2);
-                        String description = results.getString(3);
-                        Role role = new Role(id, rolename, description);
-                        roles.add(role);
-                    }
-
-                    return roles;
-                }
+                return getRolesFromQuery(statement);
             }
         } catch (SQLException e) {
             String message = String.format("Unable to fetch roles for user \"%s\" from the database", username);
@@ -267,18 +256,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     public List<Role> getRoles() {
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from roles order by role_id")) {
-                try(ResultSet results = statement.executeQuery()) {
-                    List<Role> roles = new ArrayList<>();
-                    while(results.next()) {
-                        int id = results.getInt(1);
-                        String rolename = results.getString(2);
-                        String description = results.getString(3);
-                        Role role = new Role(id, rolename, description);
-                        roles.add(role);
-                    }
-
-                    return roles;
-                }
+                return getRolesFromQuery(statement);
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the list of roles";
@@ -607,6 +585,21 @@ public class UserManagementServiceProvider implements UserManagementService {
         String firstname = results.getString(6);
         String lastname = results.getString(7);
         return new User(id, username, email, firstname, lastname);
+    }
+
+    List<Role> getRolesFromQuery(PreparedStatement statement) throws SQLException {
+        try(ResultSet results = statement.executeQuery()) {
+            List<Role> roles = new ArrayList<>();
+            while(results.next()) {
+                int id = results.getInt(1);
+                String rolename = results.getString(2);
+                String description = results.getString(3);
+                Role role = new Role(id, rolename, description);
+                roles.add(role);
+            }
+
+            return roles;
+        }
     }
 
 }
