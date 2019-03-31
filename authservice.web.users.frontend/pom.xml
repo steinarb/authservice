@@ -37,13 +37,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>no.priv.bang.authservice</groupId>
-            <artifactId>authservice.web.users.api</artifactId>
-            <version>${project.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
         </dependency>

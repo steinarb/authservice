@@ -31,15 +31,7 @@
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.definitions</artifactId>
             <version>${project.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
-            <groupId>no.priv.bang.authservice</groupId>
-            <artifactId>authservice.users</artifactId>
-            <version>${project.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.web</groupId>
