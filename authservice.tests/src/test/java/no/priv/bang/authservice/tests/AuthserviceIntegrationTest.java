@@ -38,7 +38,7 @@ public class AuthserviceIntegrationTest {
         final String httpsPort = freePortAsString();
         final MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId("apache-karaf-minimal").type("zip").versionAsInProject();
         final MavenArtifactUrlReference paxJdbcRepo = maven().groupId("org.ops4j.pax.jdbc").artifactId("pax-jdbc-features").versionAsInProject().type("xml").classifier("features");
-        final MavenArtifactUrlReference authserviceFeatureRepo = maven().groupId("no.priv.bang.authservice").artifactId("authservice").versionAsInProject().type("xml").classifier("features");
+        final MavenArtifactUrlReference authserviceFeatureRepo = maven().groupId("no.priv.bang.authservice").artifactId("authservice").version("LATEST").type("xml").classifier("features");
         return options(
             karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(new File("target/exam")).useDeployFolder(false).runEmbedded(true),
             configureConsole().ignoreLocalConsole().ignoreRemoteShell(),

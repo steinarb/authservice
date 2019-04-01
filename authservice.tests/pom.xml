@@ -12,13 +12,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.priv.bang.authservice</groupId>
-            <artifactId>authservice</artifactId>
-            <version>${project.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
