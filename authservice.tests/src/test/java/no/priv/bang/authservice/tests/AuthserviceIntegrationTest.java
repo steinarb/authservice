@@ -63,20 +63,20 @@ public class AuthserviceIntegrationTest {
         assertNotNull(authserviceServlet);
     }
 
-	static int freePort() {
-	    try (final ServerSocket serverSocket = new ServerSocket(0)) {
-	        serverSocket.setReuseAddress(true);
-	        final int port = serverSocket.getLocalPort();
+    static int freePort() {
+        try (final ServerSocket serverSocket = new ServerSocket(0)) {
+            serverSocket.setReuseAddress(true);
+            final int port = serverSocket.getLocalPort();
 
-	        return port;
-	    } catch (final IOException e) {
-	        throw new IllegalStateException(e);
-	    }
-	}
+            return port;
+        } catch (final IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-	static String freePortAsString() {
-	    return Integer.toString(freePort());
-	}
+    static String freePortAsString() {
+        return Integer.toString(freePort());
+    }
 
     public File getConfigFile(String path) {
         URL res = this.getClass().getResource(path);
