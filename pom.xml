@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <name>Authentication webapp</name>
+    <description>A drop-in shiro user database for apache karaf web whiteboard, with user administration UI and user self-service password and user info change. In addition can serve as forms based authentication for nginx</description>
 
     <modules>
         <module>authservice.definitions</module>
