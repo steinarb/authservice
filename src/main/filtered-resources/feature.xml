@@ -29,20 +29,24 @@
         <feature>authservice-users</feature>
         <feature>authservice-web-security</feature>
     </feature>
+    <feature name="authservice-user-admin">
+        <feature>authservice-with-dbrealm-and-session</feature>
+        <feature>authservice-user-management-frontend</feature>
+    </feature>
     <feature name="authservice-with-derby-dbrealm-and-session">
         <feature>authservice-db-derby-test</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
     <feature name="user-admin-with-derby">
-        <feature>authservice-with-derby-dbrealm-and-session</feature>
-        <feature>authservice-user-management-frontend</feature>
+        <feature>authservice-db-derby-test</feature>
+        <feature>authservice-user-admin</feature>
     </feature>
     <feature name="authservice-with-postgresql-dbrealm-and-session">
         <feature>authservice-db-postgresql</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
     <feature name="user-admin-with-postgresql">
-        <feature>authservice-with-postgresql-dbrealm-and-session</feature>
-        <feature>authservice-user-management-frontend</feature>
+        <feature>authservice-db-postgresql</feature>
+        <feature>authservice-user-admin</feature>
     </feature>
 </features>
