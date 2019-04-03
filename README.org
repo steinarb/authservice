@@ -163,6 +163,12 @@ There are several ways for a webapp to interact with authservice:
 
 ...or various permutations of the above.  With [[https://github.com/steinarb/ukelonn][ukelonn]] I plan to add the authservice tables to the ukelonn database, and then let the ukelonn database provide the database for authservice itself.  I have made a first step in the direction of authservice integration by basing ukelonn's user management on the UserManagementService OSGi service, so that it later can be replaced by the authservice implementation of the service.
 
+** Release history
+
+| Date         | Version | Comment         |
+|--------------+---------+-----------------|
+| [2019-04-02] |   1.0.0 | Initial release |
+
 ** License
 
 This software is licensed under Apache Public License v 2.0.
