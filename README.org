@@ -154,7 +154,171 @@ Instructions:
     4. Add some links to the selfservice URLs from your website's top page (or whereever is convenient):
        1. Change password: https://myserver.com/authservice/password/
        2. Modify real namd and email: https://myserver.com/authservice/user
-** Integrating with other webapps in karaf
+** Integrating with a Declarative Services (DS) web whiteboard application in karaf
+/Note/: only command examples for debian/ubuntu/etc. are shown, but the overall steps should work on a lot of platforms
+
+Do the following steps:
+ 1. Install PostgreSQL, as root do the following command:
+    #+BEGIN_EXAMPLE
+      apt-get install postgresql
+    #+END_EXAMPLE
+ 2. Add a PostgreSQL user named "karaf", as root do the following command
+    #+BEGIN_EXAMPLE
+      PGPASSWORD=karaf sudo -u postgres createuser karaf
+    #+END_EXAMPLE
+    /Note/: Replace the password in the PGPASSWORD environment variable with something other than the example and use that password in the karaf configuration
+ 3. Create an empty PostgreSQL database named "authservice" owned by user "karaf"
+    #+BEGIN_EXAMPLE
+      sudo -u postgres createdb -O karaf authservice
+    #+END_EXAMPLE
+ 4. SSH into the karaf console and add connection configuration for the postgresql database with the following commands:
+    #+BEGIN_EXAMPLE
+      config:edit no.priv.bang.authservice.db.postgresql.PostgresqlDatabase
+      config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
+      config:property-set authservice.db.jdbc.user "karaf"
+      config:property-set authservice.db.jdbc.password "karaf"
+      config:update
+    #+END_EXAMPLE
+    /Note/: use the actual password given in the PGPASSWORD environment variable when creating the karaf user
+ 5. Create a new DS component maven project, containing
+    1. A src/main/feature/feature.xml template file, referencing the authservice feature repository and the authservice feature, e.g.:
+       #+BEGIN_SRC nxml
+         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+         <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
+             <repository>mvn:no.priv.bang.authservice/authservice/${project.version}/xml/features</repository>
+             <feature name="${karaf-feature-name}">
+                 <feature>user-admin-with-postgresql</feature>
+             </feature>
+         </features>
+       #+END_SRC
+    2. Add a shiro compile time dependency to the project's maven dependencies:
+       #+BEGIN_EXAMPLE
+         <dependency>
+             <groupId>org.apache.shiro</groupId>
+             <artifactId>shiro-core</artifactId>
+             <version>1.3.1</version>
+             <scope>provided</scope>
+         </dependency>
+       #+END_EXAMPLE
+    3. A DS component exposing a ServletContextHelper service to the web whiteboard, e.g.:
+       #+BEGIN_SRC java
+         @Component(
+             property= {
+                 HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME+"=ukelonn",
+                 HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_PATH+"=/ukelonn"},
+             service=ServletContextHelper.class,
+             immediate=true
+         )
+         public class UkelonnServletContextHelper extends ServletContextHelper { }
+       #+END_SRC
+    4. A DS component exposing a Filter service to the web whiteboard, extending the AbstractShiroFilter, requiring shiro Realm and SessionDAO OSGi service injections, and configured using code (the shiro.ini mechanism doesn't work well in OSGi), eg.:
+       #+BEGIN_SRC java
+         @Component(
+             property= {
+                 HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN+"=/*",
+                 HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=ukelonn)",
+                 "servletNames=ukelonn"},
+             service=Filter.class,
+             immediate=true
+         )
+         public class UkelonnShiroFilter extends AbstractShiroFilter { // NOSONAR
+
+             private Realm realm;
+             private SessionDAO session;
+             private static final Ini INI_FILE = new Ini();
+             static {
+                 // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
+                 INI_FILE.load(UkelonnShiroFilter.class.getClassLoader().getResourceAsStream("shiro.ini"));
+             }
+
+             @Reference
+             public void setRealm(Realm realm) {
+                 this.realm = realm;
+             }
+
+             @Reference
+             public void setSession(SessionDAO session) {
+                 this.session = session;
+             }
+
+             @Activate
+             public void activate() {
+                 WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(INI_FILE);
+                 DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) securityManagerFactory.createInstance();
+                 DefaultWebSessionManager sessionmanager = new DefaultWebSessionManager();
+                 sessionmanager.setSessionDAO(session);
+                 securityManager.setSessionManager(sessionmanager);
+                 setSecurityManager(securityManager);
+                 securityManager.setRealm(realm);
+
+                 IniFilterChainResolverFactory filterChainResolverFactory = new IniFilterChainResolverFactory(INI_FILE, securityManagerFactory.getBeans());
+                 FilterChainResolver resolver = filterChainResolverFactory.createInstance();
+                 setFilterChainResolver(resolver);
+             }
+         }
+       #+END_SRC
+    5. A shiro.ini resource containing a [urls] section providing access to various path, e.g:
+       #+BEGIN_EXAMPLE
+         [main]
+         authc.loginUrl = /login
+
+         [users]
+
+         [urls]
+         / = authc
+         /user* = user
+         /admin/** = roles[administrator]
+         /api/login = anon
+         /api/registerpayment = roles[administrator]
+         /api/job/update = roles[administrator]
+         /api/admin/** = roles[administrator]
+         /api/** = authc
+         /performedjobs = authc
+         /performedpayments = authc
+       #+END_EXAMPLE
+    6. Something listening to the /login path inside the context provided by the WebContextHelper (i.e. /ukelonn/login in this example) and handling login.  "Something" could be a servlet or a JAX-RS resource.  An example of a JAX-RS resource to handle login, is this resource, which when receiving a GET returns an HTML page with a login form, and on receiving a POST from the form, performs the login:
+       #+BEGIN_SRC java
+         @Path("")
+         public class LoginResource {
+
+             @GET
+             @Path("/login")
+             @Produces(MediaType.TEXT_HTML)
+             public InputStream getLogin() {
+                 return getClass().getClassLoader().getResourceAsStream("web/login.html");
+             }
+
+             @POST
+             @Path("/login")
+             @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+             @Produces("text/html")
+             public Response postLogin(@FormParam("username") String username, @FormParam("password") String password) {
+                 Subject subject = SecurityUtils.getSubject();
+
+                 UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
+                 try {
+                     subject.login(token);
+
+                     return Response.status(Response.Status.FOUND).entity("Login successful!").build();
+                 } catch(UnknownAccountException e) {
+                     return Response.status(Response.Status.UNAUTHORIZED).entity("Unknown account")).build();
+                 } catch (IncorrectCredentialsException  e) {
+                     return Response.status(Response.Status.UNAUTHORIZED).entity("Wrong password")).build();
+                 } catch (LockedAccountException  e) {
+                     return Response.status(Response.Status.UNAUTHORIZED).entity("Account is locked")).build();
+                 } catch (AuthenticationException e) {
+                     return Response.status(Response.Status.UNAUTHORIZED).entity("Unable to log in")).build();
+                 } catch (Exception e) {
+                     throw new InternalServerErrorException();
+                 } finally {
+                     token.clear();
+                 }
+             }
+         }
+       #+END_SRC
+       /Note/! if the user logs in via the login form on the /authservice/ path on the same karaf server, the user will be logged into your application as well.
+
+** Various ways of integrating with other webapps in karaf
 
 There are several ways for a webapp to interact with authservice:
  1. Install authservice separately and add OSGi service injections for shiro Realm and Session (all user administration done in the authservice webapplication)
@@ -162,6 +326,15 @@ There are several ways for a webapp to interact with authservice:
  3. Add the features for the authservice UserManagementService implementation, as well as the features for Realm and Session and and implement a user management GUI and webservice on top of the UserManagementService
 
 ...or various permutations of the above.  With [[https://github.com/steinarb/ukelonn][ukelonn]] I plan to add the authservice tables to the ukelonn database, and then let the ukelonn database provide the database for authservice itself.  I have made a first step in the direction of authservice integration by basing ukelonn's user management on the UserManagementService OSGi service, so that it later can be replaced by the authservice implementation of the service.
+
+** Integrating with other databases than PostgreSQL
+
+Short story: it should be possible.  It should possible to use blank JDBC database that can be connected to with a combination of a JDBC url and username and password.
+
+Possible approach:
+ 1. Copy the [[https://github.com/steinarb/authservice/tree/master/authservice.db.postgresql][authservice postgresql maven project]]
+ 2. Remove the [[https://github.com/steinarb/authservice/blob/master/authservice.db.postgresql/pom.xml#L107][postgresql compile scope dependency from the pom.xml]] (this dependency adds a bundle dependency to the feature file)
+ 3. Add a dependency to the desired JDBC driver.  It has to be something that provides a DataSourceFactory OSGi service.  If the database system's JDBC driver doesn't provide a DataSourceFactory OSGi service (like e.g. PostgreSQL does), check if the pax-jdbc project have something appropriate
 
 ** Release history
 
