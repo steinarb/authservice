@@ -25,7 +25,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 public class AuthserviceLiquibase {
 
     public void createInitialSchema(Connection connection) throws LiquibaseException {
-        applyLiquibaseChangelist(connection, "db-changelog/db-changelog-1.0.0.xml");
+        applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
     }
 
     public void applyChangelist(Connection connection, ClassLoader classLoader, String changelistClasspathResource) throws LiquibaseException {
@@ -34,11 +34,11 @@ public class AuthserviceLiquibase {
     }
 
     public void updateSchema(Connection connection) throws LiquibaseException {
-        applyLiquibaseChangelist(connection, "db-changelog/db-changelog-1.1.0.xml");
+        applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.1.0.xml");
     }
 
     public boolean forceReleaseLocks(Connection connection) throws LiquibaseException {
-        Liquibase liquibase = createLiquibaseInstance(connection, "db-changelog/db-changelog-1.0.0.xml");
+        Liquibase liquibase = createLiquibaseInstance(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
         liquibase.forceReleaseLocks();
         return true;
     }
