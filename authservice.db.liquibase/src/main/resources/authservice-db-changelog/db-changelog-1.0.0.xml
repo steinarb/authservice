@@ -12,7 +12,7 @@
 
         <createTable tableName="users">
             <column autoIncrement="true" name="user_id" type="INTEGER">
-                <constraints primaryKey="true" primaryKeyName="SQL170518210719000"/>
+                <constraints primaryKey="true" primaryKeyName="authserviceuseridprimarykey"/>
             </column>
             <column name="username" type="VARCHAR(64)">
                 <constraints nullable="false" unique="true"/>
