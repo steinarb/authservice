@@ -662,7 +662,7 @@ public class UserManagementServiceProviderTest {
         assertThat(originalRolesPermissions.size()).isGreaterThan(0);
 
         // Add a new role permission
-        Role role = provider.getRoles().get(0);
+        Role role = provider.getRoles().get(1);
         Permission newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.getPermissionname())).findFirst().get();
         List<Permission> originalRolesForUser = originalRolesPermissions.get(role.getRolename());
         Map<String, List<Permission>> rolesPermissionsAfterAddingRole = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(newPermission)));

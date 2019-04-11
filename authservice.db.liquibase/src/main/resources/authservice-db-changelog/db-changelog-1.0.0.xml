@@ -170,5 +170,37 @@
 
     </changeSet>
 
+    <changeSet author="sb" id="insert-admin-user-if-not-present">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from users where username='admin'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into users (username,password,password_salt,email,firstname,lastname) values ('admin','e0/CP6ewTISoWCNfJtUNw/vHTEWl6lXlXGjmE+hBH1o=', 'Iu9wre2JgXuxvRT2MA0CGQ==','admin@localhost','Admin','Istrator');
+        </sql>
+    </changeSet>
+
+    <changeSet author="sb" id="insert-role-useradmin-if-not-present">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from roles where role_name='useradmin'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into roles (role_name, description) values ('useradmin','Administrate users')
+        </sql>
+    </changeSet>
+
+    <changeSet author="sb" id="add-user-role-useradmin-to-admin-if-not-already-present">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from user_roles where role_name='useradmin' and username='admin'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into user_roles (role_name, username) values ('useradmin','admin')
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
