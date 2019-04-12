@@ -1,5 +1,9 @@
 * Forms based nginx login and pluggable shiro auth in karaf
 
+My usecase was this: I had a set of small [[http://ops4j.github.io/pax/web/SNAPSHOT/User-Guide.html#whiteboard-extender][OSGi web whiteboard]] web applications running in [[https://karaf.apache.org][apache karaf]] fronted by [[https://nginx.org][nginx]] and I wanted to have the same login and set of users across all web application, and I wanted to have the same forms based for nginx as well.  A sort of "poor man's single signon".
+
+This project was my solution.
+
 This project contains a set of [[https://karaf.apache.org/manual/latest/#_feature_and_resolver][apache karaf features]] that fills two purposes
  1. Providing a [[Forms based login for nginx][forms based login mechanism for nginx]] (Note: the webapp provides only authentication. No authorization of individual URLs. All authenticated users get in)
  2. Providing a "poor man's single sign-on" for web applications running in the same apache karaf instance
