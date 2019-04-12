@@ -338,9 +338,10 @@ Possible approach:
 
 ** Release history
 
-| Date         | Version | Comment         |
-|--------------+---------+-----------------|
-| [2019-04-02] |   1.0.0 | Initial release |
+| Date         | Version | Comment                                                                                                                                                                          |
+|--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2019-04-12] |   1.0.1 | Avoid constraint name conflict caused by copy-paste from ukelonn liquibase schema, fix aggregate javadoc, ensure user admin with role useradmin is always created if not present |
+| [2019-04-02] |   1.0.0 | Initial release                                                                                                                                                                  |
 
 ** License
 
