@@ -189,7 +189,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/authservice/${project.version}/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/authservice/1.0.2/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-postgresql</feature>
              </feature>
