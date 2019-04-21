@@ -11,21 +11,12 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class PermissionAdd extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
-    }
-
     render () {
         let {
             permission,
             onFieldChange,
             onAddPermission,
-        } = this.state;
+        } = this.props;
 
         return (
             <div>

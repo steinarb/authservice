@@ -8,21 +8,12 @@ import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 class Permissions extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onPermissions();
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
-    }
-
     render () {
-        let { permissions } = this.state;
+        let { permissions } = this.props;
 
         return (
             <div>

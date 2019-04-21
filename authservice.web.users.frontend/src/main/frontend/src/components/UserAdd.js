@@ -12,15 +12,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class UserModify extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
-    }
-
     render () {
         let {
             passwords,
@@ -28,7 +19,7 @@ class UserModify extends Component {
             onUserFieldChange,
             onPasswordsFieldChange,
             onAddUser,
-        } = this.state;
+        } = this.props;
 
         return (
             <div>

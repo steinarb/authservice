@@ -8,21 +8,12 @@ import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 class Roles extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onRoles();
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
-    }
-
     render () {
-        let { roles } = this.state;
+        let { roles } = this.props;
 
         return (
             <div>

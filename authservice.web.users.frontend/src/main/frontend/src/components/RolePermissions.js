@@ -14,19 +14,10 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class RolePermissions extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onRoles();
         this.props.onPermissions();
         this.props.onRolePermissions();
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
     }
 
     render () {
@@ -48,7 +39,7 @@ class RolePermissions extends Component {
             onRemovePermission,
             onFieldChange,
             onSaveUpdatedRole,
-        } = this.state;
+        } = this.props;
         let {
             permissionsNotOnRoleSelected,
             permissionsNotOnRoleSelectedNames,

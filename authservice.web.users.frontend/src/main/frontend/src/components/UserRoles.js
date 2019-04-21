@@ -14,19 +14,10 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class UserRoles extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onUsers();
         this.props.onRoles();
         this.props.onUserRoles();
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
     }
 
     render () {
@@ -48,7 +39,7 @@ class UserRoles extends Component {
             onRemoveRole,
             onFieldChange,
             onSaveUpdatedUser,
-        } = this.state;
+        } = this.props;
         let {
             rolesNotOnUserSelected,
             rolesNotOnUserSelectedNames,

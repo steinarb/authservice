@@ -12,17 +12,8 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class PermissionModify extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onPermissions();
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
     }
 
     render () {
@@ -33,7 +24,7 @@ class PermissionModify extends Component {
             onPermissionsFieldChange,
             onFieldChange,
             onSaveUpdatedPermission,
-        } = this.state;
+        } = this.props;
 
         return (
             <div>

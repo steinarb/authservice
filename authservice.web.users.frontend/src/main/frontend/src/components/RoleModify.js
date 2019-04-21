@@ -12,17 +12,8 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 class RoleModify extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
-    }
-
     componentDidMount() {
         this.props.onRoles();
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ ...props });
     }
 
     render () {
@@ -33,7 +24,7 @@ class RoleModify extends Component {
             onRolesFieldChange,
             onFieldChange,
             onSaveUpdatedRole,
-        } = this.state;
+        } = this.props;
 
         return (
             <div>
