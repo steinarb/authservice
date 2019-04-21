@@ -16,8 +16,8 @@ import {
     PERMISSIONS_ERROR,
     PERMISSION_UPDATE,
     FORMFIELD_UPDATE,
-} from './actiontypes';
-import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from './constants';
+} from '../actiontypes';
+import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
 
 const usersreceived = createAction(USERS_RECEIVED);
 
