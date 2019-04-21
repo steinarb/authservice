@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE } from './actiontypes';
-import { emptyRole } from './constants';
-import { Header } from './components/bootstrap/Header';
-import { Container } from './components/bootstrap/Container';
-import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
-import {FormRow } from './components/bootstrap/FormRow';
-import {FormLabel } from './components/bootstrap/FormLabel';
-import {FormField } from './components/bootstrap/FormField';
+import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE } from '../actiontypes';
+import { emptyRole } from '../constants';
+import { Header } from './bootstrap/Header';
+import { Container } from './bootstrap/Container';
+import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
+import {FormRow } from './bootstrap/FormRow';
+import {FormLabel } from './bootstrap/FormLabel';
+import {FormField } from './bootstrap/FormField';
 
 class RoleAdd extends Component {
     constructor(props) {

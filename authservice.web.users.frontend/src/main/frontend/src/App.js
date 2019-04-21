@@ -3,19 +3,19 @@ import { Switch, Route, BrowserRouter as Router, NavLink } from 'react-router-do
 import { Provider } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
-import Home from './Home';
-import Users from './Users';
-import UserModify from './UserModify';
-import UserRoles from './UserRoles';
-import UserChangePasswords from './UserChangePasswords';
-import UserAdd from './UserAdd';
-import Roles from './Roles';
-import RoleModify from './RoleModify';
-import RolePermissions from './RolePermissions';
-import RoleAdd from './RoleAdd';
-import Permissions from './Permissions';
-import PermissionModify from './PermissionModify';
-import PermissionAdd from './PermissionAdd';
+import Home from './components/Home';
+import Users from './components/Users';
+import UserModify from './components/UserModify';
+import UserRoles from './components/UserRoles';
+import UserChangePasswords from './components/UserChangePasswords';
+import UserAdd from './components/UserAdd';
+import Roles from './components/Roles';
+import RoleModify from './components/RoleModify';
+import RolePermissions from './components/RolePermissions';
+import RoleAdd from './components/RoleAdd';
+import Permissions from './components/Permissions';
+import PermissionModify from './components/PermissionModify';
+import PermissionAdd from './components/PermissionAdd';
 
 class App extends Component {
     constructor(props) {

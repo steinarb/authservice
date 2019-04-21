@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE, ROLES_RECEIVED, ROLES_ERROR, USERROLES_RECEIVED, USERROLES_ERROR, FORMFIELD_UPDATE } from './actiontypes';
-import UserSelect from './components/UserSelect';
-import RoleList from './components/RoleList';
-import { Header } from './components/bootstrap/Header';
-import { Container } from './components/bootstrap/Container';
-import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
-import { ChevronLeft } from './components/bootstrap/ChevronLeft';
-import { ChevronRight } from './components/bootstrap/ChevronRight';
-import {FormRow } from './components/bootstrap/FormRow';
-import {FormLabel } from './components/bootstrap/FormLabel';
-import {FormField } from './components/bootstrap/FormField';
+import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE, ROLES_RECEIVED, ROLES_ERROR, USERROLES_RECEIVED, USERROLES_ERROR, FORMFIELD_UPDATE } from '../actiontypes';
+import UserSelect from './UserSelect';
+import RoleList from './RoleList';
+import { Header } from './bootstrap/Header';
+import { Container } from './bootstrap/Container';
+import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
+import { ChevronLeft } from './bootstrap/ChevronLeft';
+import { ChevronRight } from './bootstrap/ChevronRight';
+import {FormRow } from './bootstrap/FormRow';
+import {FormLabel } from './bootstrap/FormLabel';
+import {FormField } from './bootstrap/FormField';
 
 class UserRoles extends Component {
     constructor(props) {

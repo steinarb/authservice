@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR } from './actiontypes';
-import { Header } from './components/bootstrap/Header';
-import { Container } from './components/bootstrap/Container';
-import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
-import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
+import { ROLES_RECEIVED, ROLES_ERROR } from '../actiontypes';
+import { Header } from './bootstrap/Header';
+import { Container } from './bootstrap/Container';
+import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
+import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 class Roles extends Component {
     constructor(props) {

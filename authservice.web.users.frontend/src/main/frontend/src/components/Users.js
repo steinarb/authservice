@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Header } from './components/bootstrap/Header';
-import { Container } from './components/bootstrap/Container';
-import { StyledLinkLeft } from './components/bootstrap/StyledLinkLeft';
-import { StyledLinkRight } from './components/bootstrap/StyledLinkRight';
+import { Header } from './bootstrap/Header';
+import { Container } from './bootstrap/Container';
+import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
+import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 class Users extends Component {
 
