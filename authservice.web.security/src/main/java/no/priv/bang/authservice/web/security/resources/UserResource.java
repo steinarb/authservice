@@ -60,7 +60,7 @@ public class UserResource extends LoggedInUserResource {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
 
-            Document html = loadHtmlFileAndFillForm(loggedInUser);
+            Document html = loadHtmlFileAndFillForm(loggedInUser.get());
             return Response.ok().entity(html.html()).build();
         } catch (AuthserviceException e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -91,7 +91,7 @@ public class UserResource extends LoggedInUserResource {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
             }
 
-            Document html = loadHtmlFileAndFillForm(updatedUser);
+            Document html = loadHtmlFileAndFillForm(updatedUser.get());
             setMessage(html, "Modifications successfully saved");
             return Response.ok().entity(html.html()).build();
         } catch (AuthserviceException e) {
@@ -115,9 +115,8 @@ public class UserResource extends LoggedInUserResource {
         return form;
     }
 
-    private Document loadHtmlFileAndFillForm(Optional<User> loggedInUser) throws IOException {
+    private Document loadHtmlFileAndFillForm(User user) throws IOException {
         try (InputStream body = getClass().getClassLoader().getResourceAsStream(htmlFile)) {
-            User user = loggedInUser.get(); // NOSONAR false positive: isPresent is called before calling this method
             Document html = Jsoup.parse(body, "UTF-8", "");
             fillFormValues(html, user.getEmail(), user.getFirstname(), user.getLastname());
             return html;
