@@ -63,10 +63,8 @@ class RoleModify extends Component {
 }
 
 const mapStateToProps = (state) => {
-    var roles = state.roles;
-    roles.unshift(emptyRole);
     return {
-        roles,
+        roles: state.roles,
         rolesMap: new Map(state.roles.map(i => [i.rolename, i])),
         role: state.role,
     };
