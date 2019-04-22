@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-starter-kit';
-import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
+import { emptyUser } from '../constants';
 import { USERS_RECEIVED } from '../actiontypes';
 
 const usersReducer = createReducer([], {
