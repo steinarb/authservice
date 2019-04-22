@@ -1,31 +1,31 @@
 import { createReducer } from 'redux-starter-kit';
 import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
 import {
-    userserrors,
-    userroleserrors,
-    roleserrors,
-    rolepermissionserrors,
-    permissionserrors,
-} from './actions';
+    USERS_ERROR,
+    USERROLES_ERROR,
+    ROLES_ERROR,
+    ROLEPERMISSIONS_ERROR,
+    PERMISSIONS_ERROR,
+} from '../actiontypes';
 
 const errorsReducer = createReducer({}, {
-    [userserrors]: (state, action) => {
+    [USERS_ERROR]: (state, action) => {
         const users = action.payload;
         return { ...state, users };
     },
-    [userroleserrors]: (state, action) => {
+    [USERROLES_ERROR]: (state, action) => {
         const userroles = action.payload;
         return { ...state, userroles };
     },
-    [roleserrors]: (state, action) => {
+    [ROLES_ERROR]: (state, action) => {
         const roles = action.payload;
         return { ...state, roles };
     },
-    [rolepermissionserrors]: (state, action) => {
+    [ROLEPERMISSIONS_ERROR]: (state, action) => {
         const rolepermissions = action.payload;
         return { ...state, rolepermissions };
     },
-    [permissionserrors]: (state, action) => {
+    [PERMISSIONS_ERROR]: (state, action) => {
         const permissions = action.payload;
         return { ...state, permissions };
     },

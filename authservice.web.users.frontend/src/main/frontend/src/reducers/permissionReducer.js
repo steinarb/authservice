@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-starter-kit';
-import { permissionupdate } from './actions';
+import { PERMISSION_UPDATE } from '../actiontypes';
 import { emptyPermission } from '../constants';
 
 const permissionReducer = createReducer({ ...emptyPermission }, {
-    [permissionupdate]: (state, action) => {
+    [PERMISSION_UPDATE]: (state, action) => {
         const permission = action.payload;
         return permission;
     },

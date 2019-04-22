@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-starter-kit';
 import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
-import { rolepermissionsreceived } from './actions';
+import { ROLEPERMISSIONS_RECEIVED } from '../actiontypes';
 
 const rolepermissionsReducer = createReducer([], {
-    [rolepermissionsreceived]: (state, action) => {
+    [ROLEPERMISSIONS_RECEIVED]: (state, action) => {
         const rolepermissions = action.payload;
         return rolepermissions;
     },

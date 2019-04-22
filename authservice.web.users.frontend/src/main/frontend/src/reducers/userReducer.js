@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-starter-kit';
 import { emptyUser } from '../constants';
-import { userupdate } from './actions';
+import { USER_UPDATE } from '../actiontypes';
 
 const userReducer = createReducer({ ...emptyUser }, {
-    [userupdate]: (state, action) => {
+    [USER_UPDATE]: (state, action) => {
         const user = action.payload;
         return user;
     },

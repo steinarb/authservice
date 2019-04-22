@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-starter-kit';
 import { emptyRole } from '../constants';
-import { roleupdate } from './actions';
+import { ROLE_UPDATE } from '../actiontypes';
 
 const roleReducer = createReducer({ ...emptyRole }, {
-    [roleupdate]: (state, action) => {
+    [ROLE_UPDATE]: (state, action) => {
         const role = action.payload;
         return role;
     },

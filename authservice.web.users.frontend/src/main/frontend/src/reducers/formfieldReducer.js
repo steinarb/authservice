@@ -1,8 +1,8 @@
 import { createReducer } from 'redux-starter-kit';
-import { formfieldupdate } from './actions';
+import { FORMFIELD_UPDATE } from '../actiontypes';
 
 const formfieldReducer = createReducer({}, {
-    [formfieldupdate]: (state, action) => {
+    [FORMFIELD_UPDATE]: (state, action) => {
         const formfield = action.payload;
         return { ...state, ...formfield };
     },

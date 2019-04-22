@@ -1,8 +1,8 @@
 import { createReducer } from 'redux-starter-kit';
-import { rolesreceived } from './actions';
+import { ROLES_RECEIVED } from '../actiontypes';
 
 const rolesReducer = createReducer([], {
-    [rolesreceived]: (state, action) => {
+    [ROLES_RECEIVED]: (state, action) => {
         const roles = action.payload;
         return roles;
     },

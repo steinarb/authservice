@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-starter-kit';
 import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
-import { usersreceived } from './actions';
+import { USERS_RECEIVED } from '../actiontypes';
 
 const usersReducer = createReducer([], {
-    [usersreceived]: (state, action) => {
+    [USERS_RECEIVED]: (state, action) => {
         const users = action.payload;
         users.unshift(emptyUser);
         return users;
