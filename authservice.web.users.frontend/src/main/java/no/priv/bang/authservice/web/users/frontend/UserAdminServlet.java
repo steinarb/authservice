@@ -57,7 +57,9 @@ public class UserAdminServlet extends HttpServlet {
         "/roles/modify",
         "/roles/permissions",
         "/roles/add",
-        "/permissions");
+        "/permissions",
+        "/permissions/modify",
+        "/permissions/add");
 
     @Reference
     public void setLogService(LogService logservice) {
