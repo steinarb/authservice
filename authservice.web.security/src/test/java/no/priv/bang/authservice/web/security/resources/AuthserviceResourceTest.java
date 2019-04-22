@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -36,6 +37,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -245,6 +247,27 @@ class AuthserviceResourceTest extends ShiroTestBase {
         resource.httpHeaders = httpHeadersWithOriginalUri;
         URI locationWithOriginalUri = resource.findRedirectLocation();
         assertEquals(URI.create("http://lorenzo.hjemme.lan"), locationWithOriginalUri);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testLoadHtmlFileWithIOExceptionThrown() throws Exception {
+        InputStream mockstream = mock(InputStream.class);
+        when(mockstream.read(any(byte[].class), anyInt(), anyInt())).thenThrow(IOException.class);
+
+        AuthserviceResource resource = new AuthserviceResource() {
+                @Override
+                InputStream getClasspathResource(String resource) {
+                    return mockstream;
+                }
+            };
+        MockLogService logservice = new MockLogService();
+        resource.logservice = logservice;
+
+        assertThrows(InternalServerErrorException.class, () -> {
+                Document html = resource.loadHtmlFile("nonexistingfile.html");
+                assertThat(html.html()).contains("message not found");
+            });
     }
 
     private void lockAccount(String username) {

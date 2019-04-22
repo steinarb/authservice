@@ -15,6 +15,7 @@
  */
 package no.priv.bang.authservice.web.security.resources;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
@@ -39,10 +40,14 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.osgi.service.log.LogService;
 
 @Path("")
 public class AuthserviceResource {
+    private static final String LOGIN_HTML = "web/login.html";
 
     @Context
     HttpHeaders httpHeaders;
@@ -60,7 +65,7 @@ public class AuthserviceResource {
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getLogin() {
-        return getClass().getClassLoader().getResourceAsStream("web/login.html");
+        return getClass().getClassLoader().getResourceAsStream(LOGIN_HTML);
     }
 
     @POST
@@ -76,17 +81,25 @@ public class AuthserviceResource {
 
             return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(redirectUrl))).entity("Login successful!").build();
         } catch(UnknownAccountException e) {
-            logservice.log(LogService.LOG_WARNING, "Login error: unknown account", e);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(getClass().getClassLoader().getResourceAsStream("web/login_unknown_account.html")).build();
+            String message = "unknown user";
+            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            Document html = loadHtmlFileAndSetError(message);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (IncorrectCredentialsException  e) {
-            logservice.log(LogService.LOG_WARNING, "Login error: wrong password", e);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(getClass().getClassLoader().getResourceAsStream("web/login_wrong_password.html")).build();
+            String message = "wrong password";
+            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            Document html = loadHtmlFileAndSetError(message);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
-            logservice.log(LogService.LOG_WARNING, "Login error: locked account", e);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(getClass().getClassLoader().getResourceAsStream("web/login_locked_account.html")).build();
+            String message = "locked account";
+            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            Document html = loadHtmlFileAndSetError(message);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (AuthenticationException e) {
-            logservice.log(LogService.LOG_WARNING, "Login error: general authentication error", e);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(getClass().getClassLoader().getResourceAsStream("web/login_general_authentication_error.html")).build();
+            String message = "general authentication error";
+            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            Document html = loadHtmlFileAndSetError(message);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (Exception e) {
             logservice.log(LogService.LOG_ERROR, "Login error: internal server error", e);
             throw new InternalServerErrorException();
@@ -135,6 +148,36 @@ public class AuthserviceResource {
         }
 
         return Response.status(Response.Status.UNAUTHORIZED).entity("Not authenticated!\n").build();
+    }
+
+    Document loadHtmlFile(String htmlFile) {
+        try (InputStream body = getClasspathResource(htmlFile)) {
+            Document html = Jsoup.parse(body, "UTF-8", "");
+            return html;
+        } catch (IOException e) {
+            String message = "Got exception loading the index.html file";
+            logservice.log(LogService.LOG_ERROR, message, e);
+            throw new InternalServerErrorException(message, e);
+        }
+    }
+
+    InputStream getClasspathResource(String resource) {
+        return getClass().getClassLoader().getResourceAsStream(resource);
+    }
+
+    Document loadHtmlFileAndSetError(String message) {
+        Document html = loadHtmlFile(LOGIN_HTML);
+        setError(html, message);
+        return html;
+    }
+
+    static void setError(Document html, String message) {
+        setMessage(html, "Error: " + message);
+    }
+
+    static void setMessage(Document html, String message) {
+        Element banner = html.select("p[id=messagebanner]").get(0);
+        banner.text(message);
     }
 
 }
