@@ -97,19 +97,19 @@ const mapDispatchToProps = dispatch => {
         onUserFieldChange: (formValue, originalPasswords) => {
             const { user } = originalPasswords;
             const passwords = { ...originalPasswords, user: { ...user, ...formValue } };
-            dispatch({ type: PASSWORDS_UPDATE, payload: passwords });
+            dispatch(PASSWORDS_UPDATE(passwords));
         },
         onPasswordsFieldChange: (formValue, originalPasswords) => {
             const passwords = { ...originalPasswords, ...formValue };
             const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
-            dispatch({ type: PASSWORDS_UPDATE, payload: { ...passwords, passwordsNotIdentical } });
+            dispatch(PASSWORDS_UPDATE({ ...passwords, passwordsNotIdentical }));
         },
         onAddUser: (passwords) => {
             axios
                 .post('/authservice/useradmin/api/user/add', passwords)
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
-            dispatch({ type: PASSWORDS_UPDATE, payload: { ...emptyUserAndPasswords } });
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
+            dispatch(PASSWORDS_UPDATE({ ...emptyUserAndPasswords }));
         },
     };
 };

@@ -39,8 +39,8 @@ const mapDispatchToProps = dispatch => {
         onPermissions: () => {
             axios
                 .get('/authservice/useradmin/api/permissions')
-                .then(result => dispatch({ type: PERMISSIONS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: PERMISSIONS_ERROR, payload: error }));
+                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
+                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
         },
     };
 };

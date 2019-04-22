@@ -40,8 +40,8 @@ const mapDispatchToProps = dispatch => {
         onRoles: () => {
             axios
                 .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch({ type: ROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: ROLES_ERROR, payload: error }));
+                .then(result => dispatch(ROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(ROLES_ERROR(error)));
         },
     };
 };

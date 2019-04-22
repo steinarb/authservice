@@ -77,23 +77,23 @@ const mapDispatchToProps = dispatch => {
         onRoles: () => {
             axios
                 .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch({ type: ROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: ROLES_ERROR, payload: error }));
+                .then(result => dispatch(ROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(ROLES_ERROR(error)));
         },
         onRolesFieldChange: (selectedValue, rolesMap) => {
             let role = rolesMap.get(selectedValue);
-            dispatch({ type: ROLE_UPDATE, payload: role });
+            dispatch(ROLE_UPDATE(role));
         },
         onFieldChange: (formValue, originalRole) => {
             const role = { ...originalRole, ...formValue };
-            dispatch({ type: ROLE_UPDATE, payload: role });
+            dispatch(ROLE_UPDATE(role));
         },
         onSaveUpdatedRole: (role) => {
             axios
                 .post('/authservice/useradmin/api/role/modify', role)
-                .then(result => dispatch({ type: ROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: ROLES_ERROR, payload: error }));
-            dispatch({ type: ROLE_UPDATE, payload: { ...emptyRole } });
+                .then(result => dispatch(ROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(ROLES_ERROR(error)));
+            dispatch(ROLE_UPDATE({ ...emptyRole }));
         },
     };
 };

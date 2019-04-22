@@ -58,14 +58,14 @@ const mapDispatchToProps = dispatch => {
     return {
         onFieldChange: (formValue, originalPermission) => {
             const permission = { ...originalPermission, ...formValue };
-            dispatch({ type: PERMISSION_UPDATE, payload: permission });
+            dispatch(PERMISSION_UPDATE(permission));
         },
         onAddPermission: (permission) => {
             axios
                 .post('/authservice/useradmin/api/permission/add', permission)
-                .then(result => dispatch({ type: PERMISSIONS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: PERMISSIONS_ERROR, payload: error }));
-            dispatch({ type: PERMISSION_UPDATE, payload: { ...emptyPermission } });
+                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
+                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
+            dispatch(PERMISSION_UPDATE({ ...emptyPermission }));
         },
     };
 };

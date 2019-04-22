@@ -112,50 +112,50 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => {
             axios
                 .get('/authservice/useradmin/api/users')
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
         },
         onRoles: () => {
             axios
                 .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch({ type: ROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: ROLES_ERROR, payload: error }));
+                .then(result => dispatch(ROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(ROLES_ERROR(error)));
         },
         onUserRoles: () => {
             axios
                 .get('/authservice/useradmin/api/users/roles')
-                .then(result => dispatch({ type: USERROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERROLES_ERROR, payload: error }));
+                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(USERROLES_ERROR(error)));
         },
         onUsersFieldChange: (selectedValue, usersMap) => {
             let user = usersMap.get(selectedValue);
-            dispatch({ type: USER_UPDATE, payload: user });
+            dispatch(USER_UPDATE(user));
         },
         onRolesNotOnUserChange: (rolesNotOnUserSelectedNames, roleMap) => {
             const rolesNotOnUserSelected = roleMap.get(rolesNotOnUserSelectedNames);
             const payload = { rolesNotOnUserSelected, rolesNotOnUserSelectedNames };
-            dispatch({ type: FORMFIELD_UPDATE, payload });
+            dispatch(FORMFIELD_UPDATE(payload));
         },
         onAddRole: (user, rolesOnUser, rolesNotOnUserSelected) => {
             const roles = [ rolesNotOnUserSelected ];
             const userwithroles = { user, roles };
             axios
                 .post('/authservice/useradmin/api/user/addroles', userwithroles)
-                .then(result => dispatch({ type: USERROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERROLES_ERROR, payload: error }));
+                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(USERROLES_ERROR(error)));
         },
         onRolesOnUserChange: (rolesOnUserSelectedNames, roleMap) => {
             const rolesOnUserSelected = roleMap.get(rolesOnUserSelectedNames);
             const payload = { rolesOnUserSelected, rolesOnUserSelectedNames };
-            dispatch({ type: FORMFIELD_UPDATE, payload });
+            dispatch(FORMFIELD_UPDATE(payload));
         },
         onRemoveRole: (user, rolesOnUserSelected) => {
             const roles = [ rolesOnUserSelected ];
             const userwithroles = { user, roles };
             axios
                 .post('/authservice/useradmin/api/user/removeroles', userwithroles)
-                .then(result => dispatch({ type: USERROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERROLES_ERROR, payload: error }));
+                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(USERROLES_ERROR(error)));
         },
     };
 };

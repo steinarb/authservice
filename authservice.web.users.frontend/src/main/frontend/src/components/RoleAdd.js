@@ -58,14 +58,14 @@ const mapDispatchToProps = dispatch => {
     return {
         onFieldChange: (formValue, originalRole) => {
             const role = { ...originalRole, ...formValue };
-            dispatch({ type: ROLE_UPDATE, payload: role });
+            dispatch(ROLE_UPDATE(role));
         },
         onAddRole: (role) => {
             axios
                 .post('/authservice/useradmin/api/role/add', role)
-                .then(result => dispatch({ type: ROLES_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: ROLES_ERROR, payload: error }));
-            dispatch({ type: ROLE_UPDATE, payload: { ...emptyRole } });
+                .then(result => dispatch(ROLES_RECEIVED(result.data)))
+                .catch(error => dispatch(ROLES_ERROR(error)));
+            dispatch(ROLE_UPDATE({ ...emptyRole }));
         },
     };
 };

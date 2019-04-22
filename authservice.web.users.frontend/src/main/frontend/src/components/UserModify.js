@@ -89,23 +89,23 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => {
             axios
                 .get('/authservice/useradmin/api/users')
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
         },
         onUsersFieldChange: (selectedValue, usersMap) => {
             let user = usersMap.get(selectedValue);
-            dispatch({ type: USER_UPDATE, payload: user });
+            dispatch(USER_UPDATE(user));
         },
         onFieldChange: (formValue, originalUser) => {
             const user = { ...originalUser, ...formValue };
-            dispatch({ type: USER_UPDATE, payload: user });
+            dispatch(USER_UPDATE(user));
         },
         onSaveUpdatedUser: (user) => {
             axios
                 .post('/authservice/useradmin/api/user/modify', user)
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
-            dispatch({ type: USER_UPDATE, payload: { user: {} } });
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
+            dispatch(USER_UPDATE({ user: {} }));
         },
     };
 };

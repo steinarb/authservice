@@ -89,13 +89,13 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => {
             axios
                 .get('/authservice/useradmin/api/users')
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
         },
         onUsersFieldChange: (selectedValue, usersMap) => {
             const user = usersMap.get(selectedValue);
             const passwords = { ...emptyUserAndPasswords, user };
-            dispatch({ type: PASSWORDS_UPDATE, payload: passwords });
+            dispatch(PASSWORDS_UPDATE(passwords));
         },
         onPasswordsFieldChange: (formValue, passwordsFromState) => {
             const passwords = { ...passwordsFromState, ...formValue };
@@ -104,14 +104,14 @@ const mapDispatchToProps = dispatch => {
                 ...passwords,
                 passwordsNotIdentical,
             };
-            dispatch({ type: PASSWORDS_UPDATE, payload: changedField });
+            dispatch(PASSWORDS_UPDATE(changedField));
         },
         onSaveUpdatedPassword: (user) => {
             axios
                 .post('/authservice/useradmin/api/passwords/update', user)
-                .then(result => dispatch({ type: USERS_RECEIVED, payload: result.data }))
-                .catch(error => dispatch({ type: USERS_ERROR, payload: error }));
-            dispatch({ type: PASSWORDS_UPDATE, payload: emptyUserAndPasswords });
+                .then(result => dispatch(USERS_RECEIVED(result.data)))
+                .catch(error => dispatch(USERS_ERROR(error)));
+            dispatch(PASSWORDS_UPDATE(emptyUserAndPasswords));
         },
     };
 };
