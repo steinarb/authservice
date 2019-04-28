@@ -39,6 +39,13 @@
             <classifier>features</classifier>
         </dependency>
         <dependency>
+            <groupId>no.priv.bang.karaf</groupId>
+            <artifactId>postgresql-jdbc-karaf</artifactId>
+            <version>${postgresql.feature.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
         </dependency>
@@ -107,7 +114,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
