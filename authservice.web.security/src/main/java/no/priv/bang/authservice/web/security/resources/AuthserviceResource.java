@@ -47,6 +47,7 @@ import org.osgi.service.log.LogService;
 
 @Path("")
 public class AuthserviceResource {
+    private static final String LOGIN_ERROR = "Login error: ";
     private static final String LOGIN_HTML = "web/login.html";
 
     @Context
@@ -82,22 +83,22 @@ public class AuthserviceResource {
             return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(redirectUrl))).entity("Login successful!").build();
         } catch(UnknownAccountException e) {
             String message = "unknown user";
-            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetError(message);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (IncorrectCredentialsException  e) {
             String message = "wrong password";
-            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetError(message);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
             String message = "locked account";
-            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetError(message);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (AuthenticationException e) {
             String message = "general authentication error";
-            logservice.log(LogService.LOG_WARNING, "Login error: " + message, e);
+            logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetError(message);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (Exception e) {
