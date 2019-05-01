@@ -153,8 +153,7 @@ public class AuthserviceResource {
 
     Document loadHtmlFile(String htmlFile) {
         try (InputStream body = getClasspathResource(htmlFile)) {
-            Document html = Jsoup.parse(body, "UTF-8", "");
-            return html;
+            return Jsoup.parse(body, "UTF-8", "");
         } catch (IOException e) {
             String message = "Got exception loading the index.html file";
             logservice.log(LogService.LOG_ERROR, message, e);
