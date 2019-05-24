@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.FormElement;
+import org.jsoup.select.Elements;
 import org.osgi.service.log.LogService;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
@@ -41,7 +43,7 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 @Path("/password")
 public class PasswordsResource extends LoggedInUserResource {
 
-    private static final String PASSWORD_HTML = "web/password.html";
+    private static final String PASSWORD_HTML = "web/password.html"; // NOSONAR No variables holding secrets here, just the name of an HTML file
 
     @Inject
     LogService logservice;
@@ -69,18 +71,31 @@ public class PasswordsResource extends LoggedInUserResource {
             useradmin.updatePassword(passwords);
 
             Document html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Password successfully changed", logservice);
+            fillFormValues(html, password1, password2);
             return Response.ok().entity(html.html()).build();
         } catch (AuthservicePasswordsNotIdenticalException e) {
             Document html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords not identical: password not changed", logservice);
+            fillFormValues(html, password1, password2);
             return Response.status(Status.BAD_REQUEST).entity(html.html()).build();
         } catch (AuthservicePasswordEmptyException e) {
             Document html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords can't be empty: password not changed", logservice);
+            fillFormValues(html, password1, password2);
             return Response.status(Status.BAD_REQUEST).entity(html.html()).build();
         } catch (AuthserviceException e) {
             return createInternalServerErrorResponse();
         }
     }
 
+
+    private FormElement fillFormValues(Document html, String password1, String password2) {
+        FormElement form = (FormElement) html.getElementsByTag("form").get(0);
+        Elements emailInput = form.select("input[id=password1]");
+        emailInput.val(password1);
+        Elements firstnameInput = form.select("input[id=password2]");
+        firstnameInput.val(password2);
+
+        return form;
+    }
 
     private Response createInternalServerErrorResponse() {
         Document html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Internal Server Error: password not changed, see karaf.log for details", logservice);
