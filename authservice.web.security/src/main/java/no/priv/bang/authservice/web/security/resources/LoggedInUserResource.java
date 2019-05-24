@@ -26,7 +26,7 @@ import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-public class LoggedInUserResource {
+public class LoggedInUserResource extends HtmlTemplateResource {
 
     protected static Optional<User> findLoggedInUser(LogService logservice, UserManagementService useradmin) {
         try {

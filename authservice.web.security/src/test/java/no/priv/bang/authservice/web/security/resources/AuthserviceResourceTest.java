@@ -265,7 +265,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         resource.logservice = logservice;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Document html = resource.loadHtmlFile("nonexistingfile.html");
+                Document html = resource.loadHtmlFile("nonexistingfile.html", logservice);
                 assertThat(html.html()).contains("message not found");
             });
     }
