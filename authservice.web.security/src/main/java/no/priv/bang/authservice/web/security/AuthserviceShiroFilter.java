@@ -41,6 +41,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  *
  * The filter maps URLs in the webapp to users and roles.
  */
+@SuppressWarnings("deprecation")
 @Component(
     property= {
         HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN+"=/*",
@@ -71,7 +72,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     @Activate
     public void activate() {
-        WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(INI_FILE);
+        WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(INI_FILE); // NOSONAR will replace this later
         DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) securityManagerFactory.createInstance();
         DefaultWebSessionManager sessionmanager = new DefaultWebSessionManager();
         sessionmanager.setSessionDAO(session);

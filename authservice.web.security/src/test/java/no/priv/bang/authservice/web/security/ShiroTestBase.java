@@ -38,6 +38,7 @@ import org.apache.shiro.web.subject.WebSubject;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
+@SuppressWarnings("deprecation")
 public class ShiroTestBase {
 
     private static WebSecurityManager securitymanager;
