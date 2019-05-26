@@ -62,7 +62,7 @@ public class PostgresqlDatabase implements AuthserviceDatabaseService {
                 liquibase.updateSchema(connection);
             }
         } catch (Exception e) {
-            String message = "Failed to activate authservice Derby test database component";
+            String message = "Failed to activate authservice PostgreSQL database component";
             logservice.log(LogService.LOG_ERROR, message, e);
             throw new AuthserviceException(message, e);
         }
