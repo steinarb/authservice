@@ -2,6 +2,7 @@ package no.priv.bang.authservice.tests;
 
 import static org.junit.Assert.*;
 import static org.ops4j.pax.exam.CoreOptions.*;
+import static org.ops4j.pax.exam.OptionUtils.*;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.container.internal.JavaVersionUtil;
 import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -39,7 +41,7 @@ public class AuthserviceIntegrationTest {
         final MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId("apache-karaf-minimal").type("zip").versionAsInProject();
         final MavenArtifactUrlReference paxJdbcRepo = maven().groupId("org.ops4j.pax.jdbc").artifactId("pax-jdbc-features").versionAsInProject().type("xml").classifier("features");
         final MavenArtifactUrlReference authserviceFeatureRepo = maven().groupId("no.priv.bang.authservice").artifactId("authservice").version("LATEST").type("xml").classifier("features");
-        return options(
+        Option[] commonOptions = options(
             karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(new File("target/exam")).useDeployFolder(false).runEmbedded(true),
             configureConsole().ignoreLocalConsole().ignoreRemoteShell(),
             systemTimeout(720000),
@@ -55,6 +57,31 @@ public class AuthserviceIntegrationTest {
             junitBundles(),
             features(paxJdbcRepo),
             features(authserviceFeatureRepo, "user-admin-with-derby"));
+        if (JavaVersionUtil.getMajorVersion() < 9) {
+            return commonOptions;
+        }
+
+        Option[] java11VmOptions = createJava11VmOptions();
+        return combine(commonOptions, java11VmOptions);
+    }
+
+    private Option[] createJava11VmOptions() {
+        return options(
+            vmOption("--add-reads=java.xml=java.logging"),
+            vmOption("--add-exports=java.base/org.apache.karaf.specs.locator=java.xml,ALL-UNNAMED"),
+            vmOption("--patch-module"), vmOption("java.base=lib/endorsed/org.apache.karaf.specs.locator-" + System.getProperty("karaf.version") + ".jar"),
+            vmOption("--patch-module"), vmOption("java.xml=lib/endorsed/org.apache.karaf.specs.java.xml-" + System.getProperty("karaf.version") + ".jar"),
+            vmOption("--add-opens"), vmOption("java.base/java.security=ALL-UNNAMED"),
+            vmOption("--add-opens"), vmOption("java.base/java.net=ALL-UNNAMED"),
+            vmOption("--add-opens"), vmOption("java.base/java.lang=ALL-UNNAMED"),
+            vmOption("--add-opens"), vmOption("java.base/java.util=ALL-UNNAMED"),
+            vmOption("--add-opens"), vmOption("java.naming/javax.naming.spi=ALL-UNNAMED"),
+            vmOption("--add-opens"), vmOption("java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED"),
+            vmOption("--add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED"),
+            vmOption("--add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED"),
+            vmOption("--add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED"),
+            vmOption("--add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED"),
+            vmOption("-classpath"), vmOption("lib/jdk9plus/*" + File.pathSeparator + "lib/boot/*"));
     }
 
     @Test

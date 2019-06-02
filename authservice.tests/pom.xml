@@ -96,6 +96,11 @@
                         <version>3.0.0-M3</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <systemPropertyVariables>
+                        <karaf.version>${karaf.version}</karaf.version>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>
