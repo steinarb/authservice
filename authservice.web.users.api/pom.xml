@@ -141,6 +141,13 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.priv.bang.karaf</groupId>
+            <artifactId>jersey-karaf-feature</artifactId>
+            <version>${jersey-feature.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
     </dependencies>
 
     <build>
