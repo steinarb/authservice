@@ -321,6 +321,7 @@ Do the following steps:
          }
        #+END_SRC
        /Note/! if the user logs in via the login form on the /authservice/ path on the same karaf server, the user will be logged into your application as well.
+ 6. A barebones DS component plugging into authservice, and that can be adapted to your project, can be found at [[https://github.com/steinarb/authservice-sampleclient][authservice-sampleclient]]
 
 ** Various ways of integrating with other webapps in karaf
 
