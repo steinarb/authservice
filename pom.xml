@@ -38,7 +38,7 @@
         <osgi.log.version>1.3.0</osgi.log.version>
         <osgi.jdbc.version>1.0.0</osgi.jdbc.version>
         <pax.web.version>6.0.3</pax.web.version>
-        <junit.version>4.13-beta-3</junit.version> <!-- pax exam can't use junit 5 yet -->
+        <junit.version>4.12</junit.version> <!-- pax exam can't use junit 5 yet -->
         <pax.exam.version>4.13.1</pax.exam.version>
         <pax.url.version>2.5.4</pax.url.version>
         <pax.jdbc.version>1.3.1</pax.jdbc.version>
