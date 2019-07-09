@@ -204,6 +204,22 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>!*</Export-Package>
+                        <Include-Resource>
+                            /=target/classes/,
+                            /open-iconic/font/css/open-iconic-bootstrap.min.css=target/dependency/META-INF/resources/webjars/open-iconic/${open-iconic.version}/font/css/open-iconic-bootstrap.min.css,
+                            /open-iconic/font/fonts/open-iconic.woff=target/dependency/META-INF/resources/webjars/open-iconic/${open-iconic.version}/font/fonts/open-iconic.woff
+                        </Include-Resource>
+                        <_removeheaders>
+                            Include-Resource,
+                            Private-Package,
+                            Embed-Dependency,
+                            Embed-Transitive
+                        </_removeheaders>
+                    </instructions>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.karaf.tooling</groupId>
@@ -215,6 +231,49 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.webjars.bower</groupId>
+                                    <artifactId>open-iconic</artifactId>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-openiconic-for-test</id>
+                        <goals>
+                            <goal>testResources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/open-iconic</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target/dependency/META-INF/resources/webjars/open-iconic/1.1.1</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -57,6 +57,22 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
+    void testGetOpenIconicCss() {
+        AuthserviceResource resource = new AuthserviceResource();
+        InputStream cssfile = resource.getOpenIconicCss();
+        String html = new BufferedReader(new InputStreamReader(cssfile)).lines().collect(Collectors.joining("+n"));
+        assertThat(html).startsWith("@font-face");
+    }
+
+    @Test
+    void testGetOpenIconicWoff() {
+        AuthserviceResource resource = new AuthserviceResource();
+        InputStream wofffile = resource.getOpenIconicWoff();
+        String html = new BufferedReader(new InputStreamReader(wofffile)).lines().collect(Collectors.joining("+n"));
+        assertThat(html).startsWith("wOFF");
+    }
+
+    @Test
     void testGetLogin() {
         AuthserviceResource resource = new AuthserviceResource();
         InputStream htmlfile = resource.getLogin();

@@ -59,6 +59,20 @@ public class AuthserviceResource extends HtmlTemplateResource {
     }
 
     @GET
+    @Produces("text/css")
+    @Path("open-iconic/font/css/open-iconic-bootstrap.min.css")
+    public InputStream getOpenIconicCss() {
+        return getClass().getClassLoader().getResourceAsStream("open-iconic/font/css/open-iconic-bootstrap.min.css");
+    }
+
+    @GET
+    @Produces("fond/woff")
+    @Path("open-iconic/font/fonts/open-iconic.woff")
+    public InputStream getOpenIconicWoff() {
+        return getClass().getClassLoader().getResourceAsStream("open-iconic/font/fonts/open-iconic.woff");
+    }
+
+    @GET
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getLogin() {

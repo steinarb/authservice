@@ -64,6 +64,40 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
+    public void testGetOpenIconicCss() throws Exception {
+        MockLogService logservice = new MockLogService();
+        UserManagementService useradmin = mock(UserManagementService.class);
+
+        HttpServletRequest request = buildGetUrl("open-iconic/font/css/open-iconic-bootstrap.min.css");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+
+        createSubjectAndBindItToThread(request, response);
+
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertThat(response.getOutputStreamContent()).contains("open-iconic");
+    }
+
+    @Test
+    public void testGetOpenIconicWoff() throws Exception {
+        MockLogService logservice = new MockLogService();
+        UserManagementService useradmin = mock(UserManagementService.class);
+
+        HttpServletRequest request = buildGetUrl("open-iconic/font/fonts/open-iconic.woff");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+
+        createSubjectAndBindItToThread(request, response);
+
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertThat(response.getOutputStreamContent()).contains("wOFF");
+    }
+
+    @Test
     public void testAuthenticate() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
@@ -211,6 +245,13 @@ public class AuthserviceServletTest extends ShiroTestBase {
         MockHttpServletRequest request = buildGetRootUrl();
         request.setRequestURL("http://localhost:8181/authservice/user");
         request.setRequestURI("/authservice/user/");
+        return request;
+    }
+
+    private HttpServletRequest buildGetUrl(String localpath) {
+        MockHttpServletRequest request = buildGetRootUrl();
+        request.setRequestURL("http://localhost:8181/authservice/" + localpath);
+        request.setRequestURI("/authservice/" + localpath);
         return request;
     }
 
