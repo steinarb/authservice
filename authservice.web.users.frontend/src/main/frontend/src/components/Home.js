@@ -8,6 +8,7 @@ class Home extends Component {
     render () {
         return (
             <div>
+                <a className="btn btn-block btn-primary left-align-cell" href="/authservice/"><span className="oi oi-chevron-left" title="chevron left" aria-hidden="true"></span>&nbsp;Up to authservice top</a>
                 <Header>
                     <h1>User administration</h1>
                 </Header>
@@ -15,9 +16,6 @@ class Home extends Component {
                     <StyledLinkRight to="/authservice/useradmin/users">Adminstrate users</StyledLinkRight>
                     <StyledLinkRight to="/authservice/useradmin/roles">Administrate roles</StyledLinkRight>
                     <StyledLinkRight to="/authservice/useradmin/permissions">Administrate permissions</StyledLinkRight>
-                </Container>
-                <Container>
-                    <a href="/authservice/">Up to authservice top</a>
                 </Container>
             </div>
         );
