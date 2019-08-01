@@ -50,8 +50,9 @@
         <postgresql.version>42.2.5</postgresql.version>
         <postgresql.feature.version>1.0.1</postgresql.feature.version>
         <jackson.version>2.9.9</jackson.version>
-        <jersey-feature.version>1.1.0</jersey-feature.version>
-        <jersey.version>2.27</jersey.version>
+        <jackson.databind.version>2.9.9.2</jackson.databind.version>
+        <jersey-feature.version>1.2.0</jersey-feature.version>
+        <jersey.version>2.28</jersey.version>
         <open-iconic.version>1.1.1</open-iconic.version>
         <sonar.cpd.exclusions>
             **/DerbyTestDatabase.java,
@@ -291,7 +292,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson.databind.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
