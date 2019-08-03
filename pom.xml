@@ -22,7 +22,6 @@
         <module>authservice.users</module>
         <module>authservice.web.users.api</module>
         <module>authservice.web.users.frontend</module>
-        <module>authservice.tests</module>
     </modules>
 
     <properties>
