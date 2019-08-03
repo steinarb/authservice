@@ -104,8 +104,8 @@ Instructions:
               location @error401 {
                       add_header X-Original-URI "$scheme://$http_host$request_uri";
                       add_header Set-Cookie "NSREDIRECT=$scheme://$http_host$request_uri";
-                      return 302 /authservice/login
-              }
+                      return 302 /authservice/login?originalUri=$scheme://$http_host$request_uri;
+               }
       }
     #+END_SRC
 *** Installing and configuring postgresql

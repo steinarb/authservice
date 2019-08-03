@@ -20,13 +20,13 @@ import java.net.URI;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -40,6 +40,8 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.FormElement;
+import org.jsoup.select.Elements;
 import org.osgi.service.log.LogService;
 
 @Path("")
@@ -75,41 +77,48 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @GET
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
-    public InputStream getLogin() {
-        return getClass().getClassLoader().getResourceAsStream(LOGIN_HTML);
+    public Response getLogin(@QueryParam("originalUri") String originalUri) {
+        Document html = loadHtmlFile(LOGIN_HTML, logservice);
+        fillFormValues(html, originalUri);
+
+        return Response.status(Response.Status.OK).entity(html.html()).build();
     }
 
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces("text/html")
-    public Response postLogin(@FormParam("username") String username, @FormParam("password") String password, @CookieParam("NSREDIRECT") String redirectUrl) {
+    public Response postLogin(@FormParam("username") String username, @FormParam("password") String password, @FormParam("originalUri") String originalUri) {
         Subject subject = SecurityUtils.getSubject();
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
         try {
             subject.login(token);
 
-            return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(redirectUrl))).entity("Login successful!").build();
+            return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(originalUri))).entity("Login successful!").build();
         } catch(UnknownAccountException e) {
             String message = "unknown user";
             logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (IncorrectCredentialsException  e) {
             String message = "wrong password";
             logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
             String message = "locked account";
             logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (AuthenticationException e) {
             String message = "general authentication error";
             logservice.log(LogService.LOG_WARNING, LOGIN_ERROR + message, e);
             Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (Exception e) {
             logservice.log(LogService.LOG_ERROR, "Login error: internal server error", e);
@@ -159,6 +168,34 @@ public class AuthserviceResource extends HtmlTemplateResource {
         }
 
         return Response.status(Response.Status.UNAUTHORIZED).entity("Not authenticated!\n").build();
+    }
+
+    private FormElement fillFormValues(Document html, String originalUri) {
+        FormElement form = findForm(html);
+        updateOriginalUri(form, originalUri);
+
+        return form;
+    }
+
+    private FormElement fillFormValues(Document html, String originalUri, String username, String password) {
+        FormElement form = findForm(html);
+        updateOriginalUri(form, originalUri);
+        Elements usernameInput = form.select("input[id=username]");
+        usernameInput.val(username);
+        Elements passwordInput = form.select("input[id=password]");
+        passwordInput.val(password);
+
+        return form;
+    }
+
+    FormElement findForm(Document html) {
+        FormElement form = (FormElement) html.getElementsByTag("form").get(0);
+        return form;
+    }
+
+    void updateOriginalUri(FormElement form, String originalUri) {
+        Elements originalUriHidden = form.select("input[id=originalUri]");
+        originalUriHidden.val(originalUri);
     }
 
 }

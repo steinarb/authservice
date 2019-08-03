@@ -75,9 +75,10 @@ class AuthserviceResourceTest extends ShiroTestBase {
     @Test
     void testGetLogin() {
         AuthserviceResource resource = new AuthserviceResource();
-        InputStream htmlfile = resource.getLogin();
-        String html = new BufferedReader(new InputStreamReader(htmlfile)).lines().collect(Collectors.joining("+n"));
-        assertThat(html).startsWith("<html");
+        String originalUri = "https://mysite.com";
+        Response htmlfile = resource.getLogin(originalUri);
+        String html = (String) htmlfile.getEntity();
+        assertThat(html).contains(originalUri);
     }
 
     @Test
