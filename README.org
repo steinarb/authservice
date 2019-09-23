@@ -188,8 +188,8 @@ Do the following steps:
     1. A src/main/feature/feature.xml template file, referencing the authservice feature repository and the authservice feature, e.g.:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-         <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/authservice/1.1.0/xml/features</repository>
+         <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
+             <repository>mvn:no.priv.bang.authservice/authservice/1.5.0/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-postgresql</feature>
              </feature>
@@ -345,6 +345,7 @@ Possible approach:
 
 | Date         | Version | Comment                                                                                                                                                                          |
 |--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2019-03-23] |   1.5.0 | Use PostgreSQL JDBC driver version 4.2.8, which has its own karaf feature                                                                                                        |
 | [2019-08-02] |   1.4.0 | Better bootstrap styling of links, frontend version upgrades, PostgreSQL JDBC plugin that survives reloads, fix github security warning about jackson-databind                   |
 | [2019-06-10] |   1.3.0 | Make authservice build with openjdk-11                                                                                                                                           |
 | [2019-05-26] |   1.2.0 | Upgrade apache shiro to version 1.4.1 and upgrade jackson to version 2.9.9, fix webapp <title>                                                                                   |
