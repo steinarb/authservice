@@ -30,6 +30,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
 
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.LockException;
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
@@ -55,16 +58,27 @@ public class PostgresqlDatabase implements AuthserviceDatabaseService {
     public void activate(Map<String, Object> config) {
         try {
             datasource = createDatasource(config);
-            try(Connection connection = datasource.getConnection()) {
-                AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
-                liquibase.createInitialSchema(connection);
-                liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
-                liquibase.updateSchema(connection);
-            }
+            applyChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock();
+        } catch (DatabaseException e) {
+            logservice.log(LogService.LOG_WARNING, "Authservice PostgreSQL component caught exception during liquibase schema setup, continuing without modifying the schema", e);
         } catch (Exception e) {
             String message = "Failed to activate authservice PostgreSQL database component";
             logservice.log(LogService.LOG_ERROR, message, e);
             throw new AuthserviceException(message, e);
+        }
+    }
+
+    void applyChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock() throws LiquibaseException, SQLException {
+        try(Connection connection = datasource.getConnection()) {
+            AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
+            try {
+                liquibase.createInitialSchema(connection);
+                liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
+                liquibase.updateSchema(connection);
+            } catch (LockException e) {
+                logservice.log(LogService.LOG_WARNING, "Authservice PostgreSQL component failed to aquire liquibase lock, trying to force liquibase lock", e);
+                liquibase.forceReleaseLocks(connection, logservice);
+            }
         }
     }
 

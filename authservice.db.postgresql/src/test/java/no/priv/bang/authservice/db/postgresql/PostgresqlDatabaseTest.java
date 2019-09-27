@@ -19,9 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,8 +86,42 @@ class PostgresqlDatabaseTest {
         database.setLogservice(logservice);
         DataSourceFactory factory = mock(DataSourceFactory.class);
         DataSource datasource = mock(DataSource.class);
-        when(datasource.getConnection()).thenThrow(SQLException.class);
+        Connection connection = mock(Connection.class);
+        when(connection.getMetaData()).thenThrow(SQLException.class);
+        when(datasource.getConnection()).thenReturn(connection);
         when(factory.createDataSource(any())).thenReturn(datasource);
+        database.setDataSourceFactory(factory);
+
+        database.activate(Collections.emptyMap());
+        assertEquals(1, logservice.getLogmessages().size());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testCreateWhenLockExceptionIsThrown() throws Exception {
+        MockLogService logservice = new MockLogService();
+        PostgresqlDatabase database = new PostgresqlDatabase();
+        database.setLogservice(logservice);
+        DataSourceFactory factory = mock(DataSourceFactory.class);
+        DataSource datasource = mock(DataSource.class);
+        Connection connection = createMockConnection();
+        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
+        when(datasource.getConnection()).thenReturn(connection);
+        when(factory.createDataSource(any())).thenReturn(datasource);
+        database.setDataSourceFactory(factory);
+
+        database.activate(Collections.emptyMap());
+        assertEquals(2, logservice.getLogmessages().size());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testCreateWhenSQLExceptionIsThrownBeforeLiquibaseStarts() throws Exception {
+        MockLogService logservice = new MockLogService();
+        PostgresqlDatabase database = new PostgresqlDatabase();
+        database.setLogservice(logservice);
+        DataSourceFactory factory = mock(DataSourceFactory.class);
+        when(factory.createDataSource(any())).thenThrow(SQLException.class);
         database.setDataSourceFactory(factory);
 
         assertThrows(AuthserviceException.class, () -> {
@@ -124,6 +160,22 @@ class PostgresqlDatabaseTest {
         assertEquals("jdbc:postgresql:///authservice", properties.getProperty(DataSourceFactory.JDBC_URL));
         assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_USER));
         assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
+    }
+
+    Connection createMockConnection() throws Exception {
+        Connection connection = mock(Connection.class);
+        DatabaseMetaData metadata = mock(DatabaseMetaData.class);
+        when(metadata.getDatabaseProductName()).thenReturn("mockdb");
+        when(metadata.getSQLKeywords()).thenReturn("insert, select, delete");
+        ResultSet tables = mock(ResultSet.class);
+        when(metadata.getTables(anyString(), anyString(), anyString(), any(String[].class))).thenReturn(tables);
+        Statement stmnt = mock(Statement.class);
+        ResultSet results = mock(ResultSet.class);
+        when(results.next()).thenReturn(true).thenReturn(false);
+        when(stmnt.executeQuery(anyString())).thenReturn(results);
+        when(connection.createStatement()).thenReturn(stmnt);
+        when(connection.getMetaData()).thenReturn(metadata);
+        return connection;
     }
 
     private Map<String, Object> createConfigThatWillWorkWithDerby() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2019 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 package no.priv.bang.authservice.db.liquibase;
 
 import java.sql.Connection;
+
+import org.osgi.service.log.LogService;
+
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
@@ -37,10 +40,16 @@ public class AuthserviceLiquibase {
         applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.1.0.xml");
     }
 
-    public boolean forceReleaseLocks(Connection connection) throws LiquibaseException {
-        Liquibase liquibase = createLiquibaseInstance(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
-        liquibase.forceReleaseLocks();
-        return true;
+    public boolean forceReleaseLocks(Connection connection, LogService logservice) throws LiquibaseException {
+        try {
+            Liquibase liquibase = createLiquibaseInstance(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
+            liquibase.forceReleaseLocks();
+            logservice.log(LogService.LOG_INFO, "Liquibase lock successfully forced, continuing without modifying the schema");
+            return true;
+        } catch (Exception e) {
+            logservice.log(LogService.LOG_WARNING, "Authservice failed to force lock", e);
+            return false;
+        }
     }
 
     private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {

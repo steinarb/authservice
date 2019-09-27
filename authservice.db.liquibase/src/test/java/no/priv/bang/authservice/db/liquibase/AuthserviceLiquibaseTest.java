@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2019 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package no.priv.bang.authservice.db.liquibase;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +30,9 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
+import org.osgi.service.log.LogService;
+
+import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceLiquibaseTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
@@ -70,10 +74,20 @@ class AuthserviceLiquibaseTest {
 
     @Test
     void testForceReleaseLocks() throws Exception {
+        LogService logservice = new MockLogService();
         Connection connection = createConnection();
         AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
-        boolean success = handleregLiquibase.forceReleaseLocks(connection);
+        boolean success = handleregLiquibase.forceReleaseLocks(connection, logservice);
         assertTrue(success);
+    }
+
+    @Test
+    void testForceReleaseLocksWithFailure() throws Exception {
+        LogService logservice = new MockLogService();
+        Connection connection = mock(Connection.class);
+        AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
+        boolean success = handleregLiquibase.forceReleaseLocks(connection, logservice);
+        assertFalse(success);
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
