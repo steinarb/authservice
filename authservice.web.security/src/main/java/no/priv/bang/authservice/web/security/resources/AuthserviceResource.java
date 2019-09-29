@@ -189,8 +189,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
     }
 
     FormElement findForm(Document html) {
-        FormElement form = (FormElement) html.getElementsByTag("form").get(0);
-        return form;
+        return (FormElement) html.getElementsByTag("form").get(0);
     }
 
     void updateOriginalUri(FormElement form, String originalUri) {
