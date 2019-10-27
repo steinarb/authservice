@@ -89,24 +89,15 @@ public class PostgresqlDatabase extends DatabaseServiceBase implements Authservi
     }
 
     private DataSource createDatasource(Map<String, Object> config) throws SQLException {
-        Properties properties = createDatabaseConnectionProperties(config);
+        Properties properties = createDatabaseConnectionPropertiesFromOsgiConfig(config);
         return dataSourceFactory.createDataSource(properties);
     }
 
-    static Properties createDatabaseConnectionProperties(Map<String, Object> config) {
+    static Properties createDatabaseConnectionPropertiesFromOsgiConfig(Map<String, Object> config) {
         String jdbcUrl = ((String) config.getOrDefault(AUTHSERVICE_JDBC_URL, "jdbc:postgresql:///authservice")).trim();
         String jdbcUser = ((String) config.getOrDefault(AUTHSERVICE_JDBC_USER, "karaf")).trim();
         String jdbcPassword = ((String) config.getOrDefault(AUTHSERVICE_JDBC_PASSWORD, "karaf")).trim();
-        Properties properties = new Properties();
-        properties.setProperty(DataSourceFactory.JDBC_URL, jdbcUrl);
-        if (!"".equals(jdbcUser)) {
-            properties.setProperty(DataSourceFactory.JDBC_USER, jdbcUser);
-        }
-        if (!"".equals(jdbcPassword)) {
-            properties.setProperty(DataSourceFactory.JDBC_PASSWORD, jdbcPassword);
-        }
-
-        return properties;
+        return createDatabaseConnectionProperties(jdbcUrl, jdbcUser, jdbcPassword);
     }
 
 }

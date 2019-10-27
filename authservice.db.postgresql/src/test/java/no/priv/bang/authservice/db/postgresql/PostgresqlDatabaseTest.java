@@ -135,7 +135,7 @@ class PostgresqlDatabaseTest {
         config.put(AUTHSERVICE_JDBC_URL, "jdbc:postgresql:///ukelonn");
         config.put(AUTHSERVICE_JDBC_USER, "authservice");
         config.put(AUTHSERVICE_JDBC_PASSWORD, "secret");
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionProperties(config);
+        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(config);
         assertEquals("jdbc:postgresql:///ukelonn", properties.getProperty(DataSourceFactory.JDBC_URL));
         assertEquals("authservice", properties.getProperty(DataSourceFactory.JDBC_USER));
         assertEquals("secret", properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
@@ -147,7 +147,7 @@ class PostgresqlDatabaseTest {
         config.put(AUTHSERVICE_JDBC_URL, "");
         config.put(AUTHSERVICE_JDBC_USER, "");
         config.put(AUTHSERVICE_JDBC_PASSWORD, "");
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionProperties(config);
+        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(config);
         assertEquals("", properties.getProperty(DataSourceFactory.JDBC_URL));
         // Verify that empty username and password can be used to remove username and password from the properties
         assertNull(properties.getProperty(DataSourceFactory.JDBC_USER));
@@ -156,7 +156,7 @@ class PostgresqlDatabaseTest {
 
     @Test
     public void testCreateDatabaseConnectionPropertiesDefaultsOnEmptyConfig() {
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionProperties(Collections.emptyMap());
+        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(Collections.emptyMap());
         assertEquals("jdbc:postgresql:///authservice", properties.getProperty(DataSourceFactory.JDBC_URL));
         assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_USER));
         assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
