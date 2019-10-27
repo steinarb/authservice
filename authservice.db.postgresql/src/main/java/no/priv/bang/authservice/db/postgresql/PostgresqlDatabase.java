@@ -36,9 +36,10 @@ import liquibase.exception.LockException;
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
+import no.priv.bang.osgiservice.database.DatabaseServiceBase;
 
 @Component(immediate=true)
-public class PostgresqlDatabase implements AuthserviceDatabaseService {
+public class PostgresqlDatabase extends DatabaseServiceBase implements AuthserviceDatabaseService {
 
     private LogService logservice;
     private DataSourceFactory dataSourceFactory;
@@ -85,11 +86,6 @@ public class PostgresqlDatabase implements AuthserviceDatabaseService {
     @Override
     public DataSource getDatasource() {
         return datasource;
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException {
-        return datasource.getConnection();
     }
 
     private DataSource createDatasource(Map<String, Object> config) throws SQLException {

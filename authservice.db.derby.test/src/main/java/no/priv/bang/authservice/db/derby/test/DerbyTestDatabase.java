@@ -30,9 +30,10 @@ import org.osgi.service.log.LogService;
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
+import no.priv.bang.osgiservice.database.DatabaseServiceBase;
 
 @Component(immediate=true)
-public class DerbyTestDatabase implements AuthserviceDatabaseService {
+public class DerbyTestDatabase extends DatabaseServiceBase implements AuthserviceDatabaseService {
 
     private LogService logservice;
     private DataSourceFactory dataSourceFactory;
@@ -68,11 +69,6 @@ public class DerbyTestDatabase implements AuthserviceDatabaseService {
     @Override
     public DataSource getDatasource() {
         return datasource;
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException {
-        return datasource.getConnection();
     }
 
     private DataSource createDatasource() throws SQLException {
