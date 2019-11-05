@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.priv.bang.authservice</groupId>
     <artifactId>authservice</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -624,7 +624,7 @@
     <scm>
         <url>https://github.com/steinarb/authservice</url>
         <connection>scm:git:https://github.com/steinarb/authservice.git</connection>
-        <tag>authservice-1.6.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
