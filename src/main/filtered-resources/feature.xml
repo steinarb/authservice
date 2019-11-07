@@ -15,14 +15,43 @@
 
     <repository>mvn:no.priv.bang.authservice/authservice.definitions/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase/${project.version}/xml/features</repository>
-    <repository>mvn:no.priv.bang.authservice/authservice.db.derby.test/${project.version}/xml/features</repository>
-    <repository>mvn:no.priv.bang.authservice/authservice.db.postgresql/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase.test/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase.production/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.dbrealm/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.memorysession/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.frontend/${project.version}/xml/features</repository>
+    <repository>mvn:org.postgresql/postgresql/${postgresql.version}/xml/features</repository>
+    <feature name="authservice-db-test" version="${project.version}">
+        <config name="org.ops4j.datasource-authservice-test">
+            osgi.jdbc.driver.name=derby
+            dataSourceName=jdbc/authservice
+            url=jdbc:derby:memory:ukelonn;create=true
+            ops4j.preHook=authservicedb
+        </config>
+        <capability>
+            osgi.service;objectClass=javax.sql.DataSource;effective:=active;osgi.jndi.service.name=jdbc/authservice
+        </capability>
+        <feature>authservice-db-liquibase-test</feature>
+        <feature>pax-jdbc-config</feature>
+    </feature>
+    <feature name="authservice-db-production" version="${project.version}">
+        <config name="org.ops4j.datasource-authservice-production">
+            osgi.jdbc.driver.name=PostgreSQL JDBC Driver
+            dataSourceName=jdbc/authservice
+            url=jdbc:postgresql:///authservice
+            user=karaf
+            password=karaf
+            ops4j.preHook=authservicedb
+        </config>
+        <capability>
+            osgi.service;objectClass=javax.sql.DataSource;effective:=active;osgi.jndi.service.name=jdbc/authservice
+        </capability>
+        <feature>authservice-db-liquibase-production</feature>
+        <feature>pax-jdbc-config</feature>
+    </feature>
     <feature name="authservice-with-dbrealm-and-session">
         <feature>authservice-web-security-dbrealm</feature>
         <feature>authservice-web-security-memorysession</feature>
@@ -33,20 +62,36 @@
         <feature>authservice-with-dbrealm-and-session</feature>
         <feature>authservice-user-management-frontend</feature>
     </feature>
-    <feature name="authservice-with-derby-dbrealm-and-session">
-        <feature>authservice-db-derby-test</feature>
+    <feature name="authservice-with-testdb-dbrealm-and-session">
+        <feature>authservice-db-test</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
+    </feature>
+    <feature name="authservice-with-derby-dbrealm-and-session">
+        <feature>authservice-with-testdb-dbrealm-and-session</feature>
+        <feature>pax-jdbc-derby</feature>
+    </feature>
+    <feature name="user-admin-with-testdb">
+        <feature>authservice-db-test</feature>
+        <feature>authservice-user-admin</feature>
     </feature>
     <feature name="user-admin-with-derby">
-        <feature>authservice-db-derby-test</feature>
-        <feature>authservice-user-admin</feature>
+        <feature>user-admin-with-testdb</feature>
+        <feature>pax-jdbc-derby</feature>
     </feature>
-    <feature name="authservice-with-postgresql-dbrealm-and-session">
-        <feature>authservice-db-postgresql</feature>
+    <feature name="authservice-with-productiondb-dbrealm-and-session">
+        <feature>authservice-db-production</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
-    <feature name="user-admin-with-postgresql">
-        <feature>authservice-db-postgresql</feature>
+    <feature name="authservice-with-postgresql-dbrealm-and-session">
+        <feature>authservice-with-productiondb-dbrealm-and-session</feature>
+        <feature>postgresql</feature>
+    </feature>
+    <feature name="user-admin-with-productiondb">
+        <feature>authservice-db-production</feature>
         <feature>authservice-user-admin</feature>
+    </feature>
+    <feature name="user-admin-with-postgresql">
+        <feature>user-admin-with-productiondb</feature>
+        <feature>postgresql</feature>
     </feature>
 </features>

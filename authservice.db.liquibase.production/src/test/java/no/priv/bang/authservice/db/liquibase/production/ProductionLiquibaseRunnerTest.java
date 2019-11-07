@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.db.postgresql;
+package no.priv.bang.authservice.db.liquibase.production;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,9 +24,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -35,24 +32,20 @@ import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
-import static no.priv.bang.authservice.definitions.AuthserviceConstants.*;
-
-import no.priv.bang.authservice.db.postgresql.PostgresqlDatabase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
-class PostgresqlDatabaseTest {
+class ProductionLiquibaseRunnerTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
 
     @Test
-    void testCreate() throws Exception {
+    void testCreateSchema() throws Exception {
         MockLogService logservice = new MockLogService();
-        PostgresqlDatabase database = new PostgresqlDatabase();
-        database.setLogservice(logservice);
-        database.setDataSourceFactory(derbyDataSourceFactory);
-        Map<String, Object> config = createConfigThatWillWorkWithDerby();
-        database.activate(config);
-
+        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        runner.setLogservice(logservice);
+        runner.activate();
+        DataSource database = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
+        runner.prepare(database);
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
                 ResultSet results = statment.executeQuery();
@@ -65,7 +58,7 @@ class PostgresqlDatabaseTest {
             }
         }
 
-        try(Connection connection = database.getDatasource().getConnection()) {
+        try(Connection connection = database.getConnection()) {
             try(PreparedStatement statment = connection.prepareStatement("select * from roles")) {
                 ResultSet results = statment.executeQuery();
                 int rolecount = 0;
@@ -80,86 +73,38 @@ class PostgresqlDatabaseTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    void testCreateWhenSQLExceptionIsThrown() throws Exception {
+    void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
-        PostgresqlDatabase database = new PostgresqlDatabase();
-        database.setLogservice(logservice);
-        DataSourceFactory factory = mock(DataSourceFactory.class);
+        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        runner.setLogservice(logservice);
         DataSource datasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenReturn(connection);
-        when(factory.createDataSource(any())).thenReturn(datasource);
-        database.setDataSourceFactory(factory);
 
-        database.activate(Collections.emptyMap());
+        runner.activate();
+        assertThrows(AuthserviceException.class, () -> {
+                runner.prepare(datasource);
+            });
         assertEquals(1, logservice.getLogmessages().size());
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    void testCreateWhenLockExceptionIsThrown() throws Exception {
+    void testCreateSchemaWhenLockExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
-        PostgresqlDatabase database = new PostgresqlDatabase();
-        database.setLogservice(logservice);
+        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        runner.setLogservice(logservice);
         DataSourceFactory factory = mock(DataSourceFactory.class);
         DataSource datasource = mock(DataSource.class);
         Connection connection = createMockConnection();
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenReturn(connection);
         when(factory.createDataSource(any())).thenReturn(datasource);
-        database.setDataSourceFactory(factory);
 
-        database.activate(Collections.emptyMap());
+        runner.activate();
+        runner.prepare(datasource);
         assertEquals(2, logservice.getLogmessages().size());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    void testCreateWhenSQLExceptionIsThrownBeforeLiquibaseStarts() throws Exception {
-        MockLogService logservice = new MockLogService();
-        PostgresqlDatabase database = new PostgresqlDatabase();
-        database.setLogservice(logservice);
-        DataSourceFactory factory = mock(DataSourceFactory.class);
-        when(factory.createDataSource(any())).thenThrow(SQLException.class);
-        database.setDataSourceFactory(factory);
-
-        assertThrows(AuthserviceException.class, () -> {
-                database.activate(Collections.emptyMap());
-            });
-    }
-
-    @Test
-    public void testCreateDatabaseConnectionProperties() {
-        Map<String, Object> config = new HashMap<>();
-        config.put(AUTHSERVICE_JDBC_URL, "jdbc:postgresql:///ukelonn");
-        config.put(AUTHSERVICE_JDBC_USER, "authservice");
-        config.put(AUTHSERVICE_JDBC_PASSWORD, "secret");
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(config);
-        assertEquals("jdbc:postgresql:///ukelonn", properties.getProperty(DataSourceFactory.JDBC_URL));
-        assertEquals("authservice", properties.getProperty(DataSourceFactory.JDBC_USER));
-        assertEquals("secret", properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
-    }
-
-    @Test
-    public void testCreateDatabaseConnectionPropertiesWithEmptyConfigValues() {
-        Map<String, Object> config = new HashMap<>();
-        config.put(AUTHSERVICE_JDBC_URL, "");
-        config.put(AUTHSERVICE_JDBC_USER, "");
-        config.put(AUTHSERVICE_JDBC_PASSWORD, "");
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(config);
-        assertEquals("", properties.getProperty(DataSourceFactory.JDBC_URL));
-        // Verify that empty username and password can be used to remove username and password from the properties
-        assertNull(properties.getProperty(DataSourceFactory.JDBC_USER));
-        assertNull(properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
-    }
-
-    @Test
-    public void testCreateDatabaseConnectionPropertiesDefaultsOnEmptyConfig() {
-        Properties properties = PostgresqlDatabase.createDatabaseConnectionPropertiesFromOsgiConfig(Collections.emptyMap());
-        assertEquals("jdbc:postgresql:///authservice", properties.getProperty(DataSourceFactory.JDBC_URL));
-        assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_USER));
-        assertEquals("karaf", properties.getProperty(DataSourceFactory.JDBC_PASSWORD));
     }
 
     Connection createMockConnection() throws Exception {
@@ -178,9 +123,9 @@ class PostgresqlDatabaseTest {
         return connection;
     }
 
-    private Map<String, Object> createConfigThatWillWorkWithDerby() {
-        Map<String, Object> config = new HashMap<>();
-        config.put(AUTHSERVICE_JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+    private Properties createConfigThatWillWorkWithDerby() {
+        Properties config = new Properties();
+        config.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
         return config;
     }
 

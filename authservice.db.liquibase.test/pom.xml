@@ -6,12 +6,12 @@
         <version>1.7.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>authservice.db.derby.test</artifactId>
+    <artifactId>authservice.db.liquibase.test</artifactId>
 
-    <name>Authentication webapp derby database for use in development and testing</name>
+    <name>Authentication webapp test database for use during development</name>
 
     <properties>
-        <karaf-feature-name>authservice-db-derby-test</karaf-feature-name>
+        <karaf-feature-name>authservice-db-liquibase-test</karaf-feature-name>
     </properties>
 
     <dependencies>
@@ -85,6 +85,10 @@
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>
             <artifactId>pax-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.jdbc</groupId>
+            <artifactId>pax-jdbc-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>

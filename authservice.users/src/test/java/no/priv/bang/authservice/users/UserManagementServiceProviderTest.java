@@ -28,7 +28,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+
+import javax.sql.DataSource;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -39,10 +42,11 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
+import org.osgi.service.jdbc.DataSourceFactory;
+
 import static org.assertj.core.api.Assertions.*;
 
-import no.priv.bang.authservice.db.derby.test.DerbyTestDatabase;
-import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
+import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordsNotIdenticalException;
@@ -56,16 +60,19 @@ import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserRoles;
 
 public class UserManagementServiceProviderTest {
-    private static DerbyTestDatabase database;
+    private static DataSource datasource;
 
     @BeforeAll
-    static void setupForAll() {
+    static void setupForAll() throws Exception {
         DerbyDataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
-        database = new DerbyTestDatabase();
+        Properties properties = new Properties();
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        datasource = derbyDataSourceFactory.createDataSource(properties);
         MockLogService logservice = new MockLogService();
-        database.setLogservice(logservice);
-        database.setDataSourceFactory(derbyDataSourceFactory);
-        database.activate();
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        runner.setLogservice(logservice);
+        runner.activate();
+        runner.prepare(datasource);
     }
 
     @Test
@@ -73,7 +80,7 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         String username = "jod";
@@ -86,14 +93,14 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         PreparedStatement statement = mock(PreparedStatement.class);
         ResultSet results = mock(ResultSet.class);
         when(statement.executeQuery()).thenReturn(results);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
-        when(mockdatabase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockdatabase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         String username = "jod";
@@ -109,11 +116,11 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockdatabase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockdatabase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         String username = "jod";
@@ -128,7 +135,7 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         String username = "jod";
@@ -142,9 +149,9 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
-        when(mockdatabase.getConnection()).thenThrow(AuthserviceException.class);
-        provider.setDatabase(mockdatabase);
+        DataSource mockdatasource = mock(DataSource.class);
+        when(mockdatasource.getConnection()).thenThrow(AuthserviceException.class);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         String username = "jod";
@@ -159,7 +166,7 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         String username = "jod";
@@ -173,9 +180,9 @@ public class UserManagementServiceProviderTest {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockdatabase = mock(AuthserviceDatabaseService.class);
-        when(mockdatabase.getConnection()).thenThrow(SQLException.class);
-        provider.setDatabase(mockdatabase);
+        DataSource mockdatasource = mock(DataSource.class);
+        when(mockdatasource.getConnection()).thenThrow(SQLException.class);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         String username = "jod";
@@ -191,11 +198,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
@@ -210,11 +217,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         User dummy = new User();
@@ -229,7 +236,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -247,7 +254,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -260,7 +267,7 @@ public class UserManagementServiceProviderTest {
         // Check that the new password works
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken(user.getUsername(), newPassword.toCharArray());
@@ -273,7 +280,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -290,7 +297,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -307,7 +314,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -324,7 +331,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -341,11 +348,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         List<User> users = Collections.emptyList();
@@ -362,7 +369,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> users = provider.getUsers();
@@ -379,7 +386,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<User> usersBeforeAddingOne = provider.getUsers();
@@ -393,7 +400,7 @@ public class UserManagementServiceProviderTest {
         User user = users.stream().filter(u -> "jsmith".equals(u.getUsername())).findFirst().get();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken(user.getUsername(), newUserPassword.toCharArray());
@@ -406,7 +413,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         User newUser = new User(-1, "admin", "admin@gmail.com", "Admin", "Istrator");
@@ -423,14 +430,14 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         PreparedStatement statement = mock(PreparedStatement.class);
         ResultSet results = mock(ResultSet.class);
         when(statement.executeQuery()).thenReturn(results);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         User newUser = new User(-1, "jod", "jod31@gmail.com", "John", "Doe");
@@ -447,7 +454,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<Role> originalRoles = provider.getRoles();
@@ -495,11 +502,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
@@ -513,7 +520,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         List<Permission> originalPermissions = provider.getPermissions();
@@ -561,11 +568,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
@@ -579,7 +586,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         Map<String, List<Role>> originalUserRoles = provider.getUserRoles();
@@ -627,11 +634,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
@@ -655,7 +662,7 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        provider.setDatabase(database);
+        provider.setDataSource(datasource);
         provider.activate();
 
         Map<String, List<Permission>> originalRolesPermissions = provider.getRolesPermissions();
@@ -702,11 +709,11 @@ public class UserManagementServiceProviderTest {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
-        AuthserviceDatabaseService mockbase = mock(AuthserviceDatabaseService.class);
+        DataSource mockdatasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockbase.getConnection()).thenReturn(connection);
-        provider.setDatabase(mockbase);
+        when(mockdatasource.getConnection()).thenReturn(connection);
+        provider.setDataSource(mockdatasource);
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {

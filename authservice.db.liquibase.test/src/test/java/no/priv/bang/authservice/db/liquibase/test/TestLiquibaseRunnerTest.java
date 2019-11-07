@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2019 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.db.derby.test;
+package no.priv.bang.authservice.db.liquibase.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -32,18 +33,19 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
-class DerbyTestDatabaseTest {
+class TestLiquibaseRunnerTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
 
     @Test
-    void testCreate() throws Exception {
+    void testCreateSchema() throws Exception {
         MockLogService logservice = new MockLogService();
-        DerbyTestDatabase database = new DerbyTestDatabase();
-        database.setLogservice(logservice);
-        database.setDataSourceFactory(derbyDataSourceFactory);
-        database.activate();
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        runner.setLogservice(logservice);
+        runner.activate();
+        DataSource datasource = createDatasource();
+        runner.prepare(datasource);
 
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
                 ResultSet results = statment.executeQuery();
                 int usercount = 0;
@@ -55,7 +57,7 @@ class DerbyTestDatabaseTest {
             }
         }
 
-        try(Connection connection = database.getDatasource().getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statment = connection.prepareStatement("select * from roles")) {
                 ResultSet results = statment.executeQuery();
                 int rolecount = 0;
@@ -70,19 +72,23 @@ class DerbyTestDatabaseTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    void testCreateWhenSQLExceptionIsThrown() throws Exception {
+    void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
-        DerbyTestDatabase database = new DerbyTestDatabase();
-        database.setLogservice(logservice);
-        DataSourceFactory factory = mock(DataSourceFactory.class);
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        runner.setLogservice(logservice);
         DataSource datasource = mock(DataSource.class);
         when(datasource.getConnection()).thenThrow(SQLException.class);
-        when(factory.createDataSource(any())).thenReturn(datasource);
-        database.setDataSourceFactory(factory);
 
         assertThrows(AuthserviceException.class, () -> {
-                database.activate();
+                runner.activate();
+                runner.prepare(datasource);
             });
+    }
+
+    private DataSource createDatasource() throws SQLException {
+        Properties properties = new Properties();
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        return derbyDataSourceFactory.createDataSource(properties);
     }
 
 }

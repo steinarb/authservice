@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
-            <artifactId>authservice.db.derby.test</artifactId>
+            <artifactId>authservice.db.liquibase.test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -137,6 +137,11 @@
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>
             <artifactId>pax-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.jdbc</groupId>
+            <artifactId>pax-jdbc-pool-common</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>

@@ -4,6 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
+
+import javax.sql.DataSource;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -20,27 +23,23 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
 
-import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
-
 @Component( service=Realm.class, immediate=true )
 public class AuthserviceDbRealm extends JdbcRealm {
 
     LogService logservice;
-    private AuthserviceDatabaseService database;
 
     @Reference
     public void setLogservice(LogService logservice) {
         this.logservice = logservice;
     }
 
-    @Reference
-    public void setDatabaseService(AuthserviceDatabaseService database) {
-        this.database = database;
+    @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
+    public void setDataSource(DataSource datasource) {
+        this.dataSource = datasource;
     }
 
     @Activate
     public void activate() {
-        dataSource = database.getDatasource();
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("SHA-256");
         credentialsMatcher.setStoredCredentialsHexEncoded(false); // base64 encoding, not hex

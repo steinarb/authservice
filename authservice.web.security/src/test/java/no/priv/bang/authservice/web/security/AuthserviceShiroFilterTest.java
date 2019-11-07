@@ -20,10 +20,13 @@ import static org.mockito.Mockito.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
@@ -32,8 +35,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
+import org.osgi.service.jdbc.DataSourceFactory;
+
 import liquibase.exception.LiquibaseException;
-import no.priv.bang.authservice.db.derby.test.DerbyTestDatabase;
+import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
@@ -46,13 +51,16 @@ public class AuthserviceShiroFilterTest {
     @BeforeAll
     public static void setup() throws SQLException, LiquibaseException {
         DerbyDataSourceFactory dataSourceFactory = new DerbyDataSourceFactory();
+        Properties properties = new Properties();
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        DataSource datasource = dataSourceFactory.createDataSource(properties);
         MockLogService logservice = new MockLogService();
-        DerbyTestDatabase database = new DerbyTestDatabase();
-        database.setLogservice(logservice);
-        database.setDataSourceFactory(dataSourceFactory);
-        database.activate();
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        runner.setLogservice(logservice);
+        runner.activate();
+        runner.prepare(datasource);
         realm = new AuthserviceDbRealm();
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         context = mock(ServletContext.class);
         when(context.getContextPath()).thenReturn("/authservice");

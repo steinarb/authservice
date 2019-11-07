@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.sql.SQLException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -12,24 +16,28 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
+import org.osgi.service.jdbc.DataSourceFactory;
 
-import no.priv.bang.authservice.db.derby.test.DerbyTestDatabase;
+import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 /***
  * Tests for class {@link AuthserviceDbRealm}.
  */
 public class AuthserviceDbRealmTest {
-    private static DerbyTestDatabase database;
+    private static DataSource datasource;
 
     @BeforeAll
-    static void setupForAll() {
+    static void setupForAll() throws Exception {
         DerbyDataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
-        database = new DerbyTestDatabase();
+        Properties properties = new Properties();
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        datasource = derbyDataSourceFactory.createDataSource(properties);
         MockLogService logservice = new MockLogService();
-        database.setLogservice(logservice);
-        database.setDataSourceFactory(derbyDataSourceFactory);
-        database.activate();
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        runner.setLogservice(logservice);
+        runner.activate();
+        runner.prepare(datasource);
     }
 
     /***
@@ -41,7 +49,7 @@ public class AuthserviceDbRealmTest {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
         AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
@@ -57,7 +65,7 @@ public class AuthserviceDbRealmTest {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1add".toCharArray());
 
@@ -77,7 +85,7 @@ public class AuthserviceDbRealmTest {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
@@ -115,7 +123,7 @@ public class AuthserviceDbRealmTest {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
         AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);
@@ -136,7 +144,7 @@ public class AuthserviceDbRealmTest {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
-        realm.setDatabaseService(database);
+        realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("on", "ola12".toCharArray());
         AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);

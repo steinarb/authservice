@@ -14,8 +14,8 @@
     <modules>
         <module>authservice.definitions</module>
         <module>authservice.db.liquibase</module>
-        <module>authservice.db.derby.test</module>
-        <module>authservice.db.postgresql</module>
+        <module>authservice.db.liquibase.test</module>
+        <module>authservice.db.liquibase.production</module>
         <module>authservice.web.security.dbrealm</module>
         <module>authservice.web.security.memorysession</module>
         <module>authservice.web.security</module>
@@ -238,6 +238,17 @@
                 <artifactId>pax-jdbc</artifactId>
                 <version>${pax.jdbc.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jdbc</groupId>
+                <artifactId>pax-jdbc-config</artifactId>
+                <version>${pax.jdbc.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jdbc</groupId>
+                <artifactId>pax-jdbc-pool-common</artifactId>
+                <version>${pax.jdbc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>

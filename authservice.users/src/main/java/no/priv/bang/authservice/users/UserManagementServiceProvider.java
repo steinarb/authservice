@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.sql.DataSource;
+
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
@@ -37,7 +39,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
 
-import no.priv.bang.authservice.definitions.AuthserviceDatabaseService;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordsNotIdenticalException;
@@ -56,16 +57,16 @@ import no.priv.bang.osgiservice.users.UserRoles;
 @Component(service=UserManagementService.class, immediate=true)
 public class UserManagementServiceProvider implements UserManagementService {
     private LogService logservice;
-    private AuthserviceDatabaseService database;
+    private DataSource datasource;
 
     @Reference
     public void setLogservice(LogService logservice) {
         this.logservice = logservice;
     }
 
-    @Reference
-    public void setDatabase(AuthserviceDatabaseService database) {
-        this.database = database;
+    @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
+    public void setDataSource(DataSource datasource) {
+        this.datasource = datasource;
     }
 
     @Activate
@@ -75,7 +76,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public User getUser(String username) {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users where username=?")) {
                 statement.setString(1, username);
                 try(ResultSet results = statement.executeQuery()) {
@@ -97,7 +98,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Role> getRolesForUser(String username) {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select distinct r.* from roles r join user_roles ur on ur.role_name=r.role_name where ur.username=?")) {
                 statement.setString(1, username);
                 return getRolesFromQuery(statement);
@@ -111,7 +112,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Permission> getPermissionsForUser(String username) {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select distinct p.* from permissions p join roles_permissions rp on rp.permission_name=p.permission_name join user_roles up on rp.role_name=up.role_name where up.username=?")) {
                 statement.setString(1, username);
                 try(ResultSet results = statement.executeQuery()) {
@@ -136,7 +137,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<User> getUsers() {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users order by user_id")) {
                 List<User> users = new ArrayList<>();
                 try(ResultSet results = statement.executeQuery()) {
@@ -156,7 +157,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<User> modifyUser(User user) {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("update users set username=?, email=?, firstname=?, lastname=? where user_id=?")) {
                 statement.setString(1, user.getUsername());
                 statement.setString(2, user.getEmail());
@@ -198,7 +199,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         String password = userAndPasswords.getPassword1();
         String salt = getNewSalt();
         String hashedPassword = hashPassword(password, salt);
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("update users set password=?, password_salt=? where user_id=?")) { // NOSONAR it's hard to administrated passwords without mentioning the word "password"...
                 statement.setString(1, hashedPassword);
                 statement.setString(2, salt);
@@ -222,7 +223,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<User> addUser(UserAndPasswords newUserWithPasswords) {
         User addedUser = null;
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             User newUser = newUserWithPasswords.getUser();
             try(PreparedStatement statement = connection.prepareStatement("insert into users (username,email,password, password_salt,firstname,lastname) values (?, ?, 'dummy', 'dummy', ?, ?)")) {
                 statement.setString(1, newUser.getUsername());
@@ -254,7 +255,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Role> getRoles() {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from roles order by role_id")) {
                 return getRolesFromQuery(statement);
             }
@@ -268,7 +269,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Role> modifyRole(Role role) {
         int roleid = role.getId();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("update roles set role_name=?, description=? where role_id=?")) {
                 statement.setString(1, role.getRolename());
                 statement.setString(2, role.getDescription());
@@ -290,7 +291,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Role> addRole(Role newRole) {
         String rolename = newRole.getRolename();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
                 statement.setString(1, rolename);
                 statement.setString(2, newRole.getDescription());
@@ -307,7 +308,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Permission> getPermissions() {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from permissions order by permission_id")) {
                 try(ResultSet results = statement.executeQuery()) {
                     List<Permission> permissions = new ArrayList<>();
@@ -332,7 +333,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Permission> modifyPermission(Permission permission) {
         int permissionid = permission.getId();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("update permissions set permission_name=?, description=? where permission_id=?")) {
                 statement.setString(1, permission.getPermissionname());
                 statement.setString(2, permission.getDescription());
@@ -354,7 +355,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Permission> addPermission(Permission newPermission) {
         String permissionname = newPermission.getPermissionname();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
                 statement.setString(1, permissionname);
                 statement.setString(2, newPermission.getDescription());
@@ -371,7 +372,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Role>> getUserRoles() {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from users join user_roles on user_roles.username=users.username join roles on roles.role_name=user_roles.role_name")) {
                 try(ResultSet results = statement.executeQuery()) {
                     Map<String, List<Role>> userroles = new HashMap<>();
@@ -399,7 +400,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         User user = userroles.getUser();
         List<Role> roles = userroles.getRoles();
         Set<String> existingRoles = findExistingRolesForUser(user);
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             List<Role> rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.getRolename())).collect(Collectors.toList());
             for (Role role : rolesNotAlreadyOnUser) {
                 try(PreparedStatement statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
@@ -424,7 +425,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         if (!roles.isEmpty()) {
             String roleSet = roles.stream().map(r -> "\'" + r.getRolename() + "\'").collect(Collectors.joining(","));
             String sql = String.format("delete from user_roles where username=? and role_name in (%s)", roleSet);
-            try(Connection connection = database.getConnection()) {
+            try(Connection connection = datasource.getConnection()) {
                 try(PreparedStatement statement = connection.prepareStatement(sql)) {
                     statement.setString(1, user.getUsername());
                     statement.executeUpdate();
@@ -441,7 +442,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Permission>> getRolesPermissions() {
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select * from roles join roles_permissions on roles_permissions.role_name=roles.role_name join permissions on permissions.permission_name=roles_permissions.permission_name")) {
                 try(ResultSet results = statement.executeQuery()) {
                     Map<String, List<Permission>> rolespermissions = new HashMap<>();
@@ -472,7 +473,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         Role role = rolepermissions.getRole();
         List<Permission> permissions = rolepermissions.getPermissions();
         Set<String> existingPermissions = findExistingPermissionsForRole(role);
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             List<Permission> permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.getPermissionname())).collect(Collectors.toList());
             for (Permission permission : permissionsNotAlreadyOnrole) {
                 try(PreparedStatement statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
@@ -497,7 +498,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         if (!permissions.isEmpty()) {
             String roleSet = permissions.stream().map(p -> "\'" + p.getPermissionname() + "\'").collect(Collectors.joining(","));
             String sql = String.format("delete from roles_permissions where role_name=? and permission_name in (%s)", roleSet);
-            try(Connection connection = database.getConnection()) {
+            try(Connection connection = datasource.getConnection()) {
                 try(PreparedStatement statement = connection.prepareStatement(sql)) {
                     statement.setString(1, role.getRolename());
                     statement.executeUpdate();
@@ -528,7 +529,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     Set<String> findExistingRolesForUser(User user) {
         String username = user.getUsername();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select role_name from user_roles where username=?")) {
                 statement.setString(1, username);
                 try(ResultSet results = statement.executeQuery()) {
@@ -549,7 +550,7 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     Set<String> findExistingPermissionsForRole(Role role) {
         String rolename = role.getRolename();
-        try(Connection connection = database.getConnection()) {
+        try(Connection connection = datasource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("select permission_name from roles_permissions where role_name=?")) {
                 statement.setString(1, rolename);
                 try(ResultSet results = statement.executeQuery()) {

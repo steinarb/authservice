@@ -6,12 +6,12 @@
         <version>1.7.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>authservice.db.postgresql</artifactId>
+    <artifactId>authservice.db.liquibase.production</artifactId>
 
-    <name>Authentication webapp PostgreSQL database</name>
+    <name>Authentication webapp production database setup</name>
 
     <properties>
-        <karaf-feature-name>authservice-db-postgresql</karaf-feature-name>
+        <karaf-feature-name>authservice-db-liquibase-production</karaf-feature-name>
     </properties>
 
     <dependencies>
@@ -85,6 +85,10 @@
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>
             <artifactId>pax-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.jdbc</groupId>
+            <artifactId>pax-jdbc-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.jdbc</groupId>

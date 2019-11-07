@@ -134,7 +134,10 @@ Instructions:
  3. In the karaf console, do the following:
     1. Add connection configuration for the postgresql database:
        #+BEGIN_EXAMPLE
-         config:edit no.priv.bang.authservice.db.postgresql.PostgresqlDatabase
+         config:edit org.ops4j.datasource-authservice-production
+         config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+         config:property-set dataSourceName "jdbc/authservice"
+         config:property-set ops4j.preHook "authservicedb"
          config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
          config:property-set authservice.db.jdbc.user "karaf"
          config:property-set authservice.db.jdbc.password "karaf"
@@ -177,7 +180,10 @@ Do the following steps:
     #+END_EXAMPLE
  4. SSH into the karaf console and add connection configuration for the postgresql database with the following commands:
     #+BEGIN_EXAMPLE
-      config:edit no.priv.bang.authservice.db.postgresql.PostgresqlDatabase
+      config:edit org.ops4j.datasource-authservice-production
+      config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
+      config:property-set dataSourceName "jdbc/authservice"
+      config:property-set ops4j.preHook "authservicedb"
       config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
       config:property-set authservice.db.jdbc.user "karaf"
       config:property-set authservice.db.jdbc.password "karaf"
@@ -332,14 +338,73 @@ There are several ways for a webapp to interact with authservice:
 
 ...or various permutations of the above.  With [[https://github.com/steinarb/ukelonn][ukelonn]] I plan to add the authservice tables to the ukelonn database, and then let the ukelonn database provide the database for authservice itself.  I have made a first step in the direction of authservice integration by basing ukelonn's user management on the UserManagementService OSGi service, so that it later can be replaced by the authservice implementation of the service.
 
-** Integrating with other databases than PostgreSQL
+** Integrating with other databases than PostgreSQL and derby
 
 Short story: it should be possible.  It should possible to use blank JDBC database that can be connected to with a combination of a JDBC url and username and password.
 
-Possible approach:
- 1. Copy the [[https://github.com/steinarb/authservice/tree/master/authservice.db.postgresql][authservice postgresql maven project]]
- 2. Remove the [[https://github.com/steinarb/authservice/blob/master/authservice.db.postgresql/pom.xml#L107][postgresql compile scope dependency from the pom.xml]] (this dependency adds a bundle dependency to the feature file)
- 3. Add a dependency to the desired JDBC driver.  It has to be something that provides a DataSourceFactory OSGi service.  If the database system's JDBC driver doesn't provide a DataSourceFactory OSGi service (like e.g. PostgreSQL does), check if the pax-jdbc project have something appropriate
+Currently authservice operates with two databases: an in-memory derby with mock data used for tests and development, and a PostgreSQL database used for production deployments.
+
+Authservice uses XML syntax liquibase to set up the schema, straightforward SQL to insert initial data/mock data, and straightforward SQL to updated and query the authservice database, so replacing both derby and PostgreSQL, with other JDBC databases supported by liquibase (which is basically all of them), should be possible.
+
+/Please note/ however, that none of the config below has been tested.
+
+*** Replacing the test database (by default derby):
+ Possible approach:
+  1. In the karaf console, configure connection information to the alternative database ([[http://www.h2database.com/html/features.html#in_memory_databases][H2 in-memory database]] in the example):
+     #+BEGIN_EXAMPLE
+       config:edit org.ops4j.datasource-authservice-test
+       config:property-set osgi.jdbc.driver.name "H2"
+       config:property-set dataSourceName "jdbc/authservice"
+       config:property-set ops4j.preHook "authservicedb"
+       config:property-set authservice.db.jdbc.url "jdbc:h2:mem:authservice"
+       config:update
+     #+END_EXAMPLE
+  2. In the karaf console, install the H2 karaf feature (there is nothing in the authservice karaf features that loads this):
+     #+BEGIN_EXAMPLE
+       feature:install pax-jdbc-h2
+     #+END_EXAMPLE
+  3. Load the authservice feature repository:
+     #+BEGIN_EXAMPLE
+       feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+     #+END_EXAMPLE
+  4. In the karaf console, load the test database authservice feature
+     #+BEGIN_EXAMPLE
+       feature:install authservice-with-testdb-dbrealm-and-session
+     #+END_EXAMPLE
+  5. Alternatively, load the test database user-admin feature (this is a superset of the authservice feature that adds a GUI for user management):
+     #+BEGIN_EXAMPLE
+       feature:install user-admin-with-testdb
+     #+END_EXAMPLE
+
+*** Replacing the production database (by default PostgreSQL):
+ Possible approach:
+  1. In the karaf console, configure connection information to the alternative database (MySQL in the example):
+     #+BEGIN_EXAMPLE
+       config:edit org.ops4j.datasource-authservice-production
+       config:property-set osgi.jdbc.driver.name "mysql"
+       config:property-set dataSourceName "jdbc/authservice"
+       config:property-set ops4j.preHook "authservicedb"
+       config:property-set authservice.db.jdbc.url "jdbc:mysql://localhost/authservice"
+       config:property-set authservice.db.jdbc.user "karaf"
+       config:property-set authservice.db.jdbc.password "karaf"
+       config:update
+     #+END_EXAMPLE
+  2. In the karaf console, install the H2 karaf feature (there is nothing in the authservice karaf features that loads this):
+     #+BEGIN_EXAMPLE
+       feature:install pax-jdbc-mysql
+     #+END_EXAMPLE
+  3. Load the authservice feature repository:
+     #+BEGIN_EXAMPLE
+       feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+     #+END_EXAMPLE
+  4. In the karaf console, load the test database authservice feature
+     #+BEGIN_EXAMPLE
+       feature:install authservice-with-productiondb-dbrealm-and-session
+     #+END_EXAMPLE
+  5. Alternatively, load the test database user-admin feature (this is a superset of the authservice feature that adds a GUI for user management):
+     #+BEGIN_EXAMPLE
+       feature:install user-admin-with-productiondb
+     #+END_EXAMPLE
 
 ** Release history
 
