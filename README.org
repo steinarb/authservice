@@ -138,9 +138,10 @@ Instructions:
          config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
          config:property-set dataSourceName "jdbc/authservice"
          config:property-set ops4j.preHook "authservicedb"
-         config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
-         config:property-set authservice.db.jdbc.user "karaf"
-         config:property-set authservice.db.jdbc.password "karaf"
+         config:property-set org.apache.karaf.features.configKey "org.ops4j.datasource-authservice-production"
+         config:property-set url "jdbc:postgresql:///authservice"
+         config:property-set user "karaf"
+         config:property-set password "karaf"
          config:update
        #+END_EXAMPLE
        /Note/: use the actual password given in the PGPASSWORD environment variable when creating the karaf user
@@ -184,9 +185,9 @@ Do the following steps:
       config:property-set osgi.jdbc.driver.name "PostgreSQL JDBC Driver"
       config:property-set dataSourceName "jdbc/authservice"
       config:property-set ops4j.preHook "authservicedb"
-      config:property-set authservice.db.jdbc.url "jdbc:postgresql:///authservice"
-      config:property-set authservice.db.jdbc.user "karaf"
-      config:property-set authservice.db.jdbc.password "karaf"
+      config:property-set url "jdbc:postgresql:///authservice"
+      config:property-set user "karaf"
+      config:property-set password "karaf"
       config:update
     #+END_EXAMPLE
     /Note/: use the actual password given in the PGPASSWORD environment variable when creating the karaf user
@@ -356,7 +357,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
        config:property-set osgi.jdbc.driver.name "H2"
        config:property-set dataSourceName "jdbc/authservice"
        config:property-set ops4j.preHook "authservicedb"
-       config:property-set authservice.db.jdbc.url "jdbc:h2:mem:authservice"
+       config:property-set url "jdbc:h2:mem:authservice"
        config:update
      #+END_EXAMPLE
   2. In the karaf console, install the H2 karaf feature (there is nothing in the authservice karaf features that loads this):
@@ -384,9 +385,9 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
        config:property-set osgi.jdbc.driver.name "mysql"
        config:property-set dataSourceName "jdbc/authservice"
        config:property-set ops4j.preHook "authservicedb"
-       config:property-set authservice.db.jdbc.url "jdbc:mysql://localhost/authservice"
-       config:property-set authservice.db.jdbc.user "karaf"
-       config:property-set authservice.db.jdbc.password "karaf"
+       config:property-set url "jdbc:mysql://localhost/authservice"
+       config:property-set user "karaf"
+       config:property-set password "karaf"
        config:update
      #+END_EXAMPLE
   2. In the karaf console, install the H2 karaf feature (there is nothing in the authservice karaf features that loads this):
