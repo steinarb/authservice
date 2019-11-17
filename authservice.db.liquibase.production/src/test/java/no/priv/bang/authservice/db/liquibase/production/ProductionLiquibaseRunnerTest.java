@@ -118,6 +118,7 @@ class ProductionLiquibaseRunnerTest {
         ResultSet results = mock(ResultSet.class);
         when(results.next()).thenReturn(true).thenReturn(false);
         when(stmnt.executeQuery(anyString())).thenReturn(results);
+        when(stmnt.getUpdateCount()).thenReturn(-1);
         when(connection.createStatement()).thenReturn(stmnt);
         when(connection.getMetaData()).thenReturn(metadata);
         return connection;
