@@ -75,10 +75,6 @@
         </dependency>
         <dependency>
             <groupId>no.priv.bang.osgiservice</groupId>
-            <artifactId>osgiservice.database</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.priv.bang.osgiservice</groupId>
             <artifactId>osgiservice.users</artifactId>
         </dependency>
         <dependency>
