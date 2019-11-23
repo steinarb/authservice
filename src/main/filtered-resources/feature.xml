@@ -66,32 +66,16 @@
         <feature>authservice-db-test</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
-    <feature name="authservice-with-derby-dbrealm-and-session">
-        <feature>authservice-with-testdb-dbrealm-and-session</feature>
-        <feature>pax-jdbc-derby</feature>
-    </feature>
     <feature name="user-admin-with-testdb">
         <feature>authservice-db-test</feature>
         <feature>authservice-user-admin</feature>
-    </feature>
-    <feature name="user-admin-with-derby">
-        <feature>user-admin-with-testdb</feature>
-        <feature>pax-jdbc-derby</feature>
     </feature>
     <feature name="authservice-with-productiondb-dbrealm-and-session">
         <feature>authservice-db-production</feature>
         <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
-    <feature name="authservice-with-postgresql-dbrealm-and-session">
-        <feature>authservice-with-productiondb-dbrealm-and-session</feature>
-        <feature>postgresql</feature>
-    </feature>
     <feature name="user-admin-with-productiondb">
         <feature>authservice-db-production</feature>
         <feature>authservice-user-admin</feature>
-    </feature>
-    <feature name="user-admin-with-postgresql">
-        <feature>user-admin-with-productiondb</feature>
-        <feature>postgresql</feature>
     </feature>
 </features>
