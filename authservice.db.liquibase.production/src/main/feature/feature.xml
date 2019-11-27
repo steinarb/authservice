@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
     <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase/${project.version}/xml/features</repository>
+    <repository>mvn:org.postgresql/postgresql/${postgresql.version}/xml/features</repository>
     <feature name="${karaf-feature-name}">
         <feature>authservice-db-liquibase</feature>
         <feature>scr</feature>
+    </feature>
+    <feature name="authservice-db-production" version="${project.version}">
+        <config name="org.ops4j.datasource-authservice-production">
+            osgi.jdbc.driver.name=PostgreSQL JDBC Driver
+            dataSourceName=jdbc/authservice
+            url=jdbc:postgresql:///authservice
+            user=karaf
+            password=karaf
+            ops4j.preHook=authservicedb
+        </config>
+        <capability>
+            osgi.service;objectClass=javax.sql.DataSource;effective:=active;osgi.jndi.service.name=jdbc/authservice
+        </capability>
+        <feature>authservice-db-liquibase-production</feature>
+        <feature>pax-jdbc-config</feature>
+        <feature>postgresql</feature>
     </feature>
 </features>
