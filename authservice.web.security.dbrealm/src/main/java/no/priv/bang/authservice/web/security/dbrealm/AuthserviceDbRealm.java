@@ -50,7 +50,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
         if (!(token instanceof UsernamePasswordToken)) {
-            throw new AuthenticationException("UkelonnRealm shiro realm only accepts UsernamePasswordToken");
+            throw new AuthenticationException("AuthserviceRealm shiro realm only accepts UsernamePasswordToken");
         }
 
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
@@ -61,7 +61,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
             statement.setString(1, username);
             try (ResultSet passwordResultSet = statement.executeQuery()) {
                 if (passwordResultSet == null) {
-                    throw new AuthenticationException("UkelonnRealm shiro realm failed to get passwords from the database");
+                    throw new AuthenticationException("AuthserviceRealm shiro realm failed to get passwords from the database");
                 }
 
                 if (passwordResultSet.next()) {

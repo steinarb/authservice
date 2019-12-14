@@ -31,7 +31,7 @@ public class AuthserviceDbRealmTest {
     static void setupForAll() throws Exception {
         DerbyDataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
         Properties properties = new Properties();
-        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         datasource = derbyDataSourceFactory.createDataSource(properties);
         MockLogService logservice = new MockLogService();
         TestLiquibaseRunner runner = new TestLiquibaseRunner();

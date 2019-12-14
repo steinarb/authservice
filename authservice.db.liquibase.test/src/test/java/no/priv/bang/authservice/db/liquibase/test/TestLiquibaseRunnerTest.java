@@ -87,7 +87,7 @@ class TestLiquibaseRunnerTest {
 
     private DataSource createDatasource() throws SQLException {
         Properties properties = new Properties();
-        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         return derbyDataSourceFactory.createDataSource(properties);
     }
 
