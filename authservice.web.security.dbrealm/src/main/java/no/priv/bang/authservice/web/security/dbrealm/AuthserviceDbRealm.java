@@ -60,10 +60,6 @@ public class AuthserviceDbRealm extends JdbcRealm {
         try (PreparedStatement statement = dataSource.getConnection().prepareStatement("select * from users where username=?")) {
             statement.setString(1, username);
             try (ResultSet passwordResultSet = statement.executeQuery()) {
-                if (passwordResultSet == null) {
-                    throw new AuthenticationException("AuthserviceRealm shiro realm failed to get passwords from the database");
-                }
-
                 if (passwordResultSet.next()) {
                     String password = passwordResultSet.getString("password");
                     String salt = passwordResultSet.getString("password_salt");
