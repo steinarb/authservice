@@ -33,6 +33,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
         this.logservice = logservice;
     }
 
+    @Override
     @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
     public void setDataSource(DataSource datasource) {
         this.dataSource = datasource;
