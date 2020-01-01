@@ -37,13 +37,13 @@ Instructions:
     #+END_EXAMPLE
  4. In the karaf shell, install the feature that installs the authorization service that is used by nginx (this feature installs a set of test users, roles and features)
     #+BEGIN_EXAMPLE
-      feature:install authservice-with-derby-dbrealm-and-session
+      feature:install authservice-with-testdb-dbrealm-and-session
     #+END_EXAMPLE
  5. Open a browser on the URL http://localhost:8181/authservice and do a login with a valid username/password combination (e.g. "admin/admin")
  6. Open a browser on the URL http://localhost:8181/authservice/check and verify that it doesn't return a 401 HTTP code
  7. Optionally install the user administration UI (not needed for using this service with nginx, but needed for administrating the access)
     #+BEGIN_EXAMPLE
-      feature:install user-admin-with-derby
+      feature:install user-admin-with-testdb
     #+END_EXAMPLE
  8. Open a browser on the URL http://localhost:8181/authservice/useradmin and test adding/modifying users, roles and permissions
 
@@ -148,7 +148,7 @@ Instructions:
     2. Install authservice from maven central:
        #+BEGIN_EXAMPLE
          feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
-         feature:install user-admin-with-postgresql
+         feature:install user-admin-with-productiondb
        #+END_EXAMPLE
  4. Open a the nginx authservice URL in a web browser, e.g. https://myserver.com/authservice/ and:
     1. Log in as user "admin" with password "admin" (without the quotes)
@@ -198,7 +198,7 @@ Do the following steps:
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
              <repository>mvn:no.priv.bang.authservice/authservice/1.8.0/xml/features</repository>
              <feature name="${karaf-feature-name}">
-                 <feature>user-admin-with-postgresql</feature>
+                 <feature>user-admin-with-productiondb</feature>
              </feature>
          </features>
        #+END_SRC
