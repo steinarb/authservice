@@ -486,6 +486,7 @@
                         <goals>
                             <goal>resources</goal>
                         </goals>
+                        <inherited>false</inherited>
                         <configuration>
                             <resources>
                                 <resource>
