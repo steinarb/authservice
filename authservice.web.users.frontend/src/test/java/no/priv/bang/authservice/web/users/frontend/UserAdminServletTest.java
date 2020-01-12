@@ -42,11 +42,12 @@ public class UserAdminServletTest {
         servlet.init(servletConfig);
         servlet.setLogService(logservice);
         HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("http://localhost:8181/authservice/useradmin/");
         when(request.getPathInfo()).thenReturn("/");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        servlet.doGet(request, response);
+        servlet.service(request, response);
 
         assertEquals("text/html", response.getContentType());
         assertEquals(200, response.getStatus());
@@ -58,6 +59,7 @@ public class UserAdminServletTest {
     public void testDoGetAddTrailingSlash() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost:8181/authservice/useradmin"));
         when(request.getServletPath()).thenReturn("/frontend-karaf-demo");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -65,7 +67,7 @@ public class UserAdminServletTest {
         UserAdminServlet servlet = new UserAdminServlet();
         servlet.setLogService(logservice);
 
-        servlet.doGet(request, response);
+        servlet.service(request, response);
 
         assertEquals(302, response.getStatus());
     }
@@ -74,6 +76,7 @@ public class UserAdminServletTest {
     public void testDoGetResponseThrowsIOException() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("http://localhost:8181/authservice/useradmin/");
         when(request.getPathInfo()).thenReturn("/");
         MockHttpServletResponse response = mock(MockHttpServletResponse.class, CALLS_REAL_METHODS);
@@ -85,7 +88,7 @@ public class UserAdminServletTest {
         UserAdminServlet servlet = new UserAdminServlet();
         servlet.setLogService(logservice);
 
-        servlet.doGet(request, response);
+        servlet.service(request, response);
 
         assertEquals(500, response.getStatus());
     }
@@ -95,6 +98,7 @@ public class UserAdminServletTest {
     public void testDoGetResponseStreamMethodThrowsIOException() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("http://localhost:8181/authservice/useradmin/");
         when(request.getPathInfo()).thenReturn("/");
         MockHttpServletResponse response = mock(MockHttpServletResponse.class, CALLS_REAL_METHODS);
@@ -104,7 +108,7 @@ public class UserAdminServletTest {
         UserAdminServlet servlet = new UserAdminServlet();
         servlet.setLogService(logservice);
 
-        servlet.doGet(request, response);
+        servlet.service(request, response);
 
         assertEquals(500, response.getStatus());
     }
@@ -113,6 +117,7 @@ public class UserAdminServletTest {
     public void testDoGetResourceNotFound() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("http://localhost:8181/authservice/useradmin/static/nosuchname.png");
         when(request.getPathInfo()).thenReturn("/static/nosuchname.png");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -120,18 +125,9 @@ public class UserAdminServletTest {
         UserAdminServlet servlet = new UserAdminServlet();
         servlet.setLogService(logservice);
 
-        servlet.doGet(request, response);
+        servlet.service(request, response);
 
         assertEquals(404, response.getErrorCode());
-    }
-
-    @Test
-    public void testGuessContentTypeFromResourceName() {
-        UserAdminServlet servlet = new UserAdminServlet();
-        assertEquals("text/html", servlet.guessContentTypeFromResourceName("/index.html"));
-        assertEquals("application/javascript", servlet.guessContentTypeFromResourceName("/bundle.js"));
-        assertEquals("text/css", servlet.guessContentTypeFromResourceName("/bundle.css"));
-        assertNull(servlet.guessContentTypeFromResourceName("/bundle.nomatch"));
     }
 
 }
