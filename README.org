@@ -196,7 +196,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/authservice/1.8.0/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/authservice/1.9.0/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -411,6 +411,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                                                          |
 |--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2020-01-14] |   1.9.0 | Use FrontendServlet to serve the react frontend and styling                                                                                                                      |
 | [2019-12-31] |   1.8.0 | Let Immutable provide hashCode() and equals() implementation to user management beans                                                                                            |
 | [2019-12-07] |   1.7.1 | Move pax-jdbc-config from the master feature repository to the template feature.xml files of the liquibase PreHook maven modules                                                 |
 | [2019-11-15] |   1.7.0 | Replace DatabaseService with pax-jdbc-config (opens for using other RDBMSes than PostgreSQL and derby)                                                                           |
