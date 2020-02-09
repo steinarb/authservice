@@ -1,23 +1,10 @@
 package no.priv.bang.authservice.web.security.dbrealm;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Base64;
-
 import javax.sql.DataSource;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
-import org.apache.shiro.util.ByteSource;
-import org.apache.shiro.util.ByteSource.Util;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -36,47 +23,17 @@ public class AuthserviceDbRealm extends JdbcRealm {
     @Override
     @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
     public void setDataSource(DataSource datasource) {
-        this.dataSource = datasource;
+        super.setDataSource(datasource);
     }
 
     @Activate
     public void activate() {
+        setSaltStyle(SaltStyle.COLUMN);
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("SHA-256");
         credentialsMatcher.setStoredCredentialsHexEncoded(false); // base64 encoding, not hex
         credentialsMatcher.setHashIterations(1024);
         setCredentialsMatcher(credentialsMatcher);
-    }
-
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
-        if (!(token instanceof UsernamePasswordToken)) {
-            throw new AuthenticationException("AuthserviceRealm shiro realm only accepts UsernamePasswordToken");
-        }
-
-        UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
-        Object principal = usernamePasswordToken.getPrincipal();
-        String username = usernamePasswordToken.getUsername();
-
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement("select * from users where username=?")) {
-            statement.setString(1, username);
-            try (ResultSet passwordResultSet = statement.executeQuery()) {
-                if (passwordResultSet.next()) {
-                    String password = passwordResultSet.getString("password");
-                    String salt = passwordResultSet.getString("password_salt");
-                    ByteSource decodedSalt = Util.bytes(Base64.getDecoder().decode(salt));
-                    return new SimpleAuthenticationInfo(principal, password, decodedSalt, getName());
-                } else {
-                    String message = "Username \"" + username + "\" not found";
-                    logservice.log(LogService.LOG_WARNING, message);
-                    throw new IncorrectCredentialsException(message);
-                }
-            }
-        } catch (SQLException e) {
-            String message = "AuthserviceDbRealm shiro realm got SQL error exploring the password results";
-            logservice.log(LogService.LOG_ERROR, message, e);
-            throw new AuthenticationException(message, e);
-        }
     }
 
 }

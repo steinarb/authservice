@@ -8,10 +8,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -89,11 +89,11 @@ public class AuthserviceDbRealmTest {
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
-        assertThrows(IncorrectCredentialsException.class, () -> {
+        assertThrows(UnknownAccountException.class, () -> {
                 AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
                 assertEquals(1, authInfo.getPrincipals().asList().size());
             });
-        assertEquals(1, logservice.getLogmessages().size());
+        assertEquals(0, logservice.getLogmessages().size());
     }
 
     /***
@@ -108,7 +108,7 @@ public class AuthserviceDbRealmTest {
         when(token.getPrincipal()).thenReturn(username);
         when(token.getCredentials()).thenReturn(password);
 
-        assertThrows(AuthenticationException.class, () -> {
+        assertThrows(ClassCastException.class, () -> {
                 AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
                 assertEquals(1, authInfo.getPrincipals().asList().size());
             });
