@@ -53,6 +53,7 @@ public class UserAdminServlet extends FrontendServlet {
             "/permissions/add");
     }
 
+    @Override
     @Reference
     public void setLogService(LogService logservice) {
         super.setLogService(logservice);
