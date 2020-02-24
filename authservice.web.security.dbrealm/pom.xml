@@ -8,7 +8,7 @@
 
     <artifactId>authservice.web.security.dbrealm</artifactId>
 
-    <name>Authentication webapp DB-based Shiro realm service component</name>
+    <name>Authentication webapp DB-based Shiro realm</name>
 
     <properties>
         <karaf-feature-name>authservice-web-security-dbrealm</karaf-feature-name>

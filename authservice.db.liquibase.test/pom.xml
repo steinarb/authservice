@@ -8,7 +8,7 @@
 
     <artifactId>authservice.db.liquibase.test</artifactId>
 
-    <name>Authentication webapp test database for use during development</name>
+    <name>Authentication webapp test database setup</name>
 
     <properties>
         <karaf-feature-name>authservice-db-liquibase-test</karaf-feature-name>
