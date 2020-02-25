@@ -288,7 +288,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
 
     private AuthserviceServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(LogService logservice, UserManagementService useradmin) throws Exception {
         AuthserviceServlet servlet = new AuthserviceServlet();
-        servlet.setLogservice(logservice);
+        servlet.setLogService(logservice);
         servlet.setUserManagementService(useradmin);
         servlet.activate();
         ServletConfig config = createServletConfigWithApplicationAndPackagenameForJerseyResources();

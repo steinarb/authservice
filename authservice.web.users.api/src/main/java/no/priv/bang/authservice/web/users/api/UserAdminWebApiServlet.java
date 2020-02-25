@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2019 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,8 @@
 package no.priv.bang.authservice.web.users.api;
 
 
-import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.Servlet;
-import javax.servlet.ServletException;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.servlet.ServletContainer;
-import org.glassfish.jersey.servlet.WebConfig;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -34,6 +25,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
 
 import no.priv.bang.osgiservice.users.UserManagementService;
+import no.priv.bang.servlet.jersey.JerseyServlet;
 
 /***
  * This class will show ups a {@link Servlet} OSGi service, and will be picked
@@ -47,46 +39,27 @@ import no.priv.bang.osgiservice.users.UserManagementService;
     property= {
         HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/useradmin/api/*",
         HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=useradminapi",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX+ServerProperties.PROVIDER_PACKAGES+"=no.priv.bang.authservice.web.users.api.resources"},
+        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=useradminapi"},
     service=Servlet.class,
     immediate=true
 )
-public class UserAdminWebApiServlet extends ServletContainer {
+public class UserAdminWebApiServlet extends JerseyServlet {
     private static final long serialVersionUID = 6064420153498760622L;
-    private LogService logservice;  // NOSONAR Value set by DS injection
-    private UserManagementService usermanagement;  // NOSONAR Value set by DS injection
 
+    @Override
     @Reference
-    public void setLogservice(LogService logService) {
-        this.logservice = logService;
+    public void setLogService(LogService logService) {
+        super.setLogService(logService);
     }
 
     @Reference
     public void setUserManagementService(UserManagementService usermanagement) {
-        this.usermanagement = usermanagement;
+        addInjectedOsgiService(UserManagementService.class, usermanagement);
     }
 
     @Activate
     public void activate() {
         // This method is called after all injections have been satisfied
-    }
-
-    @Override
-    protected void init(WebConfig webConfig) throws ServletException {
-        super.init(webConfig);
-        ResourceConfig copyOfExistingConfig = new ResourceConfig(getConfiguration());
-        copyOfExistingConfig.register(new AbstractBinder() {
-                @Override
-                protected void configure() {
-                    bind(logservice).to(LogService.class);
-                    bind(usermanagement).to(UserManagementService.class);
-                }
-            });
-        reload(copyOfExistingConfig);
-        Map<String, Object> configProperties = getConfiguration().getProperties();
-        Set<Class<?>> classes = getConfiguration().getClasses();
-        logservice.log(LogService.LOG_INFO, String.format("Authservice user admin REST API Jersey servlet initialized with WebConfig, with resources: %s  and config params: %s", classes.toString(), configProperties.toString()));
     }
 
 }

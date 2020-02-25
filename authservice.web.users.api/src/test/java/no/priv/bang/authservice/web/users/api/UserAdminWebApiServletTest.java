@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2019 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -429,7 +429,7 @@ public class UserAdminWebApiServletTest {
 
     private UserAdminWebApiServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(UserManagementService usermanagement, LogService logservice) throws Exception {
         UserAdminWebApiServlet servlet = new UserAdminWebApiServlet();
-        servlet.setLogservice(logservice);
+        servlet.setLogService(logservice);
         servlet.setUserManagementService(usermanagement);
         servlet.activate();
         ServletConfig config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
