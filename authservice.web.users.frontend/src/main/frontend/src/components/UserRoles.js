@@ -67,8 +67,8 @@ class UserRoles extends Component {
                                 <RoleList id="rolesnotonuser" className="form-control" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
                             </div>
                             <div className="no-gutters col-sm-4">
-                                <button className="form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
-                                <button className="form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
+                                <button className="btn btn-primary form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
+                                <button className="btn btn-primary form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
                             </div>
                             <div className="no-gutters col-sm-4">
                                 <label htmlFor="email">Role on user</label>

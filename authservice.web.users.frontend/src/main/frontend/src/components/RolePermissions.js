@@ -67,8 +67,8 @@ class RolePermissions extends Component {
                                 <PermissionList id="permissionsnotonrole" className="form-control" permissions={permissionsNotOnRole} permissionsMap={permissionsNotOnRoleMap} value={permissionsNotOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsNotOnRoleChange} />
                             </div>
                             <div className="no-gutters col-sm-4">
-                                <button className="form-control" onClick={() => onAddPermission(role, permissionsOnRole, permissionsNotOnRoleSelected)}>Add permission &nbsp;<ChevronRight/></button>
-                                <button className="form-control" onClick={() => onRemovePermission(role, permissionsOnRoleSelected)}><ChevronLeft/>&nbsp; Remove permission</button>
+                                <button className="btn btn-primary form-control" onClick={() => onAddPermission(role, permissionsOnRole, permissionsNotOnRoleSelected)}>Add permission &nbsp;<ChevronRight/></button>
+                                <button className="btn btn-primary form-control" onClick={() => onRemovePermission(role, permissionsOnRoleSelected)}><ChevronLeft/>&nbsp; Remove permission</button>
                             </div>
                             <div className="no-gutters col-sm-4">
                                 <label htmlFor="permissionsonrole">Permission on role</label>

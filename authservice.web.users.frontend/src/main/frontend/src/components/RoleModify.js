@@ -53,7 +53,7 @@ class RoleModify extends Component {
                             </FormField>
                         </FormRow>
                         <FormRow>
-                            <button className="form-control" onClick={() => onSaveUpdatedRole(role)}>Save changes to role</button>
+                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedRole(role)}>Save changes to role</button>
                         </FormRow>
                     </Container>
                 </form>

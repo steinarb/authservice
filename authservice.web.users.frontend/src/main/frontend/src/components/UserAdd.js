@@ -67,7 +67,7 @@ class UserModify extends Component {
                             </FormField>
                         </FormRow>
                         <FormRow>
-                            <button className="form-control" onClick={() => onAddUser(passwords)}>Opprett bruker</button>
+                            <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords)}>Opprett bruker</button>
                         </FormRow>
                     </Container>
                 </form>

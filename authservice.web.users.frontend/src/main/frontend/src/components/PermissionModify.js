@@ -53,7 +53,7 @@ class PermissionModify extends Component {
                             </FormField>
                         </FormRow>
                         <FormRow>
-                            <button className="form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
+                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
                         </FormRow>
                     </Container>
                 </form>

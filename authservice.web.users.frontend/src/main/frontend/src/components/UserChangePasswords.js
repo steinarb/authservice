@@ -56,7 +56,7 @@ class UserChangePasswords extends Component {
                         </FormRow>
                         <FormRow>
                             <FormField>
-                                <button className="form-control" onClick={() => onSaveUpdatedPassword(passwords)}>Change password</button>
+                                <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords)}>Change password</button>
                             </FormField>
                         </FormRow>
                     </Container>

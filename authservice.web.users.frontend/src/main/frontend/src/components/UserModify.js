@@ -66,7 +66,7 @@ class UserModify extends Component {
                         <FormRow>
                             <div className="col-5"/>
                             <FormField>
-                                <button className="form-control" onClick={() => onSaveUpdatedUser(user)}>Lagre endringer av bruker</button>
+                              <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedUser(user)}>Lagre endringer av bruker</button>
                             </FormField>
                         </FormRow>
                     </Container>
