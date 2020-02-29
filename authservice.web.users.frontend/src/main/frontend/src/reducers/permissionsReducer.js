@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { createReducer, createAction } from 'redux-starter-kit';
+import { createReducer, createAction } from '@reduxjs/toolkit';
 import { emptyPermission } from '../constants';
 import {
     PERMISSIONS_RECEIVED,

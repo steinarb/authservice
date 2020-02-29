@@ -1,4 +1,4 @@
-import { createReducer } from 'redux-starter-kit';
+import { createReducer } from '@reduxjs/toolkit';
 import { FORMFIELD_UPDATE } from '../actiontypes';
 
 const formfieldReducer = createReducer({}, {

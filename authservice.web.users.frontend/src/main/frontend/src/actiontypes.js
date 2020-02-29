@@ -1,4 +1,4 @@
-import { createAction } from 'redux-starter-kit';
+import { createAction } from '@reduxjs/toolkit';
 
 export const USERS_RECEIVED = createAction('USERS_RECEIVED');
 export const USERS_ERROR = createAction('USERS_ERROR');

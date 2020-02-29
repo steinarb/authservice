@@ -1,4 +1,4 @@
-import { createReducer } from 'redux-starter-kit';
+import { createReducer } from '@reduxjs/toolkit';
 import { PERMISSION_UPDATE } from '../actiontypes';
 import { emptyPermission } from '../constants';
 
