@@ -19,11 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.web.config.IniFilterChainResolverFactory;
-import org.apache.shiro.web.config.WebIniSecurityManagerFactory;
+import org.apache.shiro.web.env.IniWebEnvironment;
 import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -54,10 +56,17 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     private Realm realm;
     private SessionDAO session;
+    private IniWebEnvironment environment;
+    private ServletContext context;
     private static final Ini INI_FILE = new Ini();
     static {
         // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
         INI_FILE.load(AuthserviceShiroFilter.class.getClassLoader().getResourceAsStream("shiro.ini"));
+    }
+
+    @Reference(target = "(osgi.web.contextname=authservice)")
+    public void setServletContext(ServletContext context) {
+        this.context = context;
     }
 
     @Reference
@@ -72,17 +81,20 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     @Activate
     public void activate() {
-        WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(INI_FILE); // NOSONAR will replace this later
-        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) securityManagerFactory.createInstance();
+        environment = new IniWebEnvironment();
+        environment.setIni(INI_FILE);
+        environment.setServletContext(context);
+        environment.init();
         DefaultWebSessionManager sessionmanager = new DefaultWebSessionManager();
         sessionmanager.setSessionDAO(session);
         sessionmanager.setSessionIdUrlRewritingEnabled(false);
+        DefaultWebSecurityManager securityManager = DefaultWebSecurityManager.class.cast(environment.getWebSecurityManager());
         securityManager.setSessionManager(sessionmanager);
-        setSecurityManager(securityManager);
         securityManager.setRealm(realm);
+        setSecurityManager(securityManager);
         // Using the PassThruAuthenticationFilter instead of the default authc FormAuthenticationFilter
         // to be able to do a redirect back "out of" authservice to the originalUrl
-        Map<String, Object> defaultBeans = new HashMap<>(securityManagerFactory.getBeans());
+        Map<String, Object> defaultBeans = new HashMap<>(environment.getObjects());
         PassThruAuthenticationFilter authc = new PassThruAuthenticationFilter();
         authc.setLoginUrl("/login");
         defaultBeans.put("authc", (Object)authc);
