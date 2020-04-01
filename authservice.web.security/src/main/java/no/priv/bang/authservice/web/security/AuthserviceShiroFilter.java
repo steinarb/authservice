@@ -49,7 +49,6 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     private Realm realm;
     private SessionDAO session;
-    private IniWebEnvironment environment;
     private ServletContext context;
     private static final Ini INI_FILE = new Ini();
     static {
@@ -74,7 +73,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     @Activate
     public void activate() {
-        environment = new IniWebEnvironment();
+        IniWebEnvironment environment = new IniWebEnvironment();
         environment.setIni(INI_FILE);
         environment.setServletContext(context);
         environment.init();
