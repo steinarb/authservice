@@ -16,8 +16,6 @@
 package no.priv.bang.authservice.web.security;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
-
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -49,16 +47,10 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     private Realm realm;
     private SessionDAO session;
-    private ServletContext context;
     private static final Ini INI_FILE = new Ini();
     static {
         // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
         INI_FILE.load(AuthserviceShiroFilter.class.getClassLoader().getResourceAsStream("shiro.ini"));
-    }
-
-    @Reference(target = "(osgi.web.contextname=authservice)")
-    public void setServletContext(ServletContext context) {
-        this.context = context;
     }
 
     @Reference
@@ -75,7 +67,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
     public void activate() {
         IniWebEnvironment environment = new IniWebEnvironment();
         environment.setIni(INI_FILE);
-        environment.setServletContext(context);
+        environment.setServletContext(getServletContext());
         environment.init();
         DefaultWebSessionManager sessionmanager = new DefaultWebSessionManager();
         sessionmanager.setSessionDAO(session);
