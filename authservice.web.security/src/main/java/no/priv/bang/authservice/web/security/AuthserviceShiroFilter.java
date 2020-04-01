@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,13 @@
  */
 package no.priv.bang.authservice.web.security;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
-import org.apache.shiro.web.config.IniFilterChainResolverFactory;
 import org.apache.shiro.web.env.IniWebEnvironment;
-import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
-import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
@@ -43,7 +37,6 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  *
  * The filter maps URLs in the webapp to users and roles.
  */
-@SuppressWarnings("deprecation")
 @Component(
     property= {
         HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN+"=/*",
@@ -92,16 +85,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
         securityManager.setSessionManager(sessionmanager);
         securityManager.setRealm(realm);
         setSecurityManager(securityManager);
-        // Using the PassThruAuthenticationFilter instead of the default authc FormAuthenticationFilter
-        // to be able to do a redirect back "out of" authservice to the originalUrl
-        Map<String, Object> defaultBeans = new HashMap<>(environment.getObjects());
-        PassThruAuthenticationFilter authc = new PassThruAuthenticationFilter();
-        authc.setLoginUrl("/login");
-        defaultBeans.put("authc", (Object)authc);
-
-        IniFilterChainResolverFactory filterChainResolverFactory = new IniFilterChainResolverFactory(INI_FILE, defaultBeans);
-        PathMatchingFilterChainResolver resolver = (PathMatchingFilterChainResolver) filterChainResolverFactory.createInstance();
-        setFilterChainResolver(resolver);
+        setFilterChainResolver(environment.getFilterChainResolver());
     }
 
 }
