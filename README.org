@@ -196,7 +196,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/authservice/1.11.6/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/authservice/1.11.7/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -411,6 +411,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                                                          |
 |--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2020-04-10] |  1.11.7 | Use jersey 2.30.1 and jackson 2.10.3                                                                                                                                             |
 | [2020-04-01] |  1.11.6 | Remove the use of deprecated classes and methods in the shiro setup                                                                                                              |
 | [2020-03-26] |  1.11.5 | Use pax-web 7.2.14 (the version used by karaf 4.2.8)                                                                                                                             |
 | [2020-03-05] |  1.11.4 | Use runtime and compile dependency to jackson-databind 2.9.10.3 to fix security issue CVE-2020-8840                                                                              |
