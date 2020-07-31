@@ -65,8 +65,7 @@ class LoggedInUserResourceTest extends ShiroTestBase {
         createNullWebSubjectAndBindItToThread();
 
         assertThrows(AuthserviceException.class, () -> {
-                Optional<User> loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
-                assertFalse(loggedInUser.isPresent());
+                LoggedInUserResource.findLoggedInUser(logservice, useradmin);
             });
     }
 

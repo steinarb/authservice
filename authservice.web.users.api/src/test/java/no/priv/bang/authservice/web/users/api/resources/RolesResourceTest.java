@@ -63,8 +63,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Role> roles = resource.getRoles();
-                assertThat(roles.size()).isGreaterThan(0);
+                resource.getRoles();
             });
     }
 
@@ -96,8 +95,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Role> roles = resource.modifyRole(role);
-                assertThat(roles.size()).isGreaterThan(0);
+                resource.modifyRole(role);
             });
     }
 
@@ -130,8 +128,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Role> roles = resource.addRole(role);
-                assertThat(roles.size()).isGreaterThan(0);
+                resource.addRole(role);
             });
     }
 
@@ -159,8 +156,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
-                assertThat(rolespermissions.size()).isGreaterThan(0);
+                resource.getRolesPermissions();
             });
     }
 
@@ -187,9 +183,9 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
+        RolePermissions rolepermissions = new RolePermissions(new Role(), Arrays.asList(new Permission()));
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
-                assertThat(rolespermissions.size()).isGreaterThan(0);
+                resource.addRolePermissions(rolepermissions);
             });
     }
 
@@ -216,9 +212,9 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
+        RolePermissions rolepermissions = new RolePermissions(new Role(), Arrays.asList(new Permission()));
         assertThrows(InternalServerErrorException.class, () -> {
-                Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
-                assertThat(rolespermissions.size()).isGreaterThan(0);
+                resource.removeRolePermissions(rolepermissions);
             });
     }
 

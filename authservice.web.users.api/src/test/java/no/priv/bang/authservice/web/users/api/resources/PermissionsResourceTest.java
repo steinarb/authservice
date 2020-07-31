@@ -58,8 +58,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Permission> permissions = resource.getPermissions();
-                assertThat(permissions.size()).isGreaterThan(0);
+                resource.getPermissions();
             });
     }
 
@@ -91,8 +90,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Permission> permissions = resource.modifyPermission(permission);
-                assertThat(permissions.size()).isGreaterThan(0);
+                resource.modifyPermission(permission);
             });
     }
 
@@ -125,8 +123,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                List<Permission> permissions = resource.addPermission(permission);
-                assertThat(permissions.size()).isGreaterThan(0);
+                resource.addPermission(permission);
             });
     }
 

@@ -70,8 +70,7 @@ class AuthserviceDbRealmTest {
         AuthenticationToken token = new UsernamePasswordToken("jad", "1add".toCharArray());
 
         assertThrows(IncorrectCredentialsException.class, () -> {
-                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-                assertEquals(1, authInfo.getPrincipals().asList().size());
+                realm.getAuthenticationInfo(token);
             });
     }
 
@@ -90,8 +89,7 @@ class AuthserviceDbRealmTest {
         AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
         assertThrows(UnknownAccountException.class, () -> {
-                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-                assertEquals(1, authInfo.getPrincipals().asList().size());
+                realm.getAuthenticationInfo(token);
             });
         assertEquals(0, logservice.getLogmessages().size());
     }
@@ -109,8 +107,7 @@ class AuthserviceDbRealmTest {
         when(token.getCredentials()).thenReturn(password);
 
         assertThrows(ClassCastException.class, () -> {
-                AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
-                assertEquals(1, authInfo.getPrincipals().asList().size());
+                realm.getAuthenticationInfo(token);
             });
     }
 

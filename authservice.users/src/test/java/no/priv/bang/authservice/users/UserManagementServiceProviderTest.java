@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-
 import javax.sql.DataSource;
 
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -105,8 +103,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         assertThrows(AuthserviceException.class, () -> {
-                User user = provider.getUser(username);
-                assertNull(user);
+                provider.getUser(username);
             });
     }
 
@@ -125,8 +122,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         assertThrows(AuthserviceException.class, () -> {
-                User user = provider.getUser(username);
-                assertNull(user);
+                provider.getUser(username);
             });
     }
 
@@ -156,8 +152,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         assertThrows(AuthserviceException.class, () -> {
-                List<Role> roles = provider.getRolesForUser(username);
-                assertThat(roles.size()).isGreaterThan(0);
+                provider.getRolesForUser(username);
             });
     }
 
@@ -187,8 +182,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         assertThrows(AuthserviceException.class, () -> {
-                List<Permission> permissions = provider.getPermissionsForUser(username);
-                assertThat(permissions.size()).isGreaterThan(0);
+                provider.getPermissionsForUser(username);
             });
     }
 
@@ -206,8 +200,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                List<User> users = provider.getUsers();
-                assertEquals(0, users.size());
+                provider.getUsers();
             });
     }
 
@@ -226,8 +219,7 @@ class UserManagementServiceProviderTest {
 
         User dummy = new User();
         assertThrows(AuthserviceException.class, () -> {
-                List<User> users = provider.modifyUser(dummy);
-                assertEquals(0, users.size());
+                provider.modifyUser(dummy);
             });
     }
 
@@ -287,8 +279,7 @@ class UserManagementServiceProviderTest {
         User user = users.get(0);
         UserAndPasswords passwords = new UserAndPasswords(user, "not", "matching", false);
         assertThrows(AuthservicePasswordsNotIdenticalException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -304,8 +295,7 @@ class UserManagementServiceProviderTest {
         User user = users.get(0);
         UserAndPasswords passwords = new UserAndPasswords(user, null, null, false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -321,8 +311,7 @@ class UserManagementServiceProviderTest {
         User user = users.get(0);
         UserAndPasswords passwords = new UserAndPasswords(user, "", null, false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -334,11 +323,9 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(datasource);
         provider.activate();
 
-        List<User> users = provider.getUsers();
         UserAndPasswords passwords = new UserAndPasswords(null, "secret", "secret", false);
         assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -355,12 +342,10 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        List<User> users = Collections.emptyList();
         User user = new User(100, "notmatching", "nomatch@gmail.com", "Not", "Match");
         UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(AuthserviceException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -372,12 +357,10 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(datasource);
         provider.activate();
 
-        List<User> users = provider.getUsers();
         User user = new User(100, "notmatching", "nomatch@gmail.com", "Not", "Match");
         UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
         assertThrows(AuthserviceException.class, () -> {
-                List<User> updatedUsers = provider.updatePassword(passwords);
-                assertEquals(users.size(), updatedUsers.size());
+                provider.updatePassword(passwords);
             });
     }
 
@@ -420,8 +403,7 @@ class UserManagementServiceProviderTest {
         String newUserPassword = "supersecret";
         UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword, false);
         assertThrows(AuthserviceException.class, () -> {
-                List<User> users = provider.addUser(newUserWithPasswords);
-                assertEquals(0, users.size());
+                provider.addUser(newUserWithPasswords);
             });
     }
 
@@ -444,8 +426,7 @@ class UserManagementServiceProviderTest {
         String newUserPassword = "supersecret";
         UserAndPasswords newUserWithPasswords = new UserAndPasswords(newUser, newUserPassword, newUserPassword, false);
         assertThrows(AuthserviceException.class, () -> {
-                List<User> users = provider.addUser(newUserWithPasswords);
-                assertEquals(0, users.size());
+                provider.addUser(newUserWithPasswords);
             });
     }
 
@@ -467,8 +448,7 @@ class UserManagementServiceProviderTest {
         // Verify that trying to insert a new role with the same rolename fails
         Role dummy2 = new Role(-1, "dummy", "dummy");
         assertThrows(AuthserviceException.class, () -> {
-                List<Role> rolesAfterAdd2 = provider.addRole(dummy2);
-                assertEquals(rolesAfterAdd.size(), rolesAfterAdd2.size());
+                provider.addRole(dummy2);
             });
 
         // Modify a role
@@ -482,8 +462,7 @@ class UserManagementServiceProviderTest {
         // Verify that changing the role name to a name already in the database fails
         Role failingToUpdate = new Role(modifiedRole.getId(), "admin", modifiedRole.getDescription());
         assertThrows(AuthserviceException.class, () -> {
-                List<Role> failedToUpdateRoles = provider.modifyRole(failingToUpdate);
-                assertEquals(modifiedRoles.size(), failedToUpdateRoles.size());
+                provider.modifyRole(failingToUpdate);
             });
 
         // Verify that trying to modify a role not present logs a warning
@@ -510,8 +489,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                List<Role> roles = provider.getRoles();
-                assertEquals(0, roles.size());
+                provider.getRoles();
             });
     }
 
@@ -533,8 +511,7 @@ class UserManagementServiceProviderTest {
         // Verify that trying to insert a new role with the same permissionname fails
         Permission dummy2 = new Permission(-1, "dummy", "dummy");
         assertThrows(AuthserviceException.class, () -> {
-                List<Permission> permissionsAfterAdd2 = provider.addPermission(dummy2);
-                assertEquals(permissionsAfterAdd.size(), permissionsAfterAdd2.size());
+                provider.addPermission(dummy2);
             });
 
         // Modify a permission
@@ -548,8 +525,7 @@ class UserManagementServiceProviderTest {
         // Verify that changing the permission name to a name already in the database fails
         Permission failingToUpdate = new Permission(modifiedPermission.getId(), "user_admin_api_read", modifiedPermission.getDescription());
         assertThrows(AuthserviceException.class, () -> {
-                List<Permission> failedToUpdatePermissions = provider.modifyPermission(failingToUpdate);
-                assertEquals(modifiedPermissions.size(), failedToUpdatePermissions.size());
+                provider.modifyPermission(failingToUpdate);
             });
 
         // Verify that trying to modify a permission not present logs a warning
@@ -576,8 +552,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                List<Permission> permissions = provider.getPermissions();
-                assertEquals(0, permissions.size());
+                provider.getPermissions();
             });
     }
 
@@ -606,9 +581,9 @@ class UserManagementServiceProviderTest {
 
         // Try adding a non-existing role
         Role nonExistingRole = new Role(42, "notfound", "dummy");
+        UserRoles userroles2 = new UserRoles(user, Arrays.asList(nonExistingRole));
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Role>> userRolesAfterAddingRole3 = provider.addUserRoles(new UserRoles(user, Arrays.asList(nonExistingRole)));
-                assertEquals(0, userRolesAfterAddingRole3.size());
+                provider.addUserRoles(userroles2);
             });
 
         // Remove the role
@@ -642,18 +617,17 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Role>> userroles = provider.getUserRoles();
-                assertEquals(0, userroles.size());
+                provider.getUserRoles();
             });
 
+        User user = new User();
         assertThrows(AuthserviceException.class, () -> {
-                Set<String> role_names = provider.findExistingRolesForUser(new User());
-                assertEquals(0, role_names.size());
+                provider.findExistingRolesForUser(user);
             });
 
+        UserRoles userroles = new UserRoles(new User(), Arrays.asList(new Role()));
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Role>> userroles = provider.removeUserRoles(new UserRoles(new User(), Arrays.asList(new Role())));
-                assertEquals(0, userroles.size());
+                provider.removeUserRoles(userroles);
             });
     }
 
@@ -681,9 +655,9 @@ class UserManagementServiceProviderTest {
 
         // Try adding a non-existing role
         Permission nonExistingPermission = new Permission(42, "notfound", "dummy");
+        RolePermissions rolepermissions = new RolePermissions(role, Arrays.asList(nonExistingPermission));
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Permission>> rolesPermissionsAfterAddingRole3 = provider.addRolePermissions(new RolePermissions(role, Arrays.asList(nonExistingPermission)));
-                assertEquals(0, rolesPermissionsAfterAddingRole3.size());
+                provider.addRolePermissions(rolepermissions);
             });
 
         // Remove the role
@@ -717,18 +691,17 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Permission>> rolesPermissions = provider.getRolesPermissions();
-                assertEquals(0, rolesPermissions.size());
+                provider.getRolesPermissions();
             });
 
+        Role role = new Role();
         assertThrows(AuthserviceException.class, () -> {
-                Set<String> existingPermissions = provider.findExistingPermissionsForRole(new Role());
-                assertEquals(0, existingPermissions.size());
+                provider.findExistingPermissionsForRole(role);
             });
 
+        RolePermissions rolepermissions = new RolePermissions(new Role(), Arrays.asList(new Permission()));
         assertThrows(AuthserviceException.class, () -> {
-                Map<String, List<Permission>> rolespermissions = provider.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
-                assertEquals(0, rolespermissions.size());
+                provider.removeRolePermissions(rolepermissions);
             });
     }
 

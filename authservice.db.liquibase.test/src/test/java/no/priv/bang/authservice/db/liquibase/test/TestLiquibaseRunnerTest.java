@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,8 +79,8 @@ class TestLiquibaseRunnerTest {
         DataSource datasource = mock(DataSource.class);
         when(datasource.getConnection()).thenThrow(SQLException.class);
 
+        runner.activate();
         assertThrows(AuthserviceException.class, () -> {
-                runner.activate();
                 runner.prepare(datasource);
             });
     }

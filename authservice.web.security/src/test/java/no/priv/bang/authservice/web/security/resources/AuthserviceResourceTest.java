@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
-import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -190,8 +189,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         String password = "wrong";
         String redirectUrl = "https://myserver.com/resource";
         assertThrows(InternalServerErrorException.class, () -> {
-                Response response = resource.postLogin(username, password, redirectUrl);
-                assertEquals(401, response.getStatus());
+                resource.postLogin(username, password, redirectUrl);
             });
     }
 
@@ -282,8 +280,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         resource.logservice = logservice;
 
         assertThrows(InternalServerErrorException.class, () -> {
-                Document html = resource.loadHtmlFile("nonexistingfile.html", logservice);
-                assertThat(html.html()).contains("message not found");
+                resource.loadHtmlFile("nonexistingfile.html", logservice);
             });
     }
 
