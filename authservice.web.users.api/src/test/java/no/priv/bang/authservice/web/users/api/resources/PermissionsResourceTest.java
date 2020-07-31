@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.InternalServerErrorException;
 
@@ -29,6 +28,7 @@ import org.osgi.service.log.LogService;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
+import static no.priv.bang.authservice.web.users.api.resources.Testdata.*;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
@@ -128,15 +128,6 @@ class PermissionsResourceTest {
                 List<Permission> permissions = resource.addPermission(permission);
                 assertThat(permissions.size()).isGreaterThan(0);
             });
-    }
-
-    public static List<Permission> createPermissions() {
-        Permission user_admin_api_read = new Permission(1, "user_admin_api_read", "User admin read access");
-        Permission user_admin_api_write = new Permission(2, "user_admin_api_write", "User admin write access");
-        Permission caseworker_read = new Permission(3, "caseworker_read", "Caseworker read access");
-        Permission caseworker_write = new Permission(4, "caseworker_write", "Caseworker write access");
-        Permission user_read = new Permission(5, "user_read", "User read access");
-        return Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read);
     }
 
 }

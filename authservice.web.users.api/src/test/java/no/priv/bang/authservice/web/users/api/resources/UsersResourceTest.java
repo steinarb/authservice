@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +39,7 @@ import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserManagementService;
 import no.priv.bang.osgiservice.users.UserRoles;
+import static no.priv.bang.authservice.web.users.api.resources.Testdata.*;
 
 class UsersResourceTest {
 
@@ -252,7 +252,7 @@ class UsersResourceTest {
     void testGetUserRoles() {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
-        when(usermanagement.getUserRoles()).thenReturn(createUserroles());
+        when(usermanagement.getUserRoles()).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
@@ -281,7 +281,7 @@ class UsersResourceTest {
     void testAddUserRoles() {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
-        when(usermanagement.addUserRoles(any())).thenReturn(createUserroles());
+        when(usermanagement.addUserRoles(any())).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
@@ -310,7 +310,7 @@ class UsersResourceTest {
     void testRemoveUserRoles() {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
-        when(usermanagement.removeUserRoles(any())).thenReturn(createUserroles());
+        when(usermanagement.removeUserRoles(any())).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
@@ -333,34 +333,6 @@ class UsersResourceTest {
                 Map<String, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
                 assertThat(userroles.size()).isGreaterThan(0);
             });
-    }
-
-    public static List<User> createUsers() {
-        User admin = new User(1, "admin", "admin@gmail.com", "Admin", "Istrator");
-        User on = new User(2, "on", "olanordmann2345@gmail.com", "Ola", "Nordmann");
-        User kn = new User(3, "kn", "karinordmann3456@gmail.com", "Kari", "Nordmann");
-        User jad = new User(4, "jad", "janedoe7896@gmail.com", "Jane", "Doe");
-        User jod = new User(5, "jod", "johndoe6789@gmail.com", "John", "Doe");
-        return Arrays.asList(admin, on, kn, jad, jod);
-    }
-
-    public static Map<String, List<Role>> createUserroles() {
-        List<User> users = createUsers();
-        User admin = users.get(0);
-        User on = users.get(1);
-        User kn = users.get(2);
-        User jad = users.get(3);
-        User jod = users.get(4);
-        List<Role> roles = RolesResourceTest.createRoles();
-        Role adminrole = roles.get(0);
-        Role caseworker = roles.get(1);
-        Map<String, List<Role>> userroles = new HashMap<>();
-        userroles.put(admin.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(on.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(kn.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(jad.getUsername(), Arrays.asList(caseworker));
-        userroles.put(jod.getUsername(), Arrays.asList(caseworker));
-        return userroles;
     }
 
 }

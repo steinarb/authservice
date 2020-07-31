@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,9 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockHttpSession;
 import com.mockrunner.mock.web.MockServletOutputStream;
 
-import static no.priv.bang.authservice.web.users.api.resources.UsersResourceTest.*;
-import static no.priv.bang.authservice.web.users.api.resources.RolesResourceTest.*;
-import static no.priv.bang.authservice.web.users.api.resources.PermissionsResourceTest.*;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
+import static no.priv.bang.authservice.web.users.api.resources.Testdata.*;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.Role;
