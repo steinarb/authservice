@@ -32,7 +32,7 @@
         <karaf.version>4.2.5</karaf.version>
         <junit.jupiter.version>5.4.2</junit.jupiter.version>
         <junit.platform.version>1.4.2</junit.platform.version>
-        <mockrunner.version>2.0.1</mockrunner.version>
+        <mockrunner.version>2.0.4</mockrunner.version>
         <osgi-service.version>1.5.0</osgi-service.version>
         <service-adapters.version>1.0.1</service-adapters.version>
         <osgi.version>6.0.0</osgi.version>
