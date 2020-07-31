@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,14 +42,14 @@ import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
-public class AuthserviceShiroFilterTest {
+class AuthserviceShiroFilterTest {
 
     private static MemorySessionDAO session = new MemorySessionDAO();
     private static AuthserviceDbRealm realm;
     private static ServletContext context;
 
     @BeforeAll
-    public static void setup() throws SQLException, LiquibaseException {
+    static void setup() throws SQLException, LiquibaseException {
         DerbyDataSourceFactory dataSourceFactory = new DerbyDataSourceFactory();
         Properties properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
@@ -67,7 +67,7 @@ public class AuthserviceShiroFilterTest {
     }
 
     @Test
-    public void testAuthenticationSucceed() throws Exception {
+    void testAuthenticationSucceed() throws Exception {
         AuthserviceShiroFilter filter = new AuthserviceShiroFilter();
         filter.setServletContext(context);
         filter.setRealm(realm);

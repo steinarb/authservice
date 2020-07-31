@@ -38,7 +38,7 @@ import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.RolePermissions;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-public class RolesResourceTest {
+class RolesResourceTest {
 
     @Test
     void testGetRoles() {

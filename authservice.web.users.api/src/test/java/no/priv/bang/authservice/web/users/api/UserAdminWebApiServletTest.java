@@ -57,12 +57,12 @@ import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-public class UserAdminWebApiServletTest {
+class UserAdminWebApiServletTest {
     public static final ObjectMapper mapper = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Test
-    public void testGetUsers() throws Exception {
+    void testGetUsers() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenReturn(createUsers());
@@ -80,7 +80,7 @@ public class UserAdminWebApiServletTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetUsersWhenExceptionIsThrown() throws Exception {
+    void testGetUsersWhenExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenThrow(AuthserviceException.class);
@@ -95,7 +95,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testModifyUser() throws Exception {
+    void testModifyUser() throws Exception {
         MockLogService logservice = new MockLogService();
         List<User> originalUsers = createUsers();
         User user = originalUsers.stream().reduce((first, second) -> second).get();
@@ -116,7 +116,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testModifyUserWithWrongTypeInPostData() throws Exception {
+    void testModifyUserWithWrongTypeInPostData() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
 
@@ -137,7 +137,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testUpdatePassword() throws Exception {
+    void testUpdatePassword() throws Exception {
         MockLogService logservice = new MockLogService();
         List<User> originalUsers = createUsers();
         User user = originalUsers.stream().reduce((first, second) -> second).get();
@@ -160,7 +160,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testAddUser() throws Exception {
+    void testAddUser() throws Exception {
         MockLogService logservice = new MockLogService();
         List<User> originalUsers = createUsers();
         User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
@@ -185,7 +185,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testGetUserRoles() throws Exception {
+    void testGetUserRoles() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenReturn(createUserroles());
@@ -202,7 +202,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testAddUserRoles() throws Exception {
+    void testAddUserRoles() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenReturn(createUserroles());
@@ -219,7 +219,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testRemoveUserRoles() throws Exception {
+    void testRemoveUserRoles() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenReturn(createUserroles());
@@ -236,7 +236,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testGetRoles() throws Exception {
+    void testGetRoles() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRoles()).thenReturn(createRoles());
@@ -253,7 +253,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testModifyRole() throws Exception {
+    void testModifyRole() throws Exception {
         MockLogService logservice = new MockLogService();
         Role role = new Role(1, "somerole", "Some role");
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -273,7 +273,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testAddRole() throws Exception {
+    void testAddRole() throws Exception {
         MockLogService logservice = new MockLogService();
         Role role = new Role(1, "somerole", "Some role");
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -293,7 +293,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testGetRolePermissions() throws Exception {
+    void testGetRolePermissions() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRolesPermissions()).thenReturn(createRolesPermissions());
@@ -310,7 +310,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testAddRolePermissions() throws Exception {
+    void testAddRolePermissions() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRolePermissions(any())).thenReturn(createRolesPermissions());
@@ -327,7 +327,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testRemoveRolePermissions() throws Exception {
+    void testRemoveRolePermissions() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeRolePermissions(any())).thenReturn(createRolesPermissions());
@@ -344,7 +344,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testGetPermissions() throws Exception {
+    void testGetPermissions() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenReturn(createPermissions());
@@ -361,7 +361,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testModifyPermission() throws Exception {
+    void testModifyPermission() throws Exception {
         MockLogService logservice = new MockLogService();
         Permission permission = new Permission(1, "somepermission", "Some permission");
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -381,7 +381,7 @@ public class UserAdminWebApiServletTest {
     }
 
     @Test
-    public void testAddPermission() throws Exception {
+    void testAddPermission() throws Exception {
         MockLogService logservice = new MockLogService();
         Permission permission = new Permission(1, "somepermission", "Some permission");
         UserManagementService usermanagement = mock(UserManagementService.class);

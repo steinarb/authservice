@@ -32,7 +32,7 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-public class PermissionsResourceTest {
+class PermissionsResourceTest {
 
     @Test
     void testGetPermissions() {

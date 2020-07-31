@@ -24,7 +24,7 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 /***
  * Tests for class {@link AuthserviceDbRealm}.
  */
-public class AuthserviceDbRealmTest {
+class AuthserviceDbRealmTest {
     private static DataSource datasource;
 
     @BeforeAll
@@ -45,7 +45,7 @@ public class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    public void testGetAuthenticationInfo() throws SQLException {
+    void testGetAuthenticationInfo() throws SQLException {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
@@ -61,7 +61,7 @@ public class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    public void testGetAuthenticationInfoWrongPassword() throws SQLException {
+    void testGetAuthenticationInfoWrongPassword() throws SQLException {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
@@ -81,7 +81,7 @@ public class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    public void testGetAuthenticationInfoWrongUsername() throws SQLException {
+    void testGetAuthenticationInfoWrongUsername() throws SQLException {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
@@ -100,7 +100,7 @@ public class AuthserviceDbRealmTest {
      * Test authentication failing because the token is not a {@link UsernamePasswordToken}.
      */
     @Test
-    public void testGetAuthenticationInfoWrongTokenType() {
+    void testGetAuthenticationInfoWrongTokenType() {
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         AuthenticationToken token = mock(AuthenticationToken.class);
         String username = "jad";
@@ -119,7 +119,7 @@ public class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    public void testGetRolesForUsers() throws SQLException {
+    void testGetRolesForUsers() throws SQLException {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);
@@ -140,7 +140,7 @@ public class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    public void testGetRolesForAdministrators() throws SQLException {
+    void testGetRolesForAdministrators() throws SQLException {
         MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
         realm.setLogservice(logservice);

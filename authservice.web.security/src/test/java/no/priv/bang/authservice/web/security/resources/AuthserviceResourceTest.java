@@ -147,7 +147,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    public void testPostLoginWithLockedAccount() throws Exception {
+    void testPostLoginWithLockedAccount() throws Exception {
         try {
             lockAccount("jad");
             // Set up the request
@@ -168,7 +168,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    public void testPostLoginWithAuthenticationException() {
+    void testPostLoginWithAuthenticationException() {
         createSubjectThrowingExceptionAndBindItToThread(AuthenticationException.class);
         MockLogService logservice = new MockLogService();
         AuthserviceResource resource = new AuthserviceResource();
@@ -181,7 +181,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    public void testLoginWithUnexpectedException() {
+    void testLoginWithUnexpectedException() {
         createSubjectThrowingExceptionAndBindItToThread(IllegalArgumentException.class);
         MockLogService logservice = new MockLogService();
         AuthserviceResource resource = new AuthserviceResource();
@@ -238,7 +238,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    public void testLogout() {
+    void testLogout() {
         AuthserviceResource resource = new AuthserviceResource();
         HttpHeaders httpheaders = mock(HttpHeaders.class);
         when(httpheaders.getHeaderString(anyString())).thenReturn("http://localhost/localpath");

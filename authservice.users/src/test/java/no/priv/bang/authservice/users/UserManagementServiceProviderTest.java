@@ -59,7 +59,7 @@ import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserRoles;
 
-public class UserManagementServiceProviderTest {
+class UserManagementServiceProviderTest {
     private static DataSource datasource;
 
     @BeforeAll
@@ -76,7 +76,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testGetUser() {
+    void testGetUser() {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -89,7 +89,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testGetUserWithEmptyResults() throws Exception {
+    void testGetUserWithEmptyResults() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -112,7 +112,7 @@ public class UserManagementServiceProviderTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetUserWhenSQLExceptionIsThrown() throws Exception {
+    void testGetUserWhenSQLExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -131,7 +131,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testGetRolesForUser() {
+    void testGetRolesForUser() {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -145,7 +145,7 @@ public class UserManagementServiceProviderTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetRolesForUserWhenSqlExceptionIsThrown() throws Exception {
+    void testGetRolesForUserWhenSqlExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -162,7 +162,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testGetPermissionsForUser() {
+    void testGetPermissionsForUser() {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -176,7 +176,7 @@ public class UserManagementServiceProviderTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetPermissionsForUserWhenSQLExceptionIsThrown() throws Exception {
+    void testGetPermissionsForUserWhenSQLExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         MockLogService logservice = new MockLogService();
         provider.setLogservice(logservice);
@@ -382,7 +382,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testAddUser() {
+    void testAddUser() {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
@@ -409,7 +409,7 @@ public class UserManagementServiceProviderTest {
     }
 
     @Test
-    public void testAddUserWhenUsernameExists() {
+    void testAddUserWhenUsernameExists() {
         MockLogService logservice = new MockLogService();
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);

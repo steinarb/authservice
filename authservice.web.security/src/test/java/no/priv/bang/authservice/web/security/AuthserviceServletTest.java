@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2020 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,10 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-public class AuthserviceServletTest extends ShiroTestBase {
+class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
-    public void testGetRootIndexHtml() throws Exception {
+    void testGetRootIndexHtml() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -64,7 +64,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testGetOpenIconicCss() throws Exception {
+    void testGetOpenIconicCss() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -81,7 +81,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testGetOpenIconicWoff() throws Exception {
+    void testGetOpenIconicWoff() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -98,7 +98,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testAuthenticate() throws Exception {
+    void testAuthenticate() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -121,7 +121,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testAuthenticateUnknownAccount() throws Exception {
+    void testAuthenticateUnknownAccount() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -145,7 +145,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testAuthenticateWrongPassword() throws Exception {
+    void testAuthenticateWrongPassword() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -168,7 +168,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testGetPasswordIndexHtml() throws Exception {
+    void testGetPasswordIndexHtml() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
 
@@ -185,7 +185,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testGetUser() throws Exception {
+    void testGetUser() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
@@ -207,7 +207,7 @@ public class AuthserviceServletTest extends ShiroTestBase {
     }
 
     @Test
-    public void testSubmitUser() throws Exception {
+    void testSubmitUser() throws Exception {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";

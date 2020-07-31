@@ -41,7 +41,7 @@ import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserManagementService;
 import no.priv.bang.osgiservice.users.UserRoles;
 
-public class UsersResourceTest {
+class UsersResourceTest {
 
     @Test
     void testGetUsers() {
