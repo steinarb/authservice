@@ -66,7 +66,7 @@ class UserResourceTest extends ShiroTestBase {
         Document html = Jsoup.parse(responsebody);
         FormElement form = (FormElement) html.getElementsByTag("form").get(0);
         List<KeyVal> formdata = form.formData();
-        assertThat(formdata.size()).isGreaterThan(0);
+        assertThat(formdata.size()).isPositive();
         assertEquals(user.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(user.getFirstname(), findFormvalue(formdata, "firstname").value());
         assertEquals(user.getLastname(), findFormvalue(formdata, "lastname").value());
@@ -224,7 +224,7 @@ class UserResourceTest extends ShiroTestBase {
         Document html = Jsoup.parse(responsebody);
         FormElement form = (FormElement) html.getElementsByTag("form").get(0);
         List<KeyVal> formdata = form.formData();
-        assertThat(formdata.size()).isGreaterThan(0);
+        assertThat(formdata.size()).isPositive();
         assertEquals(updatedUser.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(updatedUser.getFirstname(), findFormvalue(formdata, "firstname").value());
         assertEquals(updatedUser.getLastname(), findFormvalue(formdata, "lastname").value());

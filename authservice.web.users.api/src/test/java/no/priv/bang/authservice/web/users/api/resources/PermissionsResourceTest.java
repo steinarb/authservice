@@ -44,7 +44,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.getPermissions();
-        assertThat(permissions.size()).isGreaterThan(0);
+        assertThat(permissions.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")

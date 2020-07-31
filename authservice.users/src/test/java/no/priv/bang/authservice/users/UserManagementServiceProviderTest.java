@@ -136,7 +136,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         List<Role> roles = provider.getRolesForUser(username);
-        assertThat(roles.size()).isGreaterThan(0);
+        assertThat(roles.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -166,7 +166,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         List<Permission> permissions = provider.getPermissionsForUser(username);
-        assertThat(permissions.size()).isGreaterThan(0);
+        assertThat(permissions.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -232,7 +232,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<User> users = provider.getUsers();
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
         User firstUser = users.get(0);
         User modifiedUser = new User(firstUser.getUserid(), firstUser.getUsername(), firstUser.getEmail(), "John", "Smith");
         List<User> updatedUsers = provider.modifyUser(modifiedUser);
@@ -439,7 +439,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<Role> originalRoles = provider.getRoles();
-        assertThat(originalRoles.size()).isGreaterThan(0);
+        assertThat(originalRoles.size()).isPositive();
 
         Role dummy1 = new Role(-1, "dummy", "dummy");
         List<Role> rolesAfterAdd = provider.addRole(dummy1);
@@ -502,7 +502,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<Permission> originalPermissions = provider.getPermissions();
-        assertThat(originalPermissions.size()).isGreaterThan(0);
+        assertThat(originalPermissions.size()).isPositive();
 
         Permission dummy1 = new Permission(-1, "dummy", "dummy");
         List<Permission> permissionsAfterAdd = provider.addPermission(dummy1);
@@ -565,7 +565,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         Map<String, List<Role>> originalUserRoles = provider.getUserRoles();
-        assertThat(originalUserRoles.size()).isGreaterThan(0);
+        assertThat(originalUserRoles.size()).isPositive();
 
         // Add a new user role
         User user = provider.getUsers().get(0);
@@ -640,7 +640,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         Map<String, List<Permission>> originalRolesPermissions = provider.getRolesPermissions();
-        assertThat(originalRolesPermissions.size()).isGreaterThan(0);
+        assertThat(originalRolesPermissions.size()).isPositive();
 
         // Add a new role permission
         Role role = provider.getRoles().get(1);

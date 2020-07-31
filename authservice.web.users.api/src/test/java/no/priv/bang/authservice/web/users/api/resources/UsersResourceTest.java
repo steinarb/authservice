@@ -51,7 +51,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         List<User> users = resource.getUsers();
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -250,7 +250,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.getUserRoles();
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -278,7 +278,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -307,7 +307,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")

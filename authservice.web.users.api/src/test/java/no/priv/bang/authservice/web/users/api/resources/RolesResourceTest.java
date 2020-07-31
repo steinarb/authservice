@@ -49,7 +49,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.getRoles();
-        assertThat(roles.size()).isGreaterThan(0);
+        assertThat(roles.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -142,7 +142,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
-        assertThat(rolespermissions.size()).isGreaterThan(0);
+        assertThat(rolespermissions.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -170,7 +170,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
-        assertThat(rolespermissions.size()).isGreaterThan(0);
+        assertThat(rolespermissions.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -199,7 +199,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
-        assertThat(rolespermissions.size()).isGreaterThan(0);
+        assertThat(rolespermissions.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")

@@ -73,7 +73,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @SuppressWarnings("unchecked")
@@ -196,7 +196,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @Test
@@ -213,7 +213,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @Test
@@ -230,7 +230,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isGreaterThan(0);
+        assertThat(userroles.size()).isPositive();
     }
 
     @Test
@@ -247,7 +247,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @Test
@@ -267,7 +267,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @Test
@@ -287,7 +287,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @Test
@@ -304,7 +304,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isGreaterThan(0);
+        assertThat(rolepermissions.size()).isPositive();
     }
 
     @Test
@@ -321,7 +321,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isGreaterThan(0);
+        assertThat(rolepermissions.size()).isPositive();
     }
 
     @Test
@@ -338,7 +338,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isGreaterThan(0);
+        assertThat(rolepermissions.size()).isPositive();
     }
 
     @Test
@@ -355,7 +355,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @Test
@@ -375,7 +375,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     @Test
@@ -395,7 +395,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isGreaterThan(0);
+        assertThat(users.size()).isPositive();
     }
 
     private HttpServletRequest buildGetUrl(String resource) {
