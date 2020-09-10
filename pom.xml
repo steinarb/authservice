@@ -246,12 +246,6 @@
                 <version>${pax.jdbc.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-                <version>1_3</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.ops4j.pax.jdbc</groupId>
                 <artifactId>pax-jdbc-derby</artifactId>
                 <version>${pax.jdbc.version}</version>
