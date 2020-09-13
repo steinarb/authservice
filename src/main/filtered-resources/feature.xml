@@ -27,15 +27,22 @@
         <feature>authservice-web-security-dbrealm</feature>
         <feature>authservice-web-security-memorysession</feature>
         <feature>authservice-users</feature>
+    </feature>
+    <feature name="authservice-with-webcontext-dbrealm-and-session">
+        <feature>authservice-with-dbrealm-and-session</feature>
         <feature>authservice-web-security</feature>
     </feature>
     <feature name="authservice-user-admin">
-        <feature>authservice-with-dbrealm-and-session</feature>
+        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
         <feature>authservice-user-management-frontend</feature>
+    </feature>
+    <feature name="authservice-with-testdb-dbrealm-and-session-no-context">
+        <feature>authservice-db-test</feature>
+        <feature>authservice-with-dbrealm-and-session</feature>
     </feature>
     <feature name="authservice-with-testdb-dbrealm-and-session">
         <feature>authservice-db-test</feature>
-        <feature>authservice-with-dbrealm-and-session</feature>
+        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
     </feature>
     <feature name="user-admin-with-testdb">
         <feature>authservice-db-test</feature>
@@ -43,7 +50,7 @@
     </feature>
     <feature name="authservice-with-productiondb-dbrealm-and-session">
         <feature>authservice-db-production</feature>
-        <feature>authservice-with-dbrealm-and-session</feature>
+        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
     </feature>
     <feature name="user-admin-with-productiondb">
         <feature>authservice-db-production</feature>
