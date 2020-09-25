@@ -40,9 +40,9 @@ class AuthserviceLiquibaseTest {
     @Test
     void testCreateSchema() throws Exception {
         Connection connection = createConnection();
-        AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
-        handleregLiquibase.createInitialSchema(connection);
-        handleregLiquibase.updateSchema(connection);
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        authserviceLiquibase.createInitialSchema(connection);
+        authserviceLiquibase.updateSchema(connection);
         String username = "jad";
         String password = "1ad";
         String salt = "pepper";
@@ -76,8 +76,8 @@ class AuthserviceLiquibaseTest {
     void testForceReleaseLocks() throws Exception {
         LogService logservice = new MockLogService();
         Connection connection = createConnection();
-        AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
-        boolean success = handleregLiquibase.forceReleaseLocks(connection, logservice);
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
         assertTrue(success);
     }
 
@@ -85,8 +85,8 @@ class AuthserviceLiquibaseTest {
     void testForceReleaseLocksWithFailure() throws Exception {
         LogService logservice = new MockLogService();
         Connection connection = mock(Connection.class);
-        AuthserviceLiquibase handleregLiquibase = new AuthserviceLiquibase();
-        boolean success = handleregLiquibase.forceReleaseLocks(connection, logservice);
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
         assertFalse(success);
     }
 
