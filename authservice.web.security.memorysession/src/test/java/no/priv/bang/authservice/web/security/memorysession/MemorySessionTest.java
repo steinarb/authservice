@@ -23,10 +23,10 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.junit.jupiter.api.Test;
 
-public class MemorySessionTest {
+class MemorySessionTest {
 
     @Test
-    public void testCreateComponent() {
+    void testCreateComponent() {
         MemorySession component = new MemorySession();
         component.activate();
         Session session = new SimpleSession();

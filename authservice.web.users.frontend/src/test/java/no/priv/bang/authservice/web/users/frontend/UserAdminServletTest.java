@@ -32,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.Test;
 
-public class UserAdminServletTest {
+class UserAdminServletTest {
 
     @Test
-    public void testGet() throws Exception {
+    void testGet() throws Exception {
         MockLogService logservice = new MockLogService();
         UserAdminServlet servlet = new UserAdminServlet();
         ServletConfig servletConfig = mock(ServletConfig.class);
@@ -57,7 +57,7 @@ public class UserAdminServletTest {
 
 
     @Test
-    public void testDoGetAddTrailingSlash() throws Exception {
+    void testDoGetAddTrailingSlash() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
@@ -74,7 +74,7 @@ public class UserAdminServletTest {
     }
 
     @Test
-    public void testDoGetResponseThrowsIOException() throws Exception {
+    void testDoGetResponseThrowsIOException() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
@@ -96,7 +96,7 @@ public class UserAdminServletTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testDoGetResponseStreamMethodThrowsIOException() throws Exception {
+    void testDoGetResponseStreamMethodThrowsIOException() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
@@ -115,7 +115,7 @@ public class UserAdminServletTest {
     }
 
     @Test
-    public void testDoGetResourceNotFound() throws Exception {
+    void testDoGetResourceNotFound() throws Exception {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
