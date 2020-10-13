@@ -15,9 +15,8 @@
  */
 package no.priv.bang.authservice.web.users.frontend;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
-import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
@@ -30,6 +29,8 @@ import java.io.IOException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+
+import org.junit.jupiter.api.Test;
 
 public class UserAdminServletTest {
 

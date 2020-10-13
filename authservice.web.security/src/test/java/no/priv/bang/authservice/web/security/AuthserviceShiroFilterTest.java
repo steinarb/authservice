@@ -15,7 +15,7 @@
  */
 package no.priv.bang.authservice.web.security;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;

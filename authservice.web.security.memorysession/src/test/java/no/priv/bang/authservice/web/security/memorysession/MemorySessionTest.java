@@ -15,13 +15,13 @@
  */
 package no.priv.bang.authservice.web.security.memorysession;
 
-import static org.junit.Assert.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.Serializable;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SimpleSession;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MemorySessionTest {
 
