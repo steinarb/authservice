@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, PERMISSION_UPDATE } from '../actiontypes';
+import {
+    PERMISSION_UPDATE,
+    PERMISSION_ADD,
+} from '../actiontypes';
 import { emptyPermission } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -60,13 +62,7 @@ const mapDispatchToProps = dispatch => {
             const permission = { ...originalPermission, ...formValue };
             dispatch(PERMISSION_UPDATE(permission));
         },
-        onAddPermission: (permission) => {
-            axios
-                .post('/authservice/useradmin/api/permission/add', permission)
-                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
-            dispatch(PERMISSION_UPDATE({ ...emptyPermission }));
-        },
+        onAddPermission: (permission) => dispatch(PERMISSION_ADD(permission)),
     };
 };
 

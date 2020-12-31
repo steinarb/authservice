@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE } from '../actiontypes';
+import {
+    ROLE_UPDATE,
+    ROLE_ADD,
+} from '../actiontypes';
 import { emptyRole } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -60,13 +62,7 @@ const mapDispatchToProps = dispatch => {
             const role = { ...originalRole, ...formValue };
             dispatch(ROLE_UPDATE(role));
         },
-        onAddRole: (role) => {
-            axios
-                .post('/authservice/useradmin/api/role/add', role)
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-            dispatch(ROLE_UPDATE({ ...emptyRole }));
-        },
+        onAddRole: (role) => dispatch(ROLE_ADD(role)),
     };
 };
 

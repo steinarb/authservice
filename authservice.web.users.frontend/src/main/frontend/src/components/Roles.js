@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR } from '../actiontypes';
+import {
+    ROLES_REQUEST,
+} from '../actiontypes';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -37,12 +38,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRoles: () => {
-            axios
-                .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-        },
+        onRoles: () => dispatch(ROLES_REQUEST())
     };
 };
 

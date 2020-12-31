@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { USERS_RECEIVED, USERS_ERROR, PASSWORDS_UPDATE } from '../actiontypes';
+import {
+    PASSWORDS_UPDATE,
+    USER_ADD,
+} from '../actiontypes';
 import { emptyUserAndPasswords } from '../constants';
 import UserSelect from './UserSelect';
 import { Header } from './bootstrap/Header';
@@ -104,13 +106,7 @@ const mapDispatchToProps = dispatch => {
             const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
             dispatch(PASSWORDS_UPDATE({ ...passwords, passwordsNotIdentical }));
         },
-        onAddUser: (passwords) => {
-            axios
-                .post('/authservice/useradmin/api/user/add', passwords)
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-            dispatch(PASSWORDS_UPDATE({ ...emptyUserAndPasswords }));
-        },
+        onAddUser: (userAndPasswords) => dispatch(USER_ADD(userAndPasswords)),
     };
 };
 

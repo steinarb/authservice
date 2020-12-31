@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE } from '../actiontypes';
+import {
+    USERS_REQUEST,
+    USER_UPDATE,
+    USER_MODIFY,
+} from '../actiontypes';
 import UserSelect from './UserSelect';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -86,12 +89,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUsers: () => {
-            axios
-                .get('/authservice/useradmin/api/users')
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-        },
+        onUsers: () => dispatch(USERS_REQUEST()),
         onUsersFieldChange: (selectedValue, usersMap) => {
             let user = usersMap.get(selectedValue);
             dispatch(USER_UPDATE(user));
@@ -100,13 +98,7 @@ const mapDispatchToProps = dispatch => {
             const user = { ...originalUser, ...formValue };
             dispatch(USER_UPDATE(user));
         },
-        onSaveUpdatedUser: (user) => {
-            axios
-                .post('/authservice/useradmin/api/user/modify', user)
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-            dispatch(USER_UPDATE({ user: {} }));
-        },
+        onSaveUpdatedUser: (user) => dispatch(USER_MODIFY(user)),
     };
 };
 

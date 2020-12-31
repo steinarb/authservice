@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { USERS_RECEIVED, USERS_ERROR, USER_UPDATE, ROLES_RECEIVED, ROLES_ERROR, USERROLES_RECEIVED, USERROLES_ERROR, FORMFIELD_UPDATE } from '../actiontypes';
+import {
+    USERS_REQUEST,
+    USER_UPDATE,
+    USER_ADD_ROLES,
+    USER_REMOVE_ROLES,
+    ROLES_REQUEST,
+    ROLES_RECEIVED,
+    USERROLES_REQUEST,
+    FORMFIELD_UPDATE,
+} from '../actiontypes';
 import UserSelect from './UserSelect';
 import RoleList from './RoleList';
 import { Header } from './bootstrap/Header';
@@ -109,24 +117,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUsers: () => {
-            axios
-                .get('/authservice/useradmin/api/users')
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-        },
-        onRoles: () => {
-            axios
-                .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-        },
-        onUserRoles: () => {
-            axios
-                .get('/authservice/useradmin/api/users/roles')
-                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(USERROLES_ERROR(error)));
-        },
+        onUsers: () => dispatch(USERS_REQUEST()),
+        onRoles: () => dispatch(ROLES_REQUEST()),
+        onUserRoles: () => dispatch(USERROLES_REQUEST()),
         onUsersFieldChange: (selectedValue, usersMap) => {
             let user = usersMap.get(selectedValue);
             dispatch(USER_UPDATE(user));
@@ -136,27 +129,13 @@ const mapDispatchToProps = dispatch => {
             const payload = { rolesNotOnUserSelected, rolesNotOnUserSelectedNames };
             dispatch(FORMFIELD_UPDATE(payload));
         },
-        onAddRole: (user, rolesOnUser, rolesNotOnUserSelected) => {
-            const roles = [ rolesNotOnUserSelected ];
-            const userwithroles = { user, roles };
-            axios
-                .post('/authservice/useradmin/api/user/addroles', userwithroles)
-                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(USERROLES_ERROR(error)));
-        },
+        onAddRole: (user, rolesOnUser, rolesNotOnUserSelected) => dispatch(USER_ADD_ROLES({ user, rolesNotOnUserSelected })),
         onRolesOnUserChange: (rolesOnUserSelectedNames, roleMap) => {
             const rolesOnUserSelected = roleMap.get(rolesOnUserSelectedNames);
             const payload = { rolesOnUserSelected, rolesOnUserSelectedNames };
             dispatch(FORMFIELD_UPDATE(payload));
         },
-        onRemoveRole: (user, rolesOnUserSelected) => {
-            const roles = [ rolesOnUserSelected ];
-            const userwithroles = { user, roles };
-            axios
-                .post('/authservice/useradmin/api/user/removeroles', userwithroles)
-                .then(result => dispatch(USERROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(USERROLES_ERROR(error)));
-        },
+        onRemoveRole: (user, rolesOnUserSelected) => dispatch(USER_REMOVE_ROLES({ user, rolesOnUserSelected })),
     };
 };
 

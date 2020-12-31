@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, PERMISSION_UPDATE } from '../actiontypes';
+import {
+    PERMISSIONS_REQUEST,
+    PERMISSION_UPDATE,
+    PERMISSION_MODIFY,
+} from '../actiontypes';
 import PermissionSelect from './PermissionSelect';
 import { emptyPermission } from '../constants';
 import { Header } from './bootstrap/Header';
@@ -72,12 +75,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPermissions: () => {
-            axios
-                .get('/authservice/useradmin/api/permissions')
-                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
-        },
+        onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
         onPermissionsFieldChange: (selectedValue, permissionsMap) => {
             let permission = permissionsMap.get(selectedValue);
             dispatch(PERMISSION_UPDATE(permission));
@@ -86,13 +84,7 @@ const mapDispatchToProps = dispatch => {
             const permission = { ...originalPermission, ...formValue };
             dispatch(PERMISSION_UPDATE(permission));
         },
-        onSaveUpdatedPermission: (permission) => {
-            axios
-                .post('/authservice/useradmin/api/permission/modify', permission)
-                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
-            dispatch(PERMISSION_UPDATE({ ...emptyPermission }));
-        },
+        onSaveUpdatedPermission: (permission) => dispatch(PERMISSION_MODIFY(permission)),
     };
 };
 

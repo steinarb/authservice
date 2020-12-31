@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE } from '../actiontypes';
+import {
+    ROLES_REQUEST,
+    ROLE_UPDATE,
+    ROLE_MODIFY,
+} from '../actiontypes';
 import RoleSelect from './RoleSelect';
-import { emptyRole } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -72,12 +74,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRoles: () => {
-            axios
-                .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-        },
+        onRoles: () => dispatch(ROLES_REQUEST()),
         onRolesFieldChange: (selectedValue, rolesMap) => {
             let role = rolesMap.get(selectedValue);
             dispatch(ROLE_UPDATE(role));
@@ -86,13 +83,7 @@ const mapDispatchToProps = dispatch => {
             const role = { ...originalRole, ...formValue };
             dispatch(ROLE_UPDATE(role));
         },
-        onSaveUpdatedRole: (role) => {
-            axios
-                .post('/authservice/useradmin/api/role/modify', role)
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-            dispatch(ROLE_UPDATE({ ...emptyRole }));
-        },
+        onSaveUpdatedRole: (role) => dispatch(ROLE_MODIFY(role)),
     };
 };
 

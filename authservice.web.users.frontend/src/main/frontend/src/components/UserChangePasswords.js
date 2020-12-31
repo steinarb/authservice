@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { USERS_RECEIVED, USERS_ERROR, PASSWORDS_UPDATE } from '../actiontypes';
+import {
+    USERS_REQUEST,
+    PASSWORDS_UPDATE,
+    PASSWORDS_MODIFY,
+} from '../actiontypes';
 import UserSelect from './UserSelect';
 import { emptyUserAndPasswords } from '../constants';
 import { Header } from './bootstrap/Header';
@@ -86,12 +89,7 @@ const checkIfPasswordsAreNotIdentical = (passwords) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUsers: () => {
-            axios
-                .get('/authservice/useradmin/api/users')
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-        },
+        onUsers: () => dispatch(USERS_REQUEST()),
         onUsersFieldChange: (selectedValue, usersMap) => {
             const user = usersMap.get(selectedValue);
             const passwords = { ...emptyUserAndPasswords, user };
@@ -106,13 +104,7 @@ const mapDispatchToProps = dispatch => {
             };
             dispatch(PASSWORDS_UPDATE(changedField));
         },
-        onSaveUpdatedPassword: (user) => {
-            axios
-                .post('/authservice/useradmin/api/passwords/update', user)
-                .then(result => dispatch(USERS_RECEIVED(result.data)))
-                .catch(error => dispatch(USERS_ERROR(error)));
-            dispatch(PASSWORDS_UPDATE(emptyUserAndPasswords));
-        },
+        onSaveUpdatedPassword: (userAndPasswords) => dispatch(PASSWORDS_MODIFY(userAndPasswords)),
     };
 };
 

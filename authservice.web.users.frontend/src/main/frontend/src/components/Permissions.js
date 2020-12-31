@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { PERMISSIONS_RECEIVED, PERMISSIONS_ERROR } from '../actiontypes';
+import {
+    PERMISSIONS_REQUEST,
+} from '../actiontypes';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -36,12 +37,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPermissions: () => {
-            axios
-                .get('/authservice/useradmin/api/permissions')
-                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
-        },
+        onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
     };
 };
 

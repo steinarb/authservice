@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { ROLES_RECEIVED, ROLES_ERROR, ROLE_UPDATE, PERMISSIONS_RECEIVED, PERMISSIONS_ERROR, ROLEPERMISSIONS_RECEIVED, ROLEPERMISSIONS_ERROR, FORMFIELD_UPDATE } from '../actiontypes';
+import {
+    ROLES_REQUEST,
+    ROLE_UPDATE,
+    PERMISSIONS_REQUEST,
+    ROLEPERMISSIONS_REQUEST,
+    ROLE_ADD_PERMISSIONS,
+    ROLE_REMOVE_PERMISSIONS,
+    FORMFIELD_UPDATE,
+} from '../actiontypes';
 import RoleSelect from './RoleSelect';
 import PermissionList from './PermissionList';
 import { Header } from './bootstrap/Header';
@@ -109,24 +116,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRoles: () => {
-            axios
-                .get('/authservice/useradmin/api/roles')
-                .then(result => dispatch(ROLES_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLES_ERROR(error)));
-        },
-        onPermissions: () => {
-            axios
-                .get('/authservice/useradmin/api/permissions')
-                .then(result => dispatch(PERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(PERMISSIONS_ERROR(error)));
-        },
-        onRolePermissions: () => {
-            axios
-                .get('/authservice/useradmin/api/roles/permissions')
-                .then(result => dispatch(ROLEPERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLEPERMISSIONS_ERROR(error)));
-        },
+        onRoles: () => dispatch(ROLES_REQUEST()),
+        onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
+        onRolePermissions: () => dispatch(ROLEPERMISSIONS_REQUEST()),
         onRolesFieldChange: (selectedValue, rolesMap) => {
             let role = rolesMap.get(selectedValue);
             dispatch(ROLE_UPDATE(role));
@@ -136,27 +128,13 @@ const mapDispatchToProps = dispatch => {
             const payload = { permissionsNotOnRoleSelected, permissionsNotOnRoleSelectedNames };
             dispatch(FORMFIELD_UPDATE(payload));
         },
-        onAddPermission: (role, permissionsOnRole, permissionsNotOnRoleSelected) => {
-            const permissions = [ permissionsNotOnRoleSelected ];
-            const rolewithpermissions = { role, permissions };
-            axios
-                .post('/authservice/useradmin/api/role/addpermissions', rolewithpermissions)
-                .then(result => dispatch(ROLEPERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLEPERMISSIONS_ERROR(error)));
-        },
+        onAddPermission: (role, permissionsOnRole, permissionsNotOnRoleSelected) => dispatch(ROLE_ADD_PERMISSIONS({ role, permissionsNotOnRoleSelected })),
         onPermissionsOnRoleChange: (permissionsOnRoleSelectedNames, permissionMap) => {
             const permissionsOnRoleSelected = permissionMap.get(permissionsOnRoleSelectedNames);
             const payload = { permissionsOnRoleSelected, permissionsOnRoleSelectedNames };
             dispatch(FORMFIELD_UPDATE(payload));
         },
-        onRemovePermission: (role, permissionsOnRoleSelected) => {
-            const permissions = [ permissionsOnRoleSelected ];
-            const rolewithpermissions = { role, permissions };
-            axios
-                .post('/authservice/useradmin/api/role/removepermissions', rolewithpermissions)
-                .then(result => dispatch(ROLEPERMISSIONS_RECEIVED(result.data)))
-                .catch(error => dispatch(ROLEPERMISSIONS_ERROR(error)));
-        },
+        onRemovePermission: (role, permissionsOnRoleSelected) => dispatch(ROLE_REMOVE_PERMISSIONS({ role, permissionsOnRoleSelected })),
     };
 };
 
