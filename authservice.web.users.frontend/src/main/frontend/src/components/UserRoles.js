@@ -10,7 +10,6 @@ import {
     USERROLES_REQUEST,
     FORMFIELD_UPDATE,
 } from '../actiontypes';
-import UserSelect from './UserSelect';
 import RoleList from './RoleList';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -40,7 +39,7 @@ class UserRoles extends Component {
             rolesOnUser,
             rolesOnUserMap,
             formfield,
-            onUsersFieldChange,
+            onUsersChange,
             onRolesNotOnUserChange,
             onAddRole,
             onRolesOnUserChange,
@@ -66,7 +65,9 @@ class UserRoles extends Component {
                         <FormRow>
                             <FormLabel htmlFor="users">Select user</FormLabel>
                             <FormField>
-                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                                <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                                    {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -103,7 +104,6 @@ const mapStateToProps = (state) => {
     const rolesNotOnUserMap = new Map(rolesNotOnUser.map(i => [i.rolename, i]));
     return {
         users: state.users,
-        usersMap: new Map(state.users.map(i => [i.firstname + ' ' + i.lastname, i])),
         user: state.user,
         roles: state.roles,
         userroles: state.userroles,
@@ -120,9 +120,10 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => dispatch(USERS_REQUEST()),
         onRoles: () => dispatch(ROLES_REQUEST()),
         onUserRoles: () => dispatch(USERROLES_REQUEST()),
-        onUsersFieldChange: (selectedValue, usersMap) => {
-            let user = usersMap.get(selectedValue);
-            dispatch(USER_UPDATE(user));
+        onUsersChange: (e, users) => {
+            const userid = parseInt(e.target.value, 10);
+            let user = users.find(u => u.userid === userid);
+            dispatch(USER_UPDATE({ ...user }));
         },
         onRolesNotOnUserChange: (rolesNotOnUserSelectedNames, roleMap) => {
             const rolesNotOnUserSelected = roleMap.get(rolesNotOnUserSelectedNames);

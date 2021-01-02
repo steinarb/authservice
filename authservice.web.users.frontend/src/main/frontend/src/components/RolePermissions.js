@@ -9,7 +9,6 @@ import {
     ROLE_REMOVE_PERMISSIONS,
     FORMFIELD_UPDATE,
 } from '../actiontypes';
-import RoleSelect from './RoleSelect';
 import PermissionList from './PermissionList';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -30,7 +29,6 @@ class RolePermissions extends Component {
     render () {
         let {
             roles,
-            rolesMap,
             role,
             rolepermissions,
             permissions,
@@ -39,7 +37,7 @@ class RolePermissions extends Component {
             permissionsOnRole,
             permissionsOnRoleMap,
             formfield,
-            onRolesFieldChange,
+            onRolesChange,
             onPermissionsNotOnRoleChange,
             onAddPermission,
             onPermissionsOnRoleChange,
@@ -65,7 +63,9 @@ class RolePermissions extends Component {
                         <FormRow>
                             <FormLabel htmlFor="roles">Select role</FormLabel>
                             <FormField>
-                                <RoleSelect id="roles" roles={roles} rolesMap={rolesMap} value={role.fullname} onRolesFieldChange={onRolesFieldChange} />
+                                <select id="roles" className="form-control" onChange={e => onRolesChange(e, roles)} value={role.id}>
+                                    {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -119,8 +119,9 @@ const mapDispatchToProps = dispatch => {
         onRoles: () => dispatch(ROLES_REQUEST()),
         onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
         onRolePermissions: () => dispatch(ROLEPERMISSIONS_REQUEST()),
-        onRolesFieldChange: (selectedValue, rolesMap) => {
-            let role = rolesMap.get(selectedValue);
+        onRolesChange: (e, roles) => {
+            const id = parseInt(e.target.value, 10);
+            let role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
         onPermissionsNotOnRoleChange: (permissionsNotOnRoleSelectedNames, permissionMap) => {

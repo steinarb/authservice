@@ -5,7 +5,6 @@ import {
     USER_ADD,
 } from '../actiontypes';
 import { emptyUserAndPasswords } from '../constants';
-import UserSelect from './UserSelect';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';

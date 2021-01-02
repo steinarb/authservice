@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
+    USER_UPDATE,
     PASSWORDS_UPDATE,
     PASSWORDS_MODIFY,
 } from '../actiontypes';
-import UserSelect from './UserSelect';
 import { emptyUserAndPasswords } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -21,11 +21,11 @@ class UserChangePasswords extends Component {
 
     render () {
         let {
+            user,
             users,
-            usersMap,
             passwords = emptyUserAndPasswords,
             passwordsNotIdentical,
-            onUsersFieldChange,
+            onUsersChange,
             onPasswordsFieldChange,
             onSaveUpdatedPassword,
         } = this.props;
@@ -41,7 +41,9 @@ class UserChangePasswords extends Component {
                         <FormRow>
                             <FormLabel htmlFor="users">Select user</FormLabel>
                             <FormField>
-                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={passwords.user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                                <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                                    {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -71,8 +73,8 @@ class UserChangePasswords extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        user: state.user,
         users: state.users,
-        usersMap: new Map(state.users.map(i => [i.firstname + ' ' + i.lastname, i])),
         passwords: state.passwords,
         passwordsNotIdentical: state.passwords.passwordsNotIdentical,
     };
@@ -90,10 +92,10 @@ const checkIfPasswordsAreNotIdentical = (passwords) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
-        onUsersFieldChange: (selectedValue, usersMap) => {
-            const user = usersMap.get(selectedValue);
-            const passwords = { ...emptyUserAndPasswords, user };
-            dispatch(PASSWORDS_UPDATE(passwords));
+        onUsersChange: (e, users) => {
+            const userid = parseInt(e.target.value, 10);
+            let user = users.find(u => u.userid === userid);
+            dispatch(USER_UPDATE({ ...user }));
         },
         onPasswordsFieldChange: (formValue, passwordsFromState) => {
             const passwords = { ...passwordsFromState, ...formValue };

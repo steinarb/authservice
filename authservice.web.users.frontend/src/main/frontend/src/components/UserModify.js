@@ -5,7 +5,6 @@ import {
     USER_UPDATE,
     USER_MODIFY,
 } from '../actiontypes';
-import UserSelect from './UserSelect';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -21,9 +20,8 @@ class UserModify extends Component {
     render () {
         let {
             users,
-            usersMap,
             user,
-            onUsersFieldChange,
+            onUsersChange,
             onFieldChange,
             onSaveUpdatedUser,
         } = this.props;
@@ -39,7 +37,9 @@ class UserModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="users">Select user</FormLabel>
                             <FormField>
-                                <UserSelect id="users" className="form-control" users={users} usersMap={usersMap} value={user.fullname} onUsersFieldChange={onUsersFieldChange} />
+                                <select id="users" className="form-control" onChange={e => onUsersChange(e.target.value, users)} value={user.userid}>
+                                    {users.map((val) => <option key={val.userid}>{val.firstname} {val.lastname}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -82,7 +82,6 @@ class UserModify extends Component {
 const mapStateToProps = (state) => {
     return {
         users: state.users,
-        usersMap: new Map(state.users.map(i => [i.firstname + ' ' + i.lastname, i])),
         user: state.user,
     };
 };
@@ -90,9 +89,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
-        onUsersFieldChange: (selectedValue, usersMap) => {
-            let user = usersMap.get(selectedValue);
-            dispatch(USER_UPDATE(user));
+        onUsersChange: (userid, users) => {
+            let user = users.find(u => u.userid === userid);
+            dispatch(USER_UPDATE({ ...user }));
         },
         onFieldChange: (formValue, originalUser) => {
             const user = { ...originalUser, ...formValue };

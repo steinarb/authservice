@@ -5,7 +5,6 @@ import {
     PERMISSION_UPDATE,
     PERMISSION_MODIFY,
 } from '../actiontypes';
-import PermissionSelect from './PermissionSelect';
 import { emptyPermission } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -22,9 +21,8 @@ class PermissionModify extends Component {
     render () {
         let {
             permissions,
-            permissionsMap,
             permission,
-            onPermissionsFieldChange,
+            onPermissionsChange,
             onFieldChange,
             onSaveUpdatedPermission,
         } = this.props;
@@ -40,7 +38,9 @@ class PermissionModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="permissions">Select permission</FormLabel>
                             <FormField>
-                                <PermissionSelect id="permissions" className="form-control" permissions={permissions} permissionsMap={permissionsMap} value={permission.permissionname} onPermissionsFieldChange={onPermissionsFieldChange} />
+                                <select id="permissions" className="form-control" onChange={e => onPermissionsChange(e, permissions)} value={permission.id}>
+                                    {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -68,7 +68,6 @@ class PermissionModify extends Component {
 const mapStateToProps = (state) => {
     return {
         permissions: state.permissions,
-        permissionsMap: new Map(state.permissions.map(i => [i.permissionname, i])),
         permission: state.permission,
     };
 };
@@ -76,9 +75,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
-        onPermissionsFieldChange: (selectedValue, permissionsMap) => {
-            let permission = permissionsMap.get(selectedValue);
-            dispatch(PERMISSION_UPDATE(permission));
+        onPermissionsChange: (e, permissions) => {
+            const id = parseInt(e.target.value, 10);
+            const permission = permissions.find(p => p.id === id);
+            dispatch(PERMISSION_UPDATE({ ...permission }));
         },
         onFieldChange: (formValue, originalPermission) => {
             const permission = { ...originalPermission, ...formValue };

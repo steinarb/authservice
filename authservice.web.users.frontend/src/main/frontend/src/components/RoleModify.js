@@ -5,7 +5,6 @@ import {
     ROLE_UPDATE,
     ROLE_MODIFY,
 } from '../actiontypes';
-import RoleSelect from './RoleSelect';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -21,9 +20,8 @@ class RoleModify extends Component {
     render () {
         let {
             roles,
-            rolesMap,
             role,
-            onRolesFieldChange,
+            onRolesChange,
             onFieldChange,
             onSaveUpdatedRole,
         } = this.props;
@@ -39,7 +37,9 @@ class RoleModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="roles">Select role</FormLabel>
                             <FormField>
-                                <RoleSelect id="roles" className="form-control" roles={roles} rolesMap={rolesMap} value={role.rolename} onRolesFieldChange={onRolesFieldChange} />
+                                <select id="roles" className="form-control" onChange={e => onRolesChange(e, roles)} value={role.id}>
+                                    {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
+                                </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -67,7 +67,6 @@ class RoleModify extends Component {
 const mapStateToProps = (state) => {
     return {
         roles: state.roles,
-        rolesMap: new Map(state.roles.map(i => [i.rolename, i])),
         role: state.role,
     };
 };
@@ -75,8 +74,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onRoles: () => dispatch(ROLES_REQUEST()),
-        onRolesFieldChange: (selectedValue, rolesMap) => {
-            let role = rolesMap.get(selectedValue);
+        onRolesChange: (e, roles) => {
+            const id = parseInt(e.target.value, 10);
+            let role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
         onFieldChange: (formValue, originalRole) => {
