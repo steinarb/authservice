@@ -22,7 +22,10 @@ class UserModify extends Component {
             users,
             user,
             onUsersChange,
-            onFieldChange,
+            onUsername,
+            onEmail,
+            onFirstname,
+            onLastname,
             onSaveUpdatedUser,
         } = this.props;
 
@@ -37,33 +40,33 @@ class UserModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="users">Select user</FormLabel>
                             <FormField>
-                                <select id="users" className="form-control" onChange={e => onUsersChange(e.target.value, users)} value={user.userid}>
-                                    {users.map((val) => <option key={val.userid}>{val.firstname} {val.lastname}</option>)}
+                                <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                                    {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                                 </select>
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="username">Username</FormLabel>
                             <FormField>
-                                <input id="username" className="form-control" type="text" value={user.username} onChange={(event) => onFieldChange({username: event.target.value}, user)} />
+                                <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="email">Email address</FormLabel>
                             <FormField>
-                                <input id="email" className="form-control" type="text" value={user.email} onChange={(event) => onFieldChange({email: event.target.value}, user)} />
+                                <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="firstname">First name</FormLabel>
                             <FormField>
-                                <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={(event) => onFieldChange({firstname: event.target.value}, user)} />
+                                <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="lastname">Last name</FormLabel>
                             <FormField>
-                                <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={(event) => onFieldChange({lastname: event.target.value}, user)} />
+                                <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -89,14 +92,15 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
-        onUsersChange: (userid, users) => {
+        onUsersChange: (e, users) => {
+            const userid = parseInt(e.target.value, 10);
             let user = users.find(u => u.userid === userid);
             dispatch(USER_UPDATE({ ...user }));
         },
-        onFieldChange: (formValue, originalUser) => {
-            const user = { ...originalUser, ...formValue };
-            dispatch(USER_UPDATE(user));
-        },
+        onUsername: e => dispatch(USER_UPDATE({ username: e.target.value })),
+        onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
+        onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
+        onLastname: e => dispatch(USER_UPDATE({ lastname: e.target.value })),
         onSaveUpdatedUser: (user) => dispatch(USER_MODIFY(user)),
     };
 };

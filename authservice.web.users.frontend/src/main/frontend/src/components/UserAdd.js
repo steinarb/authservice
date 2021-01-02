@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+    USER_UPDATE,
     PASSWORDS_UPDATE,
     USER_ADD,
 } from '../actiontypes';
@@ -15,9 +16,13 @@ import {FormField } from './bootstrap/FormField';
 class UserModify extends Component {
     render () {
         let {
+            user,
             passwords,
             passwordsNotIdentical,
-            onUserFieldChange,
+            onUsername,
+            onEmail,
+            onFirstname,
+            onLastname,
             onPasswordsFieldChange,
             onAddUser,
         } = this.props;
@@ -33,25 +38,25 @@ class UserModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="username">Username</FormLabel>
                             <FormField>
-                                <input id="username" className="form-control" type="text" value={passwords.user.username} onChange={(event) => onUserFieldChange({username: event.target.value}, passwords)} />
+                                <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="email">Email address</FormLabel>
                             <FormField>
-                                <input id="email" className="form-control" type="text" value={passwords.user.email} onChange={(event) => onUserFieldChange({email: event.target.value}, passwords)} />
+                                <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="firstname">First name</FormLabel>
                             <FormField>
-                                <input id="firstname" className="form-control" type="text" value={passwords.user.firstname} onChange={(event) => onUserFieldChange({firstname: event.target.value}, passwords)} />
+                                <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="lastname">Last name</FormLabel>
                             <FormField>
-                                <input id="lastname" className="form-control" type="text" value={passwords.user.lastname} onChange={(event) => onUserFieldChange({lastname: event.target.value}, passwords)} />
+                                <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -68,7 +73,7 @@ class UserModify extends Component {
                             </FormField>
                         </FormRow>
                         <FormRow>
-                            <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords)}>Opprett bruker</button>
+                            <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords, user)}>Opprett bruker</button>
                         </FormRow>
                     </Container>
                 </form>
@@ -88,6 +93,7 @@ const checkIfPasswordsAreNotIdentical = (passwords) => {
 
 const mapStateToProps = (state) => {
     return {
+        user: state.user,
         passwords: state.passwords,
         passwordsNotIdentical: state.passwords.passwordsNotIdentical,
     };
@@ -95,17 +101,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUserFieldChange: (formValue, originalPasswords) => {
-            const { user } = originalPasswords;
-            const passwords = { ...originalPasswords, user: { ...user, ...formValue } };
-            dispatch(PASSWORDS_UPDATE(passwords));
-        },
+        onUsername: e => dispatch(USER_UPDATE({ username: e.target.value })),
+        onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
+        onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
+        onLastname: e => dispatch(USER_UPDATE({ lastname: e.target.value })),
         onPasswordsFieldChange: (formValue, originalPasswords) => {
             const passwords = { ...originalPasswords, ...formValue };
             const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
             dispatch(PASSWORDS_UPDATE({ ...passwords, passwordsNotIdentical }));
         },
-        onAddUser: (userAndPasswords) => dispatch(USER_ADD(userAndPasswords)),
+        onAddUser: (passwords, user) => dispatch(USER_ADD({ ...passwords, user })),
     };
 };
 

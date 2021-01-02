@@ -6,10 +6,7 @@ import {
 } from '../actiontypes';
 
 const userReducer = createReducer({ ...emptyUser }, {
-    [USER_UPDATE]: (state, action) => {
-        const user = action.payload;
-        return user;
-    },
+    [USER_UPDATE]: (state, action) => ({ ...state, ...action.payload }),
     [USERS_RECEIVED]: (state, action) => ({ ...emptyUser }),
 });
 
