@@ -13,7 +13,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function PermissionAdd(props) {
-    let {
+    const {
         permission,
         onPermissionsChange,
         onPermissionname,

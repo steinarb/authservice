@@ -13,7 +13,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleModify(props) {
-    let {
+    const {
         roles,
         role,
         onRolesChange,
@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => {
         onRoles: () => dispatch(ROLES_REQUEST()),
         onRolesChange: (e, roles) => {
             const id = parseInt(e.target.value, 10);
-            let role = roles.find(r => r.id === id);
+            const role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
         onRolename: e => dispatch(ROLE_UPDATE({ rolename: e.target.value })),

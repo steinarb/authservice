@@ -9,7 +9,7 @@ import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 function Permissions(props) {
-    let { permissions } = props;
+    const { permissions } = props;
 
     return (
         <div>

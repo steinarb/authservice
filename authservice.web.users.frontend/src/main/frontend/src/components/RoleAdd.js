@@ -13,7 +13,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleAdd(props) {
-    let {
+    const {
         role,
         onRolename,
         onDescription,

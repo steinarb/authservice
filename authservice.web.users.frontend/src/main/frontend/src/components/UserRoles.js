@@ -21,7 +21,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserRoles(props) {
-    let {
+    const {
         users,
         usersMap,
         user,
@@ -40,7 +40,7 @@ function UserRoles(props) {
         onFieldChange,
         onSaveUpdatedUser,
     } = props;
-    let {
+    const {
         rolesNotOnUserSelected,
         rolesNotOnUserSelectedNames,
         rolesOnUserSelected,
@@ -114,7 +114,7 @@ const mapDispatchToProps = dispatch => {
         onUserRoles: () => dispatch(USERROLES_REQUEST()),
         onUsersChange: (e, users) => {
             const userid = parseInt(e.target.value, 10);
-            let user = users.find(u => u.userid === userid);
+            const user = users.find(u => u.userid === userid);
             dispatch(USER_UPDATE({ ...user }));
         },
         onRolesNotOnUserChange: (rolesNotOnUserSelectedNames, roleMap) => {

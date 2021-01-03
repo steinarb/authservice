@@ -14,7 +14,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserAdd(props) {
-    let {
+    const {
         user,
         passwords,
         passwordsNotIdentical,

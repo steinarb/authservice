@@ -20,7 +20,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RolePermissions(props) {
-    let {
+    const {
         roles,
         role,
         rolepermissions,
@@ -38,7 +38,7 @@ function RolePermissions(props) {
         onFieldChange,
         onSaveUpdatedRole,
     } = props;
-    let {
+    const {
         permissionsNotOnRoleSelected,
         permissionsNotOnRoleSelectedNames,
         permissionsOnRoleSelected,
@@ -113,7 +113,7 @@ const mapDispatchToProps = dispatch => {
         onRolePermissions: () => dispatch(ROLEPERMISSIONS_REQUEST()),
         onRolesChange: (e, roles) => {
             const id = parseInt(e.target.value, 10);
-            let role = roles.find(r => r.id === id);
+            const role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
         onPermissionsNotOnRoleChange: (permissionsNotOnRoleSelectedNames, permissionMap) => {

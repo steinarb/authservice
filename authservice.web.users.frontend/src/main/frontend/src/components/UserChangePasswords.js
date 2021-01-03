@@ -15,7 +15,7 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserChangePasswords(props) {
-    let {
+    const {
         user,
         users,
         passwords = emptyUserAndPasswords,
@@ -76,7 +76,7 @@ const mapStateToProps = (state) => {
 };
 
 const checkIfPasswordsAreNotIdentical = (passwords) => {
-    let { password1, password2 } = passwords;
+    const { password1, password2 } = passwords;
     if (!password2) {
         return false; // if second password is empty we don't compare because it probably hasn't been typed into yet
     }
@@ -89,7 +89,7 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => dispatch(USERS_REQUEST()),
         onUsersChange: (e, users) => {
             const userid = parseInt(e.target.value, 10);
-            let user = users.find(u => u.userid === userid);
+            const user = users.find(u => u.userid === userid);
             dispatch(USER_UPDATE({ ...user }));
         },
         onPassword1: e => dispatch(PASSWORDS_UPDATE({ password1: e.target.value })),
