@@ -16,7 +16,8 @@ class PermissionAdd extends Component {
     render () {
         let {
             permission,
-            onFieldChange,
+            onPermissionsChange,
+            onPermissionname,
             onAddPermission,
         } = this.props;
 
@@ -31,13 +32,13 @@ class PermissionAdd extends Component {
                         <FormRow>
                             <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                             <FormField>
-                                <input id="permissionname" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
+                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="email">Permission description</FormLabel>
                             <FormField>
-                                <input id="description" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
+                                <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -58,11 +59,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFieldChange: (formValue, originalPermission) => {
-            const permission = { ...originalPermission, ...formValue };
-            dispatch(PERMISSION_UPDATE(permission));
-        },
-        onAddPermission: (permission) => dispatch(PERMISSION_ADD(permission)),
+        onPermissionname: e => dispatch(PERMISSION_UPDATE({ permissionname: e.target.value })),
+        onDescription: e => dispatch(PERMISSION_UPDATE({ description: e.target.value })),
+        onAddPermission: permission => dispatch(PERMISSION_ADD(permission)),
     };
 };
 

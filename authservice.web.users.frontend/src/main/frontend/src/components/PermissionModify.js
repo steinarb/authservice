@@ -23,7 +23,8 @@ class PermissionModify extends Component {
             permissions,
             permission,
             onPermissionsChange,
-            onFieldChange,
+            onPermissionname,
+            onDescription,
             onSaveUpdatedPermission,
         } = this.props;
 
@@ -46,13 +47,13 @@ class PermissionModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                             <FormField>
-                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={(event) => onFieldChange({permissionname: event.target.value}, permission)} />
+                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="description">Permission description</FormLabel>
                             <FormField>
-                                <input id="description" className="form-control" type="text" value={permission.description} onChange={(event) => onFieldChange({description: event.target.value}, permission)} />
+                                <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -80,11 +81,9 @@ const mapDispatchToProps = dispatch => {
             const permission = permissions.find(p => p.id === id);
             dispatch(PERMISSION_UPDATE({ ...permission }));
         },
-        onFieldChange: (formValue, originalPermission) => {
-            const permission = { ...originalPermission, ...formValue };
-            dispatch(PERMISSION_UPDATE(permission));
-        },
-        onSaveUpdatedPermission: (permission) => dispatch(PERMISSION_MODIFY(permission)),
+        onPermissionname: e => dispatch(PERMISSION_UPDATE({ permissionname: e.target.value })),
+        onDescription: e => dispatch(PERMISSION_UPDATE({ description: e.target.value })),
+        onSaveUpdatedPermission: permission => dispatch(PERMISSION_MODIFY(permission)),
     };
 };
 
