@@ -23,7 +23,8 @@ class UserModify extends Component {
             onEmail,
             onFirstname,
             onLastname,
-            onPasswordsFieldChange,
+            onPassword1,
+            onPassword2,
             onAddUser,
         } = this.props;
 
@@ -62,13 +63,13 @@ class UserModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="password">Password:</FormLabel>
                             <FormField>
-                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
+                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                             <FormField>
-                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
+                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
                                 { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                             </FormField>
                         </FormRow>
@@ -81,15 +82,6 @@ class UserModify extends Component {
         );
     }
 }
-
-const checkIfPasswordsAreNotIdentical = (passwords) => {
-    let { password1, password2 } = passwords;
-    if (!password2) {
-        return false; // if second password is empty we don't compare because it probably hasn't been typed into yet
-    }
-
-    return password1 !== password2;
-};
 
 const mapStateToProps = (state) => {
     return {
@@ -105,11 +97,8 @@ const mapDispatchToProps = dispatch => {
         onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
         onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
         onLastname: e => dispatch(USER_UPDATE({ lastname: e.target.value })),
-        onPasswordsFieldChange: (formValue, originalPasswords) => {
-            const passwords = { ...originalPasswords, ...formValue };
-            const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
-            dispatch(PASSWORDS_UPDATE({ ...passwords, passwordsNotIdentical }));
-        },
+        onPassword1: e => dispatch(PASSWORDS_UPDATE({ password1: e.target.value })),
+        onPassword2: e => dispatch(PASSWORDS_UPDATE({ password2: e.target.value })),
         onAddUser: (passwords, user) => dispatch(USER_ADD({ ...passwords, user })),
     };
 };

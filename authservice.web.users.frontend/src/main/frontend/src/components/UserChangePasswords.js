@@ -26,7 +26,8 @@ class UserChangePasswords extends Component {
             passwords = emptyUserAndPasswords,
             passwordsNotIdentical,
             onUsersChange,
-            onPasswordsFieldChange,
+            onPassword1,
+            onPassword2,
             onSaveUpdatedPassword,
         } = this.props;
 
@@ -49,19 +50,19 @@ class UserChangePasswords extends Component {
                         <FormRow>
                             <FormLabel htmlFor="password">Password:</FormLabel>
                             <FormField>
-                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={(event) => onPasswordsFieldChange({ password1: event.target.value }, passwords)} />
+                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                             <FormField>
-                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={(event) => onPasswordsFieldChange({ password2: event.target.value }, passwords)} />
+                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
                                 { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormField>
-                                <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords)}>Change password</button>
+                                <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords, user)}>Change password</button>
                             </FormField>
                         </FormRow>
                     </Container>
@@ -97,16 +98,9 @@ const mapDispatchToProps = dispatch => {
             let user = users.find(u => u.userid === userid);
             dispatch(USER_UPDATE({ ...user }));
         },
-        onPasswordsFieldChange: (formValue, passwordsFromState) => {
-            const passwords = { ...passwordsFromState, ...formValue };
-            const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
-            let changedField = {
-                ...passwords,
-                passwordsNotIdentical,
-            };
-            dispatch(PASSWORDS_UPDATE(changedField));
-        },
-        onSaveUpdatedPassword: (userAndPasswords) => dispatch(PASSWORDS_MODIFY(userAndPasswords)),
+        onPassword1: e => dispatch(PASSWORDS_UPDATE({ password1: e.target.value })),
+        onPassword2: e => dispatch(PASSWORDS_UPDATE({ password2: e.target.value })),
+        onSaveUpdatedPassword: (passwords, user) => dispatch(PASSWORDS_MODIFY({ ...passwords, user })),
     };
 };
 
