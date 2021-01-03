@@ -13,7 +13,7 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class UserModify extends Component {
+class UserAdd extends Component {
     render () {
         let {
             user,
@@ -103,6 +103,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-UserModify = connect(mapStateToProps, mapDispatchToProps)(UserModify);
+UserAdd = connect(mapStateToProps, mapDispatchToProps)(UserAdd);
 
-export default UserModify;
+export default UserAdd;
