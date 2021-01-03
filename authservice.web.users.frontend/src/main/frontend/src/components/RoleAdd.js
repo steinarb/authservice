@@ -16,7 +16,8 @@ class RoleAdd extends Component {
     render () {
         let {
             role,
-            onFieldChange,
+            onRolename,
+            onDescription,
             onAddRole,
         } = this.props;
 
@@ -31,13 +32,13 @@ class RoleAdd extends Component {
                         <FormRow>
                             <FormLabel htmlFor="rolename">Role name</FormLabel>
                             <FormField>
-                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={(event) => onFieldChange({rolename: event.target.value}, role)} />
+                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={onRolename} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="description">Role description</FormLabel>
                             <FormField>
-                                <input id="description" className="form-control" type="text" value={role.description} onChange={(event) => onFieldChange({description: event.target.value}, role)} />
+                                <input id="description" className="form-control" type="text" value={role.description} onChange={onDescription} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -58,10 +59,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFieldChange: (formValue, originalRole) => {
-            const role = { ...originalRole, ...formValue };
-            dispatch(ROLE_UPDATE(role));
-        },
+        onRolename: e => dispatch(ROLE_UPDATE({ rolename: e.target.value })),
+        onDescription: e => dispatch(ROLE_UPDATE({ description: e.target.value })),
         onAddRole: (role) => dispatch(ROLE_ADD(role)),
     };
 };

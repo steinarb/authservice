@@ -22,7 +22,8 @@ class RoleModify extends Component {
             roles,
             role,
             onRolesChange,
-            onFieldChange,
+            onRolename,
+            onDescription,
             onSaveUpdatedRole,
         } = this.props;
 
@@ -45,13 +46,13 @@ class RoleModify extends Component {
                         <FormRow>
                             <FormLabel htmlFor="rolename">Role name</FormLabel>
                             <FormField>
-                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={(event) => onFieldChange({rolename: event.target.value}, role)} />
+                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={onRolename} />
                             </FormField>
                         </FormRow>
                         <FormRow>
                             <FormLabel htmlFor="email">Role description</FormLabel>
                             <FormField>
-                                <input id="description" className="form-control" type="text" value={role.description} onChange={(event) => onFieldChange({description: event.target.value}, role)} />
+                                <input id="description" className="form-control" type="text" value={role.description} onChange={onDescription} />
                             </FormField>
                         </FormRow>
                         <FormRow>
@@ -79,11 +80,9 @@ const mapDispatchToProps = dispatch => {
             let role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
-        onFieldChange: (formValue, originalRole) => {
-            const role = { ...originalRole, ...formValue };
-            dispatch(ROLE_UPDATE(role));
-        },
-        onSaveUpdatedRole: (role) => dispatch(ROLE_MODIFY(role)),
+        onRolename: e => dispatch(ROLE_UPDATE({ rolename: e.target.value })),
+        onDescription: e => dispatch(ROLE_UPDATE({ description: e.target.value })),
+        onSaveUpdatedRole: role => dispatch(ROLE_MODIFY(role)),
     };
 };
 
