@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     USER_UPDATE,
@@ -13,74 +13,72 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class UserAdd extends Component {
-    render () {
-        let {
-            user,
-            passwords,
-            passwordsNotIdentical,
-            onUsername,
-            onEmail,
-            onFirstname,
-            onLastname,
-            onPassword1,
-            onPassword2,
-            onAddUser,
-        } = this.props;
+function UserAdd(props) {
+    let {
+        user,
+        passwords,
+        passwordsNotIdentical,
+        onUsername,
+        onEmail,
+        onFirstname,
+        onLastname,
+        onPassword1,
+        onPassword2,
+        onAddUser,
+    } = props;
 
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
-                <Header>
-                    <h1>Add user</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="username">Username</FormLabel>
-                            <FormField>
-                                <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="email">Email address</FormLabel>
-                            <FormField>
-                                <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="firstname">First name</FormLabel>
-                            <FormField>
-                                <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="lastname">Last name</FormLabel>
-                            <FormField>
-                                <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="password">Password:</FormLabel>
-                            <FormField>
-                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="password2">Repeat password:</FormLabel>
-                            <FormField>
-                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
-                                { passwordsNotIdentical && <span>Passwords are not identical!</span> }
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords, user)}>Opprett bruker</button>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+            <Header>
+                <h1>Add user</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="username">Username</FormLabel>
+                        <FormField>
+                            <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="email">Email address</FormLabel>
+                        <FormField>
+                            <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="firstname">First name</FormLabel>
+                        <FormField>
+                            <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="lastname">Last name</FormLabel>
+                        <FormField>
+                            <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="password">Password:</FormLabel>
+                        <FormField>
+                            <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="password2">Repeat password:</FormLabel>
+                        <FormField>
+                            <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
+                            { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords, user)}>Opprett bruker</button>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

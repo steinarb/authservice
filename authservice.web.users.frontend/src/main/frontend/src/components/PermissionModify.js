@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     PERMISSIONS_REQUEST,
@@ -13,57 +13,51 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class PermissionModify extends Component {
-    componentDidMount() {
-        this.props.onPermissions();
-    }
+function PermissionModify(props) {
+    let {
+        permissions,
+        permission,
+        onPermissionsChange,
+        onPermissionname,
+        onDescription,
+        onSaveUpdatedPermission,
+    } = props;
 
-    render () {
-        let {
-            permissions,
-            permission,
-            onPermissionsChange,
-            onPermissionname,
-            onDescription,
-            onSaveUpdatedPermission,
-        } = this.props;
-
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
-                <Header>
-                    <h1>Modify permission information</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="permissions">Select permission</FormLabel>
-                            <FormField>
-                                <select id="permissions" className="form-control" onChange={e => onPermissionsChange(e, permissions)} value={permission.id}>
-                                    {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
-                                </select>
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="permissionname">Permission name</FormLabel>
-                            <FormField>
-                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="description">Permission description</FormLabel>
-                            <FormField>
-                                <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+            <Header>
+                <h1>Modify permission information</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="permissions">Select permission</FormLabel>
+                        <FormField>
+                            <select id="permissions" className="form-control" onChange={e => onPermissionsChange(e, permissions)} value={permission.id}>
+                                {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
+                            </select>
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="permissionname">Permission name</FormLabel>
+                        <FormField>
+                            <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="description">Permission description</FormLabel>
+                        <FormField>
+                            <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

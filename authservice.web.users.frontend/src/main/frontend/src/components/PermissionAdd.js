@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     PERMISSION_UPDATE,
@@ -12,43 +12,41 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class PermissionAdd extends Component {
-    render () {
-        let {
-            permission,
-            onPermissionsChange,
-            onPermissionname,
-            onAddPermission,
-        } = this.props;
+function PermissionAdd(props) {
+    let {
+        permission,
+        onPermissionsChange,
+        onPermissionname,
+        onAddPermission,
+    } = props;
 
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
-                <Header>
-                    <h1>Add permission</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="permissionname">Permission name</FormLabel>
-                            <FormField>
-                                <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="email">Permission description</FormLabel>
-                            <FormField>
-                                <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <button onClick={() => onAddPermission(permission)}>Add new permission</button>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+            <Header>
+                <h1>Add permission</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="permissionname">Permission name</FormLabel>
+                        <FormField>
+                            <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="email">Permission description</FormLabel>
+                        <FormField>
+                            <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <button onClick={() => onAddPermission(permission)}>Add new permission</button>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

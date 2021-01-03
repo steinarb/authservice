@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
@@ -14,62 +14,56 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class UserChangePasswords extends Component {
-    componentDidMount() {
-        this.props.onUsers();
-    }
+function UserChangePasswords(props) {
+    let {
+        user,
+        users,
+        passwords = emptyUserAndPasswords,
+        passwordsNotIdentical,
+        onUsersChange,
+        onPassword1,
+        onPassword2,
+        onSaveUpdatedPassword,
+    } = props;
 
-    render () {
-        let {
-            user,
-            users,
-            passwords = emptyUserAndPasswords,
-            passwordsNotIdentical,
-            onUsersChange,
-            onPassword1,
-            onPassword2,
-            onSaveUpdatedPassword,
-        } = this.props;
-
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
-                <Header>
-                    <h1>Change password for user</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="users">Select user</FormLabel>
-                            <FormField>
-                                <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
-                                    {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
-                                </select>
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="password">Password:</FormLabel>
-                            <FormField>
-                                <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="password2">Repeat password:</FormLabel>
-                            <FormField>
-                                <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
-                                { passwordsNotIdentical && <span>Passwords are not identical!</span> }
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormField>
-                                <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords, user)}>Change password</button>
-                            </FormField>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+            <Header>
+                <h1>Change password for user</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="users">Select user</FormLabel>
+                        <FormField>
+                            <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                                {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
+                            </select>
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="password">Password:</FormLabel>
+                        <FormField>
+                            <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="password2">Repeat password:</FormLabel>
+                        <FormField>
+                            <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
+                            { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormField>
+                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords, user)}>Change password</button>
+                        </FormField>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

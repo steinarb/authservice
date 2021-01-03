@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
@@ -20,75 +20,67 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class UserRoles extends Component {
-    componentDidMount() {
-        this.props.onUsers();
-        this.props.onRoles();
-        this.props.onUserRoles();
-    }
+function UserRoles(props) {
+    let {
+        users,
+        usersMap,
+        user,
+        userroles,
+        roles,
+        rolesNotOnUser,
+        rolesNotOnUserMap,
+        rolesOnUser,
+        rolesOnUserMap,
+        formfield,
+        onUsersChange,
+        onRolesNotOnUserChange,
+        onAddRole,
+        onRolesOnUserChange,
+        onRemoveRole,
+        onFieldChange,
+        onSaveUpdatedUser,
+    } = props;
+    let {
+        rolesNotOnUserSelected,
+        rolesNotOnUserSelectedNames,
+        rolesOnUserSelected,
+        rolesOnUserSelectedNames,
+    } = formfield;
 
-    render () {
-        let {
-            users,
-            usersMap,
-            user,
-            userroles,
-            roles,
-            rolesNotOnUser,
-            rolesNotOnUserMap,
-            rolesOnUser,
-            rolesOnUserMap,
-            formfield,
-            onUsersChange,
-            onRolesNotOnUserChange,
-            onAddRole,
-            onRolesOnUserChange,
-            onRemoveRole,
-            onFieldChange,
-            onSaveUpdatedUser,
-        } = this.props;
-        let {
-            rolesNotOnUserSelected,
-            rolesNotOnUserSelectedNames,
-            rolesOnUserSelected,
-            rolesOnUserSelectedNames,
-        } = formfield;
-
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
-                <Header>
-                    <h1>Modify user to role mappings</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="users">Select user</FormLabel>
-                            <FormField>
-                                <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
-                                    {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
-                                </select>
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <div className="no-gutters col-sm-4">
-                                <label htmlFor="username">Roles not on user</label>
-                                <RoleList id="rolesnotonuser" className="form-control" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
-                            </div>
-                            <div className="no-gutters col-sm-4">
-                                <button className="btn btn-primary form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
-                                <button className="btn btn-primary form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
-                            </div>
-                            <div className="no-gutters col-sm-4">
-                                <label htmlFor="email">Role on user</label>
-                                <RoleList id="rolesnotonuser" className="form-control" roles={rolesOnUser} rolesMap={rolesOnUserMap} value={rolesOnUserSelectedNames} onRolesFieldChange={onRolesOnUserChange} />
-                            </div>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
+            <Header>
+                <h1>Modify user to role mappings</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="users">Select user</FormLabel>
+                        <FormField>
+                            <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                                {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
+                            </select>
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <div className="no-gutters col-sm-4">
+                            <label htmlFor="username">Roles not on user</label>
+                            <RoleList id="rolesnotonuser" className="form-control" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
+                        </div>
+                        <div className="no-gutters col-sm-4">
+                            <button className="btn btn-primary form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
+                            <button className="btn btn-primary form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
+                        </div>
+                        <div className="no-gutters col-sm-4">
+                            <label htmlFor="email">Role on user</label>
+                            <RoleList id="rolesnotonuser" className="form-control" roles={rolesOnUser} rolesMap={rolesOnUserMap} value={rolesOnUserSelectedNames} onRolesFieldChange={onRolesOnUserChange} />
+                        </div>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 function findRolesNotOnUser(user, roles, rolesOnUser) {

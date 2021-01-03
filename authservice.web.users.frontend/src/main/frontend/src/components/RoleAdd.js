@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     ROLE_UPDATE,
@@ -12,43 +12,41 @@ import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
-class RoleAdd extends Component {
-    render () {
-        let {
-            role,
-            onRolename,
-            onDescription,
-            onAddRole,
-        } = this.props;
+function RoleAdd(props) {
+    let {
+        role,
+        onRolename,
+        onDescription,
+        onAddRole,
+    } = props;
 
-        return (
-            <div>
-                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
-                <Header>
-                    <h1>Add role</h1>
-                </Header>
-                <form onSubmit={ e => { e.preventDefault(); }}>
-                    <Container>
-                        <FormRow>
-                            <FormLabel htmlFor="rolename">Role name</FormLabel>
-                            <FormField>
-                                <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={onRolename} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel htmlFor="description">Role description</FormLabel>
-                            <FormField>
-                                <input id="description" className="form-control" type="text" value={role.description} onChange={onDescription} />
-                            </FormField>
-                        </FormRow>
-                        <FormRow>
-                            <button className="btn btn-primary form-control" onClick={() => onAddRole(role)}>Add new role</button>
-                        </FormRow>
-                    </Container>
-                </form>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
+            <Header>
+                <h1>Add role</h1>
+            </Header>
+            <form onSubmit={ e => { e.preventDefault(); }}>
+                <Container>
+                    <FormRow>
+                        <FormLabel htmlFor="rolename">Role name</FormLabel>
+                        <FormField>
+                            <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={onRolename} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="description">Role description</FormLabel>
+                        <FormField>
+                            <input id="description" className="form-control" type="text" value={role.description} onChange={onDescription} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <button className="btn btn-primary form-control" onClick={() => onAddRole(role)}>Add new role</button>
+                    </FormRow>
+                </Container>
+            </form>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {
