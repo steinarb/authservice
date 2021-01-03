@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
     USER_UPDATE,
+    USER_CLEAR,
     USER_ADD_ROLES,
     USER_REMOVE_ROLES,
     ROLES_REQUEST,
@@ -21,6 +22,13 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserRoles(props) {
+    useEffect(() => {
+        props.onUsers();
+        props.onEmptyUser();
+        props.onRoles();
+        props.onUserRoles();
+    }, []);
+
     const {
         users,
         usersMap,
@@ -110,6 +118,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
+        onEmptyUser: () => dispatch(USER_CLEAR()),
         onRoles: () => dispatch(ROLES_REQUEST()),
         onUserRoles: () => dispatch(USERROLES_REQUEST()),
         onUsersChange: (e, users) => {

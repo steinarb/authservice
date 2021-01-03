@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
     USER_UPDATE,
+    USER_CLEAR,
     USER_MODIFY,
 } from '../actiontypes';
 import { Header } from './bootstrap/Header';
@@ -13,6 +14,11 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserModify(props) {
+    useEffect(() => {
+        props.onUsers();
+        props.onUserClear();
+    },[]);
+
     const {
         users,
         user,
@@ -86,6 +92,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
+        onUserClear: () => dispatch(USER_CLEAR()),
         onUsersChange: (e, users) => {
             const userid = parseInt(e.target.value, 10);
             const user = users.find(u => u.userid === userid);

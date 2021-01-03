@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     ROLES_REQUEST,
     ROLE_UPDATE,
+    ROLE_CLEAR,
     ROLE_MODIFY,
 } from '../actiontypes';
 import { Header } from './bootstrap/Header';
@@ -13,6 +14,11 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleModify(props) {
+    useEffect(() => {
+        props.onRoles();
+        props.onRoleClear();
+    },[]);
+
     const {
         roles,
         role,
@@ -69,6 +75,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onRoles: () => dispatch(ROLES_REQUEST()),
+        onRoleClear: () => dispatch(ROLE_CLEAR()),
         onRolesChange: (e, roles) => {
             const id = parseInt(e.target.value, 10);
             const role = roles.find(r => r.id === id);

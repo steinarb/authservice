@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
+    ROLE_CLEAR,
     ROLE_UPDATE,
     ROLE_ADD,
 } from '../actiontypes';
@@ -13,6 +14,10 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleAdd(props) {
+    useEffect(() => {
+        props.onRoleClear();
+    },[]);
+
     const {
         role,
         onRolename,
@@ -57,6 +62,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        onRoleClear: () => dispatch(ROLE_CLEAR()),
         onRolename: e => dispatch(ROLE_UPDATE({ rolename: e.target.value })),
         onDescription: e => dispatch(ROLE_UPDATE({ description: e.target.value })),
         onAddRole: (role) => dispatch(ROLE_ADD(role)),

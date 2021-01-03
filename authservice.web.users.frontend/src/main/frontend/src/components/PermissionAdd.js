@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
+    PERMISSION_CLEAR,
     PERMISSION_UPDATE,
     PERMISSION_ADD,
 } from '../actiontypes';
@@ -13,10 +14,15 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function PermissionAdd(props) {
+    useEffect(() => {
+        props.onPermissionClear();
+    },[]);
+
     const {
         permission,
         onPermissionsChange,
         onPermissionname,
+        onDescription,
         onAddPermission,
     } = props;
 
@@ -57,6 +63,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        onPermissionClear: () => dispatch(PERMISSION_CLEAR()),
         onPermissionname: e => dispatch(PERMISSION_UPDATE({ permissionname: e.target.value })),
         onDescription: e => dispatch(PERMISSION_UPDATE({ description: e.target.value })),
         onAddPermission: permission => dispatch(PERMISSION_ADD(permission)),

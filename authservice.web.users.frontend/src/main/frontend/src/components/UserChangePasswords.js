@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
     USER_UPDATE,
+    USER_CLEAR,
     PASSWORDS_UPDATE,
+    PASSWORDS_CLEAR,
     PASSWORDS_MODIFY,
 } from '../actiontypes';
-import { emptyUserAndPasswords } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -15,10 +16,16 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserChangePasswords(props) {
+    useEffect(() => {
+        props.onUsers();
+        props.onUserClear();
+        props.onPasswordsClear();
+    },[]);
+
     const {
         user,
         users,
-        passwords = emptyUserAndPasswords,
+        passwords,
         passwordsNotIdentical,
         onUsersChange,
         onPassword1,
@@ -87,6 +94,8 @@ const checkIfPasswordsAreNotIdentical = (passwords) => {
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
+        onUserClear: () => dispatch(USER_CLEAR()),
+        onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
         onUsersChange: (e, users) => {
             const userid = parseInt(e.target.value, 10);
             const user = users.find(u => u.userid === userid);

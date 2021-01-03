@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     ROLES_REQUEST,
     ROLE_UPDATE,
+    ROLE_CLEAR,
     PERMISSIONS_REQUEST,
     ROLEPERMISSIONS_REQUEST,
     ROLE_ADD_PERMISSIONS,
@@ -20,6 +21,13 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RolePermissions(props) {
+    useEffect(() => {
+        props.onRoles();
+        props.onRoleClear();
+        props.onPermissions();
+        props.onRolePermissions();
+    },[]);
+
     const {
         roles,
         role,
@@ -109,6 +117,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         onRoles: () => dispatch(ROLES_REQUEST()),
+        onRoleClear: () => dispatch(ROLE_CLEAR()),
         onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
         onRolePermissions: () => dispatch(ROLEPERMISSIONS_REQUEST()),
         onRolesChange: (e, roles) => {

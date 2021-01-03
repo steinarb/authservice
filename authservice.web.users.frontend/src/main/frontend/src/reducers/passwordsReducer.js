@@ -1,6 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
-import { PASSWORDS_UPDATE } from '../actiontypes';
+import {
+    PASSWORDS_UPDATE,
+    PASSWORDS_CLEAR,
+} from '../actiontypes';
 
 const passwordsReducer = createReducer({ ...emptyUserAndPasswords }, {
     [PASSWORDS_UPDATE]: (state, action) => {
@@ -8,6 +11,7 @@ const passwordsReducer = createReducer({ ...emptyUserAndPasswords }, {
         const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
         return { ...passwords, passwordsNotIdentical };
     },
+    [PASSWORDS_CLEAR]: (state, action) => ({ ...emptyUserAndPasswords }),
 });
 
 export default passwordsReducer;

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USER_UPDATE,
+    USER_CLEAR,
     PASSWORDS_UPDATE,
+    PASSWORDS_CLEAR,
     USER_ADD,
 } from '../actiontypes';
-import { emptyUserAndPasswords } from '../constants';
+import { emptyUser, emptyUserAndPasswords } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -14,6 +16,11 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserAdd(props) {
+    useEffect(() => {
+        props.onUserClear();
+        props.onPasswordsClear();
+    },[]);
+
     const {
         user,
         passwords,
@@ -91,6 +98,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        onUserClear: () => dispatch(USER_CLEAR()),
+        onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
         onUsername: e => dispatch(USER_UPDATE({ username: e.target.value })),
         onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
         onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
