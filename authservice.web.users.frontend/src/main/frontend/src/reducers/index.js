@@ -2,7 +2,11 @@ import { combineReducers } from 'redux';
 import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
 import usersReducer from './usersReducer';
 import userReducer from './userReducer';
-import userrolesReducer from './userrolesReducer';
+import userroles from './userrolesReducer';
+import rolesNotOnUser from './rolesNotOnUserReducer';
+import selectedInRolesNotOnUser from './selectedInRolesNotOnUserReducer';
+import rolesOnUser from './rolesOnUserReducer';
+import selectedInRolesOnUser from './selectedInRolesOnUserReducer';
 import passwordsReducer from './passwordsReducer';
 import rolesReducer from './rolesReducer';
 import roleReducer from './roleReducer';
@@ -15,7 +19,11 @@ import errorsReducer from './errorsReducer';
 const rootsReducer = combineReducers({
     users: usersReducer,
     user: userReducer,
-    userroles: userrolesReducer,
+    userroles,
+    rolesNotOnUser,
+    selectedInRolesNotOnUser,
+    rolesOnUser,
+    selectedInRolesOnUser,
     passwords: passwordsReducer,
     roles: rolesReducer,
     role: roleReducer,

@@ -4,6 +4,7 @@ import userModifySaga from './userModifySaga';
 import passwordsModifySaga from './passwordsModifySaga';
 import userAddSaga from './userAddSaga';
 import userRolesSaga from './userRolesSaga';
+import rolesOnUserSaga from './rolesOnUserSaga';
 import userAddRolesSaga from './userAddRolesSaga';
 import userRemoveRolesSaga from './userRemoveRolesSaga';
 import rolesSaga from './rolesSaga';
@@ -23,6 +24,7 @@ export default function* rootSaga() {
         fork(passwordsModifySaga),
         fork(userAddSaga),
         fork(userRolesSaga),
+        fork(rolesOnUserSaga),
         fork(userAddRolesSaga),
         fork(userRemoveRolesSaga),
         fork(rolesSaga),

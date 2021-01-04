@@ -4,14 +4,14 @@ import {
     USERS_REQUEST,
     USER_UPDATE,
     USER_CLEAR,
+    ROLES_REQUEST,
+    USERROLES_REQUEST,
+    ROLES_NOT_ON_USER_SELECTED,
+    ROLES_ON_USER_SELECTED,
     USER_ADD_ROLES,
     USER_REMOVE_ROLES,
-    ROLES_REQUEST,
-    ROLES_RECEIVED,
-    USERROLES_REQUEST,
-    FORMFIELD_UPDATE,
 } from '../actiontypes';
-import RoleList from './RoleList';
+import { emptyRole } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -31,29 +31,21 @@ function UserRoles(props) {
 
     const {
         users,
-        usersMap,
         user,
         userroles,
         roles,
         rolesNotOnUser,
-        rolesNotOnUserMap,
+        selectedInRolesNotOnUser,
         rolesOnUser,
-        rolesOnUserMap,
-        formfield,
+        selectedInRolesOnUser,
         onUsersChange,
-        onRolesNotOnUserChange,
+        onRolesNotOnUserSelected,
         onAddRole,
-        onRolesOnUserChange,
+        onRolesOnUserSelected,
         onRemoveRole,
-        onFieldChange,
-        onSaveUpdatedUser,
     } = props;
-    const {
-        rolesNotOnUserSelected,
-        rolesNotOnUserSelectedNames,
-        rolesOnUserSelected,
-        rolesOnUserSelectedNames,
-    } = formfield;
+    const addRoleDisabled = selectedInRolesNotOnUser === emptyRole.id;
+    const removeRoleDisabled = selectedInRolesOnUser === emptyRole.id;
 
     return (
         <div>
@@ -73,16 +65,20 @@ function UserRoles(props) {
                     </FormRow>
                     <FormRow>
                         <div className="no-gutters col-sm-4">
-                            <label htmlFor="username">Roles not on user</label>
-                            <RoleList id="rolesnotonuser" className="form-control" roles={rolesNotOnUser} rolesMap={rolesNotOnUserMap} value={rolesNotOnUserSelectedNames} onRolesFieldChange={onRolesNotOnUserChange} />
+                            <label htmlFor="rolesnotonuser">Roles not on user</label>
+                            <select id="rolesnotonuser" className="form-control" multiselect="true" size="10" onChange={onRolesNotOnUserSelected} value={selectedInRolesNotOnUser}>
+                                {rolesNotOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
+                            </select>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <button className="btn btn-primary form-control" onClick={() => onAddRole(user, rolesOnUser, rolesNotOnUserSelected)}>Add role &nbsp;<ChevronRight/></button>
-                            <button className="btn btn-primary form-control" onClick={() => onRemoveRole(user, rolesOnUserSelected)}><ChevronLeft/>&nbsp; Remove role</button>
+                            <button disabled={addRoleDisabled} className="btn btn-primary form-control" onClick={() => onAddRole(selectedInRolesNotOnUser)}>Add role &nbsp;<ChevronRight/></button>
+                            <button disabled={removeRoleDisabled} className="btn btn-primary form-control" onClick={() => onRemoveRole(selectedInRolesOnUser)}><ChevronLeft/>&nbsp; Remove role</button>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <label htmlFor="email">Role on user</label>
-                            <RoleList id="rolesnotonuser" className="form-control" roles={rolesOnUser} rolesMap={rolesOnUserMap} value={rolesOnUserSelectedNames} onRolesFieldChange={onRolesOnUserChange} />
+                            <label htmlFor="rolesonuser">Role on user</label>
+                            <select id="rolesonuser" className="form-control" multiselect="true" size="10" onChange={onRolesOnUserSelected} value={selectedInRolesOnUser}>
+                                {rolesOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
+                            </select>
                         </div>
                     </FormRow>
                 </Container>
@@ -97,21 +93,16 @@ function findRolesNotOnUser(user, roles, rolesOnUser) {
     return rolesNotOnUser;
 }
 
-const mapStateToProps = (state) => {
-    const rolesOnUser = state.userroles[state.user.username] || [];
-    const rolesOnUserMap = new Map(rolesOnUser.map(i => [i.rolename, i]));
-    const rolesNotOnUser = findRolesNotOnUser(state.user, state.roles, rolesOnUser);
-    const rolesNotOnUserMap = new Map(rolesNotOnUser.map(i => [i.rolename, i]));
+function mapStateToProps(state) {
     return {
         users: state.users,
         user: state.user,
-        roles: state.roles,
         userroles: state.userroles,
-        formfield: state.formfield || {},
-        rolesNotOnUser,
-        rolesNotOnUserMap,
-        rolesOnUser,
-        rolesOnUserMap,
+        roles: state.roles,
+        rolesNotOnUser: state.rolesNotOnUser,
+        selectedInRolesNotOnUser: state.selectedInRolesNotOnUser,
+        rolesOnUser: state.rolesOnUser,
+        selectedInRolesOnUser: state.selectedInRolesOnUser,
     };
 };
 
@@ -126,18 +117,10 @@ const mapDispatchToProps = dispatch => {
             const user = users.find(u => u.userid === userid);
             dispatch(USER_UPDATE({ ...user }));
         },
-        onRolesNotOnUserChange: (rolesNotOnUserSelectedNames, roleMap) => {
-            const rolesNotOnUserSelected = roleMap.get(rolesNotOnUserSelectedNames);
-            const payload = { rolesNotOnUserSelected, rolesNotOnUserSelectedNames };
-            dispatch(FORMFIELD_UPDATE(payload));
-        },
-        onAddRole: (user, rolesOnUser, rolesNotOnUserSelected) => dispatch(USER_ADD_ROLES({ user, rolesNotOnUserSelected })),
-        onRolesOnUserChange: (rolesOnUserSelectedNames, roleMap) => {
-            const rolesOnUserSelected = roleMap.get(rolesOnUserSelectedNames);
-            const payload = { rolesOnUserSelected, rolesOnUserSelectedNames };
-            dispatch(FORMFIELD_UPDATE(payload));
-        },
-        onRemoveRole: (user, rolesOnUserSelected) => dispatch(USER_REMOVE_ROLES({ user, rolesOnUserSelected })),
+        onRolesNotOnUserSelected: e => dispatch(ROLES_NOT_ON_USER_SELECTED(parseInt(e.target.value, 10))),
+        onAddRole: roleid => dispatch(USER_ADD_ROLES(roleid)),
+        onRolesOnUserSelected: e => dispatch(ROLES_ON_USER_SELECTED(parseInt(e.target.value, 10))),
+        onRemoveRole: roleid => dispatch(USER_REMOVE_ROLES(roleid)),
     };
 };
 

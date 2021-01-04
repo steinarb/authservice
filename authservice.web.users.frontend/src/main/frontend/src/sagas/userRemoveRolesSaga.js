@@ -1,4 +1,4 @@
-import { takeLatest, call, put, fork } from 'redux-saga/effects';
+import { takeLatest, call, put, fork, select } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     USER_REMOVE_ROLES,
@@ -13,8 +13,9 @@ function postUserRemoveRoles(userAndRoles) {
 
 function* userRemoveRoles(action) {
     try {
-        const { user, rolesNotOnUserSelected } = action.payload;
-        const roles = [ rolesNotOnUserSelected ];
+        const user = yield select(state => state.user);
+        const allRoles = yield select(state => state.roles);
+        const roles = allRoles.filter(r => r.id === action.payload);
         const userAndRoles = { user, roles };
         const response = yield call(postUserRemoveRoles, userAndRoles);
         const userroles = (response.headers['content-type'] == 'application/json') ? response.data : [];

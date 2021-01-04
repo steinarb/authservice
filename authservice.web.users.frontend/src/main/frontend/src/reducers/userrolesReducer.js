@@ -3,10 +3,7 @@ import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '..
 import { USERROLES_RECEIVED } from '../actiontypes';
 
 const userrolesReducer = createReducer([], {
-    [USERROLES_RECEIVED]: (state, action) => {
-        const userroles = action.payload;
-        return userroles;
-    },
+    [USERROLES_RECEIVED]: (state, action) => action.payload,
 });
 
 export default userrolesReducer;

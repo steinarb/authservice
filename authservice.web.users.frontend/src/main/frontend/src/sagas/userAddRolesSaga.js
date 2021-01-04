@@ -1,4 +1,4 @@
-import { takeLatest, call, put, fork } from 'redux-saga/effects';
+import { takeLatest, call, put, fork, select } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     USER_ADD_ROLES,
@@ -13,8 +13,9 @@ function postUserAddRoles(userAndRoles) {
 
 function* userAddRoles(action) {
     try {
-        const { user, rolesNotOnUserSelected } = action.payload;
-        const roles = [ rolesNotOnUserSelected ];
+        const user = yield select(state => state.user);
+        const allRoles = yield select(state => state.roles);
+        const roles = allRoles.filter(r => r.id === action.payload);
         const userAndRoles = { user, roles };
         const response = yield call(postUserAddRoles, userAndRoles);
         const userroles = (response.headers['content-type'] == 'application/json') ? response.data : [];
