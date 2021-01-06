@@ -438,7 +438,7 @@ class UserAdminWebApiServletTest {
     private ServletConfig createServletConfigWithApplicationAndPackagenameForJerseyResources() {
         ServletConfig config = mock(ServletConfig.class);
         when(config.getInitParameterNames()).thenReturn(Collections.enumeration(Arrays.asList(ServerProperties.PROVIDER_PACKAGES)));
-        when(config.getInitParameter(eq(ServerProperties.PROVIDER_PACKAGES))).thenReturn("no.priv.bang.authservice.web.users.api.resources");
+        when(config.getInitParameter(ServerProperties.PROVIDER_PACKAGES)).thenReturn("no.priv.bang.authservice.web.users.api.resources");
         ServletContext servletContext = mock(ServletContext.class);
         when(servletContext.getContextPath()).thenReturn("/authservice");
         when(config.getServletContext()).thenReturn(servletContext);
