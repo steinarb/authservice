@@ -11,6 +11,10 @@ import passwords from './passwordsReducer';
 import roles from './rolesReducer';
 import role from './roleReducer';
 import rolepermissions from './rolepermissionsReducer';
+import permissionsNotOnRole from './permissionsNotOnRoleReducer';
+import selectedInPermissionsNotOnRole from './selectedInPermissionsNotOnRoleReducer';
+import permissionsOnRole from './permissionsOnRoleReducer';
+import selectedInPermissionsOnRole from './selectedInPermissionsOnRoleReducer';
 import permissions from './permissionsReducer';
 import permission from './permissionReducer';
 import formfield from './formfieldReducer';
@@ -28,6 +32,10 @@ const rootsReducer = combineReducers({
     roles,
     role,
     rolepermissions,
+    permissionsNotOnRole,
+    selectedInPermissionsNotOnRole,
+    permissionsOnRole,
+    selectedInPermissionsOnRole,
     permissions,
     permission,
     formfield,

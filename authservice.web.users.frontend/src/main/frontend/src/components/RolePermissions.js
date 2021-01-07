@@ -6,10 +6,13 @@ import {
     ROLE_CLEAR,
     PERMISSIONS_REQUEST,
     ROLEPERMISSIONS_REQUEST,
+    PERMISSIONS_NOT_ON_ROLE_SELECTED,
     ROLE_ADD_PERMISSIONS,
+    PERMISSIONS_ON_ROLE_SELECTED,
     ROLE_REMOVE_PERMISSIONS,
     FORMFIELD_UPDATE,
 } from '../actiontypes';
+import { emptyPermission } from '../constants';
 import PermissionList from './PermissionList';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
@@ -34,24 +37,17 @@ function RolePermissions(props) {
         rolepermissions,
         permissions,
         permissionsNotOnRole,
-        permissionsNotOnRoleMap,
+        selectedInPermissionsNotOnRole,
         permissionsOnRole,
-        permissionsOnRoleMap,
-        formfield,
+        selectedInPermissionsOnRole,
         onRolesChange,
-        onPermissionsNotOnRoleChange,
+        onPermissionsNotOnRoleSelected,
         onAddPermission,
-        onPermissionsOnRoleChange,
+        onPermissionsOnRoleSelected,
         onRemovePermission,
-        onFieldChange,
-        onSaveUpdatedRole,
     } = props;
-    const {
-        permissionsNotOnRoleSelected,
-        permissionsNotOnRoleSelectedNames,
-        permissionsOnRoleSelected,
-        permissionsOnRoleSelectedNames,
-    } = formfield;
+    const addPermissionDisabled = selectedInPermissionsNotOnRole === emptyPermission.id;
+    const removePermissionDisabled = selectedInPermissionsOnRole === emptyPermission.id;
 
     return (
         <div>
@@ -72,15 +68,19 @@ function RolePermissions(props) {
                     <FormRow>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="permissionsnotonrole">Permissions not on role</label>
-                            <PermissionList id="permissionsnotonrole" className="form-control" permissions={permissionsNotOnRole} permissionsMap={permissionsNotOnRoleMap} value={permissionsNotOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsNotOnRoleChange} />
+                            <select id="permissionsnotonrole" className="form-control" multiselect="true" size="10" onChange={onPermissionsNotOnRoleSelected} value={selectedInPermissionsNotOnRole}>
+                                {permissionsNotOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
+                            </select>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <button className="btn btn-primary form-control" onClick={() => onAddPermission(role, permissionsOnRole, permissionsNotOnRoleSelected)}>Add permission &nbsp;<ChevronRight/></button>
-                            <button className="btn btn-primary form-control" onClick={() => onRemovePermission(role, permissionsOnRoleSelected)}><ChevronLeft/>&nbsp; Remove permission</button>
+                            <button disabled={addPermissionDisabled} className="btn btn-primary form-control" onClick={() => onAddPermission(selectedInPermissionsNotOnRole)}>Add permission &nbsp;<ChevronRight/></button>
+                            <button disabled={removePermissionDisabled} className="btn btn-primary form-control" onClick={() => onRemovePermission(selectedInPermissionsOnRole)}><ChevronLeft/>&nbsp; Remove permission</button>
                         </div>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="permissionsonrole">Permission on role</label>
-                            <PermissionList id="permissionsonrole" className="form-control" permissions={permissionsOnRole} permissionsMap={permissionsOnRoleMap} value={permissionsOnRoleSelectedNames} onPermissionsFieldChange={onPermissionsOnRoleChange} />
+                            <select id="permissionsonrole" className="form-control" multiselect="true" size="10" onChange={onPermissionsOnRoleSelected} value={selectedInPermissionsOnRole}>
+                                {permissionsOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
+                            </select>
                         </div>
                     </FormRow>
                 </Container>
@@ -96,21 +96,15 @@ function findPermissionsNotOnRole(role, permissions, permissionsOnRole) {
 }
 
 const mapStateToProps = (state) => {
-    const permissionsOnRole = state.rolepermissions[state.role.rolename] || [];
-    const permissionsOnRoleMap = new Map(permissionsOnRole.map(i => [i.permissionname, i]));
-    const permissionsNotOnRole = findPermissionsNotOnRole(state.role, state.permissions, permissionsOnRole);
-    const permissionsNotOnRoleMap = new Map(permissionsNotOnRole.map(i => [i.permissionname, i]));
     return {
         roles: state.roles,
-        rolesMap: new Map(state.roles.map(i => [i.rolename, i])),
         role: state.role,
         permissions: state.permissions,
         rolepermissions: state.rolepermissions,
-        formfield: state.formfield || {},
-        permissionsNotOnRole,
-        permissionsNotOnRoleMap,
-        permissionsOnRole,
-        permissionsOnRoleMap,
+        permissionsNotOnRole: state.permissionsNotOnRole,
+        selectedInPermissionsNotOnRole: state.selectedInPermissionsNotOnRole,
+        permissionsOnRole: state.permissionsOnRole,
+        selectedInPermissionsOnRole: state.selectedInPermissionsOnRole,
     };
 };
 
@@ -125,18 +119,10 @@ const mapDispatchToProps = dispatch => {
             const role = roles.find(r => r.id === id);
             dispatch(ROLE_UPDATE(role));
         },
-        onPermissionsNotOnRoleChange: (permissionsNotOnRoleSelectedNames, permissionMap) => {
-            const permissionsNotOnRoleSelected = permissionMap.get(permissionsNotOnRoleSelectedNames);
-            const payload = { permissionsNotOnRoleSelected, permissionsNotOnRoleSelectedNames };
-            dispatch(FORMFIELD_UPDATE(payload));
-        },
-        onAddPermission: (role, permissionsOnRole, permissionsNotOnRoleSelected) => dispatch(ROLE_ADD_PERMISSIONS({ role, permissionsNotOnRoleSelected })),
-        onPermissionsOnRoleChange: (permissionsOnRoleSelectedNames, permissionMap) => {
-            const permissionsOnRoleSelected = permissionMap.get(permissionsOnRoleSelectedNames);
-            const payload = { permissionsOnRoleSelected, permissionsOnRoleSelectedNames };
-            dispatch(FORMFIELD_UPDATE(payload));
-        },
-        onRemovePermission: (role, permissionsOnRoleSelected) => dispatch(ROLE_REMOVE_PERMISSIONS({ role, permissionsOnRoleSelected })),
+        onPermissionsNotOnRoleSelected: e => dispatch(PERMISSIONS_NOT_ON_ROLE_SELECTED(parseInt(e.target.value, 10))),
+        onAddPermission: permissionid => dispatch(ROLE_ADD_PERMISSIONS(permissionid)),
+        onPermissionsOnRoleSelected: e => dispatch(PERMISSIONS_ON_ROLE_SELECTED(parseInt(e.target.value, 10))),
+        onRemovePermission: permissionid => dispatch(ROLE_REMOVE_PERMISSIONS(permissionid)),
     };
 };
 
