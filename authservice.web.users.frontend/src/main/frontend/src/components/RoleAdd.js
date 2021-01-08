@@ -5,7 +5,6 @@ import {
     ROLE_UPDATE,
     ROLE_ADD,
 } from '../actiontypes';
-import { emptyRole } from '../constants';
 import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';

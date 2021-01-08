@@ -6,7 +6,6 @@ import {
     ROLEPERMISSIONS_ERROR,
     PERMISSIONS_ON_ROLE_CLEAR,
 } from '../actiontypes';
-import { emptyRoleAndPasswords } from '../constants';
 
 function postRoleRemovePermissions(roleAndPermissions) {
     return axios.post('/authservice/useradmin/api/role/removepermissions', roleAndPermissions);

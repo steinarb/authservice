@@ -5,7 +5,6 @@ import {
     USERROLES_RECEIVED,
     USERROLES_ERROR,
 } from '../actiontypes';
-import { emptyUserAndPasswords } from '../constants';
 
 function postUserRemoveRoles(userAndRoles) {
     return axios.post('/authservice/useradmin/api/user/removeroles', userAndRoles);
