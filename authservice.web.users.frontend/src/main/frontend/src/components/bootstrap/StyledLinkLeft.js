@@ -4,7 +4,7 @@ import { ChevronLeft } from './ChevronLeft';
 
 export const StyledLinkLeft = (props) => {
     return (
-        <Link className="btn btn-block btn-primary mb-0 left-align-cell" to={props.to} >
+        <Link className="btn btn-primary mb-0 left-align-cell" to={props.to} >
             <ChevronLeft/>&nbsp; {props.children}
         </Link>
     );

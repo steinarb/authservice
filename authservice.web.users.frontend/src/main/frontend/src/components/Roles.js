@@ -13,10 +13,11 @@ function Roles(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
                 <h1>Administrate roles</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <Container>
                 <StyledLinkRight to="/authservice/useradmin/roles/modify">Modify roles</StyledLinkRight>
                 <StyledLinkRight to="/authservice/useradmin/roles/permissions">Change role to permission mappings</StyledLinkRight>

@@ -13,10 +13,11 @@ function Permissions(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
                 <h1>Administrate permissions</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <Container>
                 <StyledLinkRight to="/authservice/useradmin/permissions/modify">Modify permissions</StyledLinkRight><br/>
                 <StyledLinkRight to="/authservice/useradmin/permissions/add">Add permission</StyledLinkRight><br/>

@@ -49,10 +49,11 @@ function UserRoles(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
                 <h1>Modify user to role mappings</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

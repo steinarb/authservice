@@ -30,10 +30,11 @@ function PermissionModify(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
                 <h1>Modify permission information</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

@@ -7,10 +7,11 @@ import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 function Users(props) {
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/">Up to the main page</StyledLinkLeft>
                 <h1>Adminstrate users</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <Container>
                 <StyledLinkRight to="/authservice/useradmin/users/modify">Modify existing users</StyledLinkRight>
                 <StyledLinkRight to="/authservice/useradmin/users/roles">Modify users to role mappings</StyledLinkRight>

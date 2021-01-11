@@ -26,10 +26,11 @@ function RoleAdd(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
                 <h1>Add role</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

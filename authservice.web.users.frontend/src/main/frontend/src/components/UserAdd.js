@@ -35,10 +35,11 @@ function UserAdd(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
                 <h1>Add user</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

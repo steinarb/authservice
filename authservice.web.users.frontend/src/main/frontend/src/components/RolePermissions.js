@@ -51,10 +51,11 @@ function RolePermissions(props) {
 
     return (
         <div>
-            <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft><br/>
-            <Header>
+            <nav className="navbar navbar-light bg-light">
+                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft><br/>
                 <h1>Modify role to permission mappings</h1>
-            </Header>
+                <div className="col-sm-2"></div>
+            </nav>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>
