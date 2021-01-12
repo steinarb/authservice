@@ -90,12 +90,6 @@ function RolePermissions(props) {
     );
 }
 
-function findPermissionsNotOnRole(role, permissions, permissionsOnRole) {
-    const permissionsOnRolePermissionnames = permissionsOnRole.map(permission => permission.permissionname);
-    const permissionsNotOnRole = permissions.filter(permission => !permissionsOnRolePermissionnames.includes(permission.permissionname));
-    return permissionsNotOnRole;
-}
-
 const mapStateToProps = (state) => {
     return {
         roles: state.roles,

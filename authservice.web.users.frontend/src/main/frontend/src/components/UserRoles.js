@@ -90,12 +90,6 @@ function UserRoles(props) {
     );
 }
 
-function findRolesNotOnUser(user, roles, rolesOnUser) {
-    const rolesOnUserRolenames = rolesOnUser.map(role => role.rolename);
-    const rolesNotOnUser = roles.filter(role => !rolesOnUserRolenames.includes(role.rolename));
-    return rolesNotOnUser;
-}
-
 function mapStateToProps(state) {
     return {
         users: state.users,

@@ -85,15 +85,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const checkIfPasswordsAreNotIdentical = (passwords) => {
-    const { password1, password2 } = passwords;
-    if (!password2) {
-        return false; // if second password is empty we don't compare because it probably hasn't been typed into yet
-    }
-
-    return password1 !== password2;
-};
-
 const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
