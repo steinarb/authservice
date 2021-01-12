@@ -89,6 +89,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-RoleModify = connect(mapStateToProps, mapDispatchToProps)(RoleModify);
-
-export default RoleModify;
+export default connect(mapStateToProps, mapDispatchToProps)(RoleModify);

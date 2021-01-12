@@ -108,6 +108,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-UserModify = connect(mapStateToProps, mapDispatchToProps)(UserModify);
-
-export default UserModify;
+export default connect(mapStateToProps, mapDispatchToProps)(UserModify);

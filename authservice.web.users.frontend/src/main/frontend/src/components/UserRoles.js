@@ -129,6 +129,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-UserRoles = connect(mapStateToProps, mapDispatchToProps)(UserRoles);
-
-export default UserRoles;
+export default connect(mapStateToProps, mapDispatchToProps)(UserRoles);

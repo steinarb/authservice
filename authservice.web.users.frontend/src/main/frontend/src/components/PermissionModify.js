@@ -89,6 +89,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-PermissionModify = connect(mapStateToProps, mapDispatchToProps)(PermissionModify);
-
-export default PermissionModify;
+export default connect(mapStateToProps, mapDispatchToProps)(PermissionModify);

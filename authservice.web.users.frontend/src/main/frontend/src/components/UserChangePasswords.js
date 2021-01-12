@@ -110,6 +110,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-UserChangePasswords = connect(mapStateToProps, mapDispatchToProps)(UserChangePasswords);
-
-export default UserChangePasswords;
+export default connect(mapStateToProps, mapDispatchToProps)(UserChangePasswords);

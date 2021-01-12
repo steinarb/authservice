@@ -70,6 +70,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-PermissionAdd = connect(mapStateToProps, mapDispatchToProps)(PermissionAdd);
-
-export default PermissionAdd;
+export default connect(mapStateToProps, mapDispatchToProps)(PermissionAdd);

@@ -111,6 +111,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-UserAdd = connect(mapStateToProps, mapDispatchToProps)(UserAdd);
-
-export default UserAdd;
+export default connect(mapStateToProps, mapDispatchToProps)(UserAdd);

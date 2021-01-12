@@ -129,6 +129,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-RolePermissions = connect(mapStateToProps, mapDispatchToProps)(RolePermissions);
-
-export default RolePermissions;
+export default connect(mapStateToProps, mapDispatchToProps)(RolePermissions);
