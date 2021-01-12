@@ -13,11 +13,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleModify(props) {
-    useEffect(() => {
-        props.onRoles();
-        props.onRoleClear();
-    },[]);
-
     const {
         roles,
         role,
@@ -25,7 +20,14 @@ function RoleModify(props) {
         onRolename,
         onDescription,
         onSaveUpdatedRole,
+        onRoles,
+        onRoleClear,
     } = props;
+
+    useEffect(() => {
+        onRoles();
+        onRoleClear();
+    },[onRoles, onRoleClear]);
 
     return (
         <div>

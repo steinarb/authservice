@@ -21,13 +21,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RolePermissions(props) {
-    useEffect(() => {
-        props.onRoles();
-        props.onRoleClear();
-        props.onPermissions();
-        props.onRolePermissions();
-    },[]);
-
     const {
         roles,
         role,
@@ -42,7 +35,19 @@ function RolePermissions(props) {
         onAddPermission,
         onPermissionsOnRoleSelected,
         onRemovePermission,
+        onRoles,
+        onRoleClear,
+        onPermissions,
+        onRolePermissions,
     } = props;
+
+    useEffect(() => {
+        onRoles();
+        onRoleClear();
+        onPermissions();
+        onRolePermissions();
+    },[onRoles, onRoleClear, onPermissions, onRolePermissions]);
+
     const addPermissionDisabled = selectedInPermissionsNotOnRole === emptyPermission.id;
     const removePermissionDisabled = selectedInPermissionsOnRole === emptyPermission.id;
 

@@ -12,16 +12,17 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function RoleAdd(props) {
-    useEffect(() => {
-        props.onRoleClear();
-    },[]);
-
     const {
         role,
         onRolename,
         onDescription,
         onAddRole,
+        onRoleClear,
     } = props;
+
+    useEffect(() => {
+        onRoleClear();
+    },[onRoleClear]);
 
     return (
         <div>

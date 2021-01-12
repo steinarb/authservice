@@ -14,11 +14,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserAdd(props) {
-    useEffect(() => {
-        props.onUserClear();
-        props.onPasswordsClear();
-    },[]);
-
     const {
         user,
         passwords,
@@ -30,7 +25,14 @@ function UserAdd(props) {
         onPassword1,
         onPassword2,
         onAddUser,
+        onUserClear,
+        onPasswordsClear,
     } = props;
+
+    useEffect(() => {
+        onUserClear();
+        onPasswordsClear();
+    },[onUserClear, onPasswordsClear]);
 
     return (
         <div>

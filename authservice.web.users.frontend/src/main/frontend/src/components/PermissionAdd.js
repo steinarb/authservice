@@ -12,17 +12,18 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function PermissionAdd(props) {
-    useEffect(() => {
-        props.onPermissionClear();
-    },[]);
-
     const {
         permission,
+        onPermissionClear,
         onPermissionsChange,
         onPermissionname,
         onDescription,
         onAddPermission,
     } = props;
+
+    useEffect(() => {
+        onPermissionClear();
+    },[onPermissionClear]);
 
     return (
         <div>

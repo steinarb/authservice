@@ -13,11 +13,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserModify(props) {
-    useEffect(() => {
-        props.onUsers();
-        props.onUserClear();
-    },[]);
-
     const {
         users,
         user,
@@ -27,7 +22,14 @@ function UserModify(props) {
         onFirstname,
         onLastname,
         onSaveUpdatedUser,
+        onUsers,
+        onUserClear,
     } = props;
+
+    useEffect(() => {
+        onUsers();
+        onUserClear();
+    },[onUsers, onUserClear]);
 
     return (
         <div>

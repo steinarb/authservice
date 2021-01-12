@@ -21,13 +21,6 @@ import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
 
 function UserRoles(props) {
-    useEffect(() => {
-        props.onUsers();
-        props.onEmptyUser();
-        props.onRoles();
-        props.onUserRoles();
-    }, []);
-
     const {
         users,
         user,
@@ -42,7 +35,19 @@ function UserRoles(props) {
         onAddRole,
         onRolesOnUserSelected,
         onRemoveRole,
+        onUsers,
+        onEmptyUser,
+        onRoles,
+        onUserRoles,
     } = props;
+
+    useEffect(() => {
+        onUsers();
+        onEmptyUser();
+        onRoles();
+        onUserRoles();
+    }, [onUsers, onEmptyUser, onRoles, onUserRoles]);
+
     const addRoleDisabled = selectedInRolesNotOnUser === emptyRole.id;
     const removeRoleDisabled = selectedInRolesOnUser === emptyRole.id;
 
