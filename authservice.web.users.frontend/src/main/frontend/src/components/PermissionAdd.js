@@ -5,7 +5,6 @@ import {
     PERMISSION_UPDATE,
     PERMISSION_ADD,
 } from '../actiontypes';
-import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import {FormRow } from './bootstrap/FormRow';

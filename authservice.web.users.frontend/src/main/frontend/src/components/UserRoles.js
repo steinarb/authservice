@@ -12,7 +12,6 @@ import {
     USER_REMOVE_ROLES,
 } from '../actiontypes';
 import { emptyRole } from '../constants';
-import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { ChevronLeft } from './bootstrap/ChevronLeft';

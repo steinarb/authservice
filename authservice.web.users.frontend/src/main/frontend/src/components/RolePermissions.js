@@ -10,11 +10,8 @@ import {
     ROLE_ADD_PERMISSIONS,
     PERMISSIONS_ON_ROLE_SELECTED,
     ROLE_REMOVE_PERMISSIONS,
-    FORMFIELD_UPDATE,
 } from '../actiontypes';
 import { emptyPermission } from '../constants';
-import PermissionList from './PermissionList';
-import { Header } from './bootstrap/Header';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { ChevronLeft } from './bootstrap/ChevronLeft';

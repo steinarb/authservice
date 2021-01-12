@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
 import {
     USERS_ERROR,
     USERROLES_ERROR,

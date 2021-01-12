@@ -1,4 +1,4 @@
-import { takeLatest, call, put, fork, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     USER_ADD_ROLES,

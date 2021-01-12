@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { emptyUser, emptyUserAndPasswords, emptyRole, emptyPermission } from '../constants';
 import users from './usersReducer';
 import user from './userReducer';
 import userroles from './userrolesReducer';

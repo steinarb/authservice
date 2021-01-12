@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, BrowserRouter as Router, NavLink } from 'react-router-dom';
-import logo from './logo.svg';
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
 import Users from './components/Users';

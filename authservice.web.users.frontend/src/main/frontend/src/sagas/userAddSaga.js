@@ -1,10 +1,8 @@
-import { takeLatest, call, put, fork } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     USER_ADD,
-    USER_UPDATE,
     USER_CLEAR,
-    PASSWORDS_UPDATE,
     PASSWORDS_CLEAR,
     USERS_RECEIVED,
     USERS_ERROR,

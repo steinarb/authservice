@@ -1,8 +1,7 @@
-import { takeLatest, call, put, fork } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     ROLE_MODIFY,
-    ROLE_UPDATE,
     ROLE_CLEAR,
     ROLES_RECEIVED,
     ROLES_ERROR,
