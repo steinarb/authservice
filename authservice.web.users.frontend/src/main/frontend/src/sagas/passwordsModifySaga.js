@@ -25,6 +25,6 @@ function* addUser(action) {
     }
 }
 
-export default function* () {
+export default function* passwordsModifySaga() {
     yield takeLatest(PASSWORDS_MODIFY, addUser);
 }

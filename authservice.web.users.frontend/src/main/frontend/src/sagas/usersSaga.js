@@ -20,6 +20,6 @@ function* requestUsers() {
     }
 }
 
-export default function* () {
+export default function* usersSaga() {
     yield takeLatest(USERS_REQUEST, requestUsers);
 }

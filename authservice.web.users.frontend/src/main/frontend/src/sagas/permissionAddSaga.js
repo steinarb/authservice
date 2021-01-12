@@ -23,6 +23,6 @@ function* addPermission(action) {
     }
 }
 
-export default function* () {
+export default function* permissionAddSaga() {
     yield takeLatest(PERMISSION_ADD, addPermission);
 }

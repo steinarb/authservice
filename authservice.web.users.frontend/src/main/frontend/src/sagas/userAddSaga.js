@@ -25,6 +25,6 @@ function* addUser(action) {
     }
 }
 
-export default function* () {
+export default function* userAddSaga() {
     yield takeLatest(USER_ADD, addUser);
 }

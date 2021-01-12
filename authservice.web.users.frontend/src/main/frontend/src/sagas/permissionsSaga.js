@@ -20,6 +20,6 @@ function* requestPermissions() {
     }
 }
 
-export default function* () {
+export default function* permissionsSaga() {
     yield takeLatest(PERMISSIONS_REQUEST, requestPermissions);
 }

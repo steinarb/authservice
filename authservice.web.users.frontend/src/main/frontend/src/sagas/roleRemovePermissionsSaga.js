@@ -26,6 +26,6 @@ function* roleRemovePermissions(action) {
     }
 }
 
-export default function* () {
+export default function* roleRemovePermissionsSaga() {
     yield takeLatest(ROLE_REMOVE_PERMISSIONS, roleRemovePermissions);
 }

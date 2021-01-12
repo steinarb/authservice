@@ -23,6 +23,6 @@ function* modifyPermission(action) {
     }
 }
 
-export default function* () {
+export default function* permissionModifySaga() {
     yield takeLatest(PERMISSION_MODIFY, modifyPermission);
 }

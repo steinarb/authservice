@@ -20,6 +20,6 @@ function* requestRolePermissions() {
     }
 }
 
-export default function* () {
+export default function* rolePermissionsSaga() {
     yield takeLatest(ROLEPERMISSIONS_REQUEST, requestRolePermissions);
 }

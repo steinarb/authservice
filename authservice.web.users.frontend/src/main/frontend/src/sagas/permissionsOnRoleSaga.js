@@ -18,7 +18,7 @@ function* findPermissionsOnRolesAndFindPermissionsNotOnRoles() {
     yield put(PERMISSIONS_NOT_ON_ROLE_UPDATE(permissionsNotOnRole));
 }
 
-export default function* () {
+export default function* permissionsOnRoleSaga() {
     yield takeLatest(ROLEPERMISSIONS_RECEIVED, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
     yield takeLatest(ROLE_UPDATE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
 }

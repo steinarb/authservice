@@ -23,6 +23,6 @@ function* modifyRole(action) {
     }
 }
 
-export default function* () {
+export default function* roleModifySaga() {
     yield takeLatest(ROLE_MODIFY, modifyRole);
 }

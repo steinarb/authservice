@@ -18,7 +18,7 @@ function* findRolesOnUsersAndFindRolesNotOnUsers() {
     yield put(ROLES_NOT_ON_USER_UPDATE(rolesNotOnUser));
 }
 
-export default function* () {
+export default function* rolesOnUserSaga() {
     yield takeLatest(USERROLES_RECEIVED, findRolesOnUsersAndFindRolesNotOnUsers);
     yield takeLatest(USER_UPDATE, findRolesOnUsersAndFindRolesNotOnUsers);
 }

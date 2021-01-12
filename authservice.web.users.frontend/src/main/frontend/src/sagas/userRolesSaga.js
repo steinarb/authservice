@@ -20,6 +20,6 @@ function* requestUserRoles() {
     }
 }
 
-export default function* () {
+export default function* userRolesSaga() {
     yield takeLatest(USERROLES_REQUEST, requestUserRoles);
 }

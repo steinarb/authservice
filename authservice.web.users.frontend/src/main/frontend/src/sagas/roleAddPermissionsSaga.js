@@ -26,6 +26,6 @@ function* roleAddPermissions(action) {
     }
 }
 
-export default function* () {
+export default function* roleAddPermissionsSaga() {
     yield takeLatest(ROLE_ADD_PERMISSIONS, roleAddPermissions);
 }

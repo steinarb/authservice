@@ -24,6 +24,6 @@ function* userRemoveRoles(action) {
     }
 }
 
-export default function* () {
+export default function* userRemoveRolesSaga() {
     yield takeLatest(USER_REMOVE_ROLES, userRemoveRoles);
 }

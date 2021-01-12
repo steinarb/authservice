@@ -23,6 +23,6 @@ function* modifyUser(action) {
     }
 }
 
-export default function* () {
+export default function* userModifySaga() {
     yield takeLatest(USER_MODIFY, modifyUser);
 }
