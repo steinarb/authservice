@@ -13,7 +13,7 @@ function getPermissions() {
 function* requestPermissions() {
     try {
         const response = yield call(getPermissions);
-        const permissions = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const permissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(PERMISSIONS_RECEIVED(permissions));
     } catch (error) {
         yield put(PERMISSIONS_ERROR(error));

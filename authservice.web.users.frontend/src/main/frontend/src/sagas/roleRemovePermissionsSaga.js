@@ -18,7 +18,7 @@ function* roleRemovePermissions(action) {
         const permissions = permissionsOnRole.filter(p => p.id === action.payload);
         const roleAndPermissions = { role, permissions };
         const response = yield call(postRoleRemovePermissions, roleAndPermissions);
-        const rolepermissions = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const rolepermissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(PERMISSIONS_ON_ROLE_CLEAR());
         yield put(ROLEPERMISSIONS_RECEIVED(rolepermissions));
     } catch (error) {

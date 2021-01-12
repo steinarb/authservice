@@ -15,7 +15,7 @@ function* modifyRole(action) {
     try {
         const role = action.payload;
         const response = yield call(postRoleModify, role);
-        const roles = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const roles = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(ROLES_RECEIVED(roles));
         yield put(ROLE_CLEAR());
     } catch (error) {

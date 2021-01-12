@@ -17,7 +17,7 @@ function* userAddRoles(action) {
         const roles = allRoles.filter(r => r.id === action.payload);
         const userAndRoles = { user, roles };
         const response = yield call(postUserAddRoles, userAndRoles);
-        const userroles = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const userroles = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(USERROLES_RECEIVED(userroles));
     } catch (error) {
         yield put(USERROLES_ERROR(error));

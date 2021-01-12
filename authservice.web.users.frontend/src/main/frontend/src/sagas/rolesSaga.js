@@ -13,7 +13,7 @@ function getRoles() {
 function* requestRoles() {
     try {
         const response = yield call(getRoles);
-        const roles = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const roles = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(ROLES_RECEIVED(roles));
     } catch (error) {
         yield put(ROLES_ERROR(error));

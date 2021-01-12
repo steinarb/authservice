@@ -18,7 +18,7 @@ function* roleAddPermissions(action) {
         const permissions = permissionsNotOnRole.filter(p => p.id === action.payload);
         const roleAndPermissions = { role, permissions };
         const response = yield call(postRoleAddPermissions, roleAndPermissions);
-        const rolepermissions = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const rolepermissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(PERMISSIONS_NOT_ON_ROLE_CLEAR());
         yield put(ROLEPERMISSIONS_RECEIVED(rolepermissions));
     } catch (error) {

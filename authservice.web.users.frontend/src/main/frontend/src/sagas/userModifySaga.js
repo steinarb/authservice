@@ -15,7 +15,7 @@ function* modifyUser(action) {
     try {
         const user = action.payload;
         const response = yield call(postUserModify, user);
-        const users = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(USERS_RECEIVED(users));
         yield put(USER_CLEAR());
     } catch (error) {

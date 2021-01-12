@@ -15,7 +15,7 @@ function* modifyPermission(action) {
     try {
         const permission = action.payload;
         const response = yield call(postPermissionModify, permission);
-        const permissions = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const permissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(PERMISSIONS_RECEIVED(permissions));
         yield put(PERMISSION_CLEAR());
     } catch (error) {

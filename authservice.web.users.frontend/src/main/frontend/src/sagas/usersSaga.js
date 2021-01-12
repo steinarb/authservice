@@ -13,7 +13,7 @@ function getUsers() {
 function* requestUsers() {
     try {
         const response = yield call(getUsers);
-        const users = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(USERS_RECEIVED(users));
     } catch (error) {
         yield put(USERS_ERROR(error));

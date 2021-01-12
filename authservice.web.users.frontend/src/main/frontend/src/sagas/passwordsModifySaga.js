@@ -16,7 +16,7 @@ function* addUser(action) {
     try {
         const userAndPasswords = action.payload;
         const response = yield call(postUserAdd, userAndPasswords);
-        const users = (response.headers['content-type'] == 'application/json') ? response.data : [];
+        const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
         yield put(USER_CLEAR());
         yield put(USERS_RECEIVED(users));
         yield put(PASSWORDS_CLEAR());
