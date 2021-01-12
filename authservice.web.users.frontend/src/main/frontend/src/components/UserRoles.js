@@ -24,8 +24,6 @@ function UserRoles(props) {
     const {
         users,
         user,
-        userroles,
-        roles,
         rolesNotOnUser,
         selectedInRolesNotOnUser,
         rolesOnUser,
@@ -102,8 +100,6 @@ function mapStateToProps(state) {
     return {
         users: state.users,
         user: state.user,
-        userroles: state.userroles,
-        roles: state.roles,
         rolesNotOnUser: state.rolesNotOnUser,
         selectedInRolesNotOnUser: state.selectedInRolesNotOnUser,
         rolesOnUser: state.rolesOnUser,

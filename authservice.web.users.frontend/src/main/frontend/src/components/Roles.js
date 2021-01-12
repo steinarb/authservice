@@ -1,15 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import {
-    ROLES_REQUEST,
-} from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
-function Roles(props) {
-    const { roles } = props;
-
+export default function Roles(props) {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
@@ -25,15 +19,3 @@ function Roles(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return { ...state };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        onRoles: () => dispatch(ROLES_REQUEST())
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Roles);

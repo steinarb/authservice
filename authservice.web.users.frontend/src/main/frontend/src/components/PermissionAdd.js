@@ -15,7 +15,6 @@ function PermissionAdd(props) {
     const {
         permission,
         onPermissionClear,
-        onPermissionsChange,
         onPermissionname,
         onDescription,
         onAddPermission,

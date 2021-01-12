@@ -8,8 +8,6 @@ import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
 function Permissions(props) {
-    const { permissions } = props;
-
     return (
         <div>
             <nav className="navbar navbar-light bg-light">

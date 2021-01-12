@@ -24,8 +24,6 @@ function RolePermissions(props) {
     const {
         roles,
         role,
-        rolepermissions,
-        permissions,
         permissionsNotOnRole,
         selectedInPermissionsNotOnRole,
         permissionsOnRole,
@@ -102,8 +100,6 @@ const mapStateToProps = (state) => {
     return {
         roles: state.roles,
         role: state.role,
-        permissions: state.permissions,
-        rolepermissions: state.rolepermissions,
         permissionsNotOnRole: state.permissionsNotOnRole,
         selectedInPermissionsNotOnRole: state.selectedInPermissionsNotOnRole,
         permissionsOnRole: state.permissionsOnRole,
