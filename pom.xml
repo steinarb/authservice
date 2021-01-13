@@ -22,7 +22,6 @@
         <module>authservice.users</module>
         <module>authservice.web.users.api</module>
         <module>authservice.web.users.frontend</module>
-        <module>authservice.tests</module>
         <module>jacoco-coverage-report</module>
     </modules>
 
@@ -605,6 +604,15 @@
     <url>http://steinarb.github.io/authservice/</url>
 
     <profiles>
+        <profile>
+            <id>modules-that-break-aggregate-javadoc-in-release-prepare</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>authservice.tests</module> <!-- avhengigheten til authservice feature er problemet -->
+            </modules>
+        </profile>
         <profile>
             <id>release-sign-artifact</id>
             <build>
