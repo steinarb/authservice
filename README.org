@@ -33,7 +33,7 @@ Instructions:
  2. [[https://karaf.apache.org/manual/latest/quick-start.html][Follow the quick start guide to downloading, unpacking and starting apache karaf]]
  3. In the karaf shell, install the authservice feature repository
     #+BEGIN_EXAMPLE
-      feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+      feature:repo-add mvn:no.priv.bang.authservice/karaf/LATEST/xml/features
     #+END_EXAMPLE
  4. In the karaf shell, install the feature that installs the authorization service that is used by nginx (this feature installs a set of test users, roles and features)
     #+BEGIN_EXAMPLE
@@ -147,7 +147,7 @@ Instructions:
        /Note/: use the actual password given in the PGPASSWORD environment variable when creating the karaf user
     2. Install authservice from maven central:
        #+BEGIN_EXAMPLE
-         feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+         feature:repo-add mvn:no.priv.bang.authservice/karaf/LATEST/xml/features
          feature:install user-admin-with-productiondb
        #+END_EXAMPLE
  4. Open a the nginx authservice URL in a web browser, e.g. https://myserver.com/authservice/ and:
@@ -196,7 +196,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/authservice/1.11.16/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/1.11.16/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -366,7 +366,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
      #+END_EXAMPLE
   3. Load the authservice feature repository:
      #+BEGIN_EXAMPLE
-       feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+       feature:repo-add mvn:no.priv.bang.authservice/karaf/LATEST/xml/features
      #+END_EXAMPLE
   4. In the karaf console, load the test database authservice feature
      #+BEGIN_EXAMPLE
@@ -396,7 +396,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
      #+END_EXAMPLE
   3. Load the authservice feature repository:
      #+BEGIN_EXAMPLE
-       feature:repo-add mvn:no.priv.bang.authservice/authservice/LATEST/xml/features
+       feature:repo-add mvn:no.priv.bang.authservice/karaf/LATEST/xml/features
      #+END_EXAMPLE
   4. In the karaf console, load the test database authservice feature
      #+BEGIN_EXAMPLE

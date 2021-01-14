@@ -64,7 +64,7 @@
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
-            <artifactId>authservice</artifactId>
+            <artifactId>karaf</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>

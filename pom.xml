@@ -22,6 +22,8 @@
         <module>authservice.users</module>
         <module>authservice.web.users.api</module>
         <module>authservice.web.users.frontend</module>
+        <module>karaf</module>
+        <module>authservice.tests</module>
         <module>jacoco-coverage-report</module>
     </modules>
 
@@ -418,52 +420,6 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>filter-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>resources</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/filtered-resources</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>attach-karaf-feature</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/classes/feature.xml</file>
-                                    <type>xml</type>
-                                    <classifier>features</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
@@ -604,15 +560,6 @@
     <url>http://steinarb.github.io/authservice/</url>
 
     <profiles>
-        <profile>
-            <id>modules-that-break-aggregate-javadoc-in-release-prepare</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>authservice.tests</module> <!-- avhengigheten til authservice feature er problemet -->
-            </modules>
-        </profile>
         <profile>
             <id>release-sign-artifact</id>
             <build>
