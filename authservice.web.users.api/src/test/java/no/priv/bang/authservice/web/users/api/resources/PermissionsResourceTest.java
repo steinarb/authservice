@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ class PermissionsResourceTest {
     void testAddPermission() {
         LogService logservice = new MockLogService();
         List<Permission> originalPermissions = createPermissions();
-        Permission permission = new Permission();
+        Permission permission = Permission.with().build();
         List<Permission> updatedPermissions = new ArrayList<Permission>(originalPermissions);
         updatedPermissions.add(permission);
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -115,7 +115,7 @@ class PermissionsResourceTest {
     @Test
     void testAddPermissionWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
-        Permission permission = new Permission();
+        Permission permission = Permission.with().build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenThrow(AuthserviceException.class);
         PermissionsResource resource = new PermissionsResource();

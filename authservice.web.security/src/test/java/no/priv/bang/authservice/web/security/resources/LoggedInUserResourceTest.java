@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ class LoggedInUserResourceTest extends ShiroTestBase {
         LogService logservice = null;
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
 
         loginUser(username, "1ad");

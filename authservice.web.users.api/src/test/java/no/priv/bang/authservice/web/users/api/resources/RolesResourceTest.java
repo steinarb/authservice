@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ class RolesResourceTest {
     void testAddRole() {
         LogService logservice = new MockLogService();
         List<Role> originalRoles = createRoles();
-        Role role = new Role();
+        Role role = Role.with().build();
         List<Role> updatedRoles = new ArrayList<Role>(originalRoles);
         updatedRoles.add(role);
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -120,7 +120,7 @@ class RolesResourceTest {
     @Test
     void testAddRoleWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
-        Role role = new Role();
+        Role role = Role.with().build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
@@ -169,7 +169,7 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+        Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
         assertThat(rolespermissions.size()).isPositive();
     }
 
@@ -183,7 +183,7 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        RolePermissions rolepermissions = new RolePermissions(new Role(), Arrays.asList(new Permission()));
+        RolePermissions rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.addRolePermissions(rolepermissions);
             });
@@ -198,7 +198,7 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(new RolePermissions(new Role(), Arrays.asList(new Permission())));
+        Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
         assertThat(rolespermissions.size()).isPositive();
     }
 
@@ -212,7 +212,7 @@ class RolesResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        RolePermissions rolepermissions = new RolePermissions(new Role(), Arrays.asList(new Permission()));
+        RolePermissions rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.removeRolePermissions(rolepermissions);
             });

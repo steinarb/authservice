@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
@@ -78,7 +78,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
@@ -102,7 +102,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
@@ -126,7 +126,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         ThreadContext.remove();
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
@@ -150,7 +150,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         createSubjectWithNullPrincipalAndBindItToThread();
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
@@ -174,7 +174,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         String email = "jad@gmail.com";
         String firstname = "Jane";
         String lastname = "Doe";
-        User user = new User(userid, username, email, firstname, lastname);
+        User user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         createSubjectAndBindItToThread();
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,11 @@ public class PasswordsResource extends LoggedInUserResource {
                 return createInternalServerErrorResponse();
             }
 
-            UserAndPasswords passwords = new UserAndPasswords(user.get(), password1, password2, false);
+            UserAndPasswords passwords = UserAndPasswords.with()
+                .user(user.get())
+                .password1(password1)
+                .password1(password2)
+                .build();
             useradmin.updatePassword(passwords);
 
             Document html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Password successfully changed", logservice);

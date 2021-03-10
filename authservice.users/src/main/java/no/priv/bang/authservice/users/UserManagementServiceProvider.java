@@ -118,10 +118,11 @@ public class UserManagementServiceProvider implements UserManagementService {
                 try(ResultSet results = statement.executeQuery()) {
                     List<Permission> permissions = new ArrayList<>();
                     while(results.next()) {
-                        int id = results.getInt(1);
-                        String permissionname = results.getString(2);
-                        String description = results.getString(3);
-                        Permission permission = new Permission(id, permissionname, description);
+                        Permission permission = Permission.with()
+                            .id(results.getInt(1))
+                            .permissionname(results.getString(2))
+                            .description(results.getString(3))
+                            .build();
                         permissions.add(permission);
                     }
 
@@ -249,7 +250,11 @@ public class UserManagementServiceProvider implements UserManagementService {
             throw new AuthserviceException(message, e);
         }
 
-        UserAndPasswords passwords = new UserAndPasswords(addedUser, newUserWithPasswords.getPassword1(), newUserWithPasswords.getPassword2(), false);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(addedUser)
+            .password1(newUserWithPasswords.getPassword1())
+            .password2(newUserWithPasswords.getPassword2())
+            .build();
         return updatePassword(passwords);
     }
 
@@ -313,10 +318,11 @@ public class UserManagementServiceProvider implements UserManagementService {
                 try(ResultSet results = statement.executeQuery()) {
                     List<Permission> permissions = new ArrayList<>();
                     while(results.next()) {
-                        int id = results.getInt(1);
-                        String permissionname = results.getString(2);
-                        String description = results.getString(3);
-                        Permission role = new Permission(id, permissionname, description);
+                        Permission role = Permission.with()
+                            .id(results.getInt(1))
+                            .permissionname(results.getString(2))
+                            .description(results.getString(3))
+                            .build();
                         permissions.add(role);
                     }
 
@@ -378,10 +384,11 @@ public class UserManagementServiceProvider implements UserManagementService {
                     Map<String, List<Role>> userroles = new HashMap<>();
                     while(results.next()) {
                         User user = unpackUser(results);
-                        int id = results.getInt(11);
-                        String rolename = results.getString(12);
-                        String description = results.getString(13);
-                        Role role = new Role(id, rolename, description);
+                        Role role = Role.with()
+                            .id(results.getInt(11))
+                            .rolename(results.getString(12))
+                            .description(results.getString(13))
+                            .build();
                         addRoleToMap(userroles, user, role);
                     }
 
@@ -447,14 +454,16 @@ public class UserManagementServiceProvider implements UserManagementService {
                 try(ResultSet results = statement.executeQuery()) {
                     Map<String, List<Permission>> rolespermissions = new HashMap<>();
                     while(results.next()) {
-                        int roleId = results.getInt(1);
-                        String rolename = results.getString(2);
-                        String roleDescription = results.getString(3);
-                        Role role = new Role(roleId, rolename, roleDescription);
-                        int permissionId = results.getInt(7);
-                        String permissionname = results.getString(8);
-                        String permissionDescription = results.getString(9);
-                        Permission permission = new Permission(permissionId, permissionname, permissionDescription);
+                        Role role = Role.with()
+                            .id(results.getInt(1))
+                            .rolename(results.getString(2))
+                            .description(results.getString(3))
+                            .build();
+                        Permission permission = Permission.with()
+                            .id(results.getInt(7))
+                            .permissionname(results.getString(8))
+                            .description(results.getString(9))
+                            .build();
                         addPermissionToMap(rolespermissions, role, permission);
                     }
 
@@ -577,22 +586,24 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     User unpackUser(ResultSet results) throws SQLException {
-        int id = results.getInt(1);
-        String username = results.getString(2);
-        String email = results.getString(5);
-        String firstname = results.getString(6);
-        String lastname = results.getString(7);
-        return new User(id, username, email, firstname, lastname);
+        return User.with()
+            .userid(results.getInt(1))
+            .username(results.getString(2))
+            .email(results.getString(5))
+            .firstname(results.getString(6))
+            .lastname(results.getString(7))
+            .build();
     }
 
     List<Role> getRolesFromQuery(PreparedStatement statement) throws SQLException {
         try(ResultSet results = statement.executeQuery()) {
             List<Role> roles = new ArrayList<>();
             while(results.next()) {
-                int id = results.getInt(1);
-                String rolename = results.getString(2);
-                String description = results.getString(3);
-                Role role = new Role(id, rolename, description);
+                Role role = Role.with()
+                    .id(results.getInt(1))
+                    .rolename(results.getString(2))
+                    .description(results.getString(3))
+                    .build();
                 roles.add(role);
             }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,13 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with()
+            .userid(1)
+            .username(username)
+            .email("jane@gmail.com")
+            .firstname("Jane")
+            .lastname("Doe")
+            .build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
 
         // "Inject" the OSGi services into the resource
@@ -124,7 +130,13 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with()
+            .userid(1)
+            .username(username)
+            .email("jane@gmail.com")
+            .firstname("Jane")
+            .lastname("Doe")
+            .build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
 
         // "Inject" the OSGi services into the resource
@@ -200,9 +212,21 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with()
+            .userid(1)
+            .username(username)
+            .email("jane@gmail.com")
+            .firstname("Jane")
+            .lastname("Doe")
+            .build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
+        User updatedUser = User.with()
+            .userid(1)
+            .username(username)
+            .email("janey2017@gmail.com")
+            .firstname("Janey")
+            .lastname("Dow")
+            .build();
         when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(updatedUser));
 
         // "Inject" the OSGi services into the resource
@@ -236,7 +260,13 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
+        User updatedUser = User.with()
+            .userid(1)
+            .username(username)
+            .email("janey2017@gmail.com")
+            .firstname("Janey")
+            .lastname("Dow")
+            .build();
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
@@ -261,7 +291,13 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
+        User updatedUser = User.with()
+            .userid(1)
+            .username(username)
+            .email("janey2017@gmail.com")
+            .firstname("Janey")
+            .lastname("Dow")
+            .build();
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
@@ -286,10 +322,10 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
-        when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(new User()));
+        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
+        when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(User.with().build()));
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
@@ -314,9 +350,9 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
+        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(updatedUser));
 
         // "Inject" the OSGi services into the resource
@@ -344,9 +380,9 @@ class UserResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         String username = "jad";
-        User user = new User(1, username, "jane@gmail.com", "Jane", "Doe");
+        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = new User(1, username, "janey2017@gmail.com", "Janey", "Dow");
+        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenThrow(AuthserviceException.class);
 
         // "Inject" the OSGi services into the resource

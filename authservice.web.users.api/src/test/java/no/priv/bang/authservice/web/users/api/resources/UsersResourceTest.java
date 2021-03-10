@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,11 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(user)
+            .password1("secret")
+            .password2("secret")
+            .build();
         List<User> users = resource.updatePassword(passwords);
         assertEquals(originalUsers.size(), users.size());
     }
@@ -128,7 +132,11 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "zecret", true);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(user)
+            .password1("secret")
+            .password2("zecret")
+            .build();
         assertThrows(BadRequestException.class, () -> {
                 resource.updatePassword(passwords);
             });
@@ -146,7 +154,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "", "", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
         assertThrows(BadRequestException.class, () -> {
                 resource.updatePassword(passwords);
             });
@@ -164,7 +172,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "", "", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.updatePassword(passwords);
             });
@@ -174,7 +182,13 @@ class UsersResourceTest {
     void testAddUser() {
         MockLogService logservice = new MockLogService();
         List<User> originalUsers = createUsers();
-        User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
+        User user = User.with()
+            .userid(-1)
+            .username("newuser")
+            .email("newuser@gmail.com")
+            .firstname("New")
+            .lastname("User")
+            .build();
         List<User> usersWithAddedUser = new ArrayList<>(originalUsers);
         usersWithAddedUser.add(user);
         UserManagementService usermanagement = mock(UserManagementService.class);
@@ -183,7 +197,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
         List<User> users = resource.addUser(passwords);
         assertThat(users.size()).isGreaterThan(originalUsers.size());
     }
@@ -192,14 +206,20 @@ class UsersResourceTest {
     @Test
     void testAddUserWhenPasswordsAreNotIdentical() {
         MockLogService logservice = new MockLogService();
-        User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
+        User user = User.with()
+            .userid(-1)
+            .username("newuser")
+            .email("newuser@gmail.com")
+            .firstname("New")
+            .lastname("User")
+            .build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
         assertThrows(BadRequestException.class, () -> {
                 resource.addUser(passwords);
             });
@@ -209,14 +229,24 @@ class UsersResourceTest {
     @Test
     void testAddUserWhenPasswordIsEmpty() {
         MockLogService logservice = new MockLogService();
-        User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
+        User user = User.with()
+            .userid(-1)
+            .username("newuser")
+            .email("newuser@gmail.com")
+            .firstname("New")
+            .lastname("User")
+            .build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordEmptyException.class);
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(user)
+            .password1("secret")
+            .password2("secret")
+            .build();
         assertThrows(BadRequestException.class, () -> {
                 resource.addUser(passwords);
             });
@@ -226,14 +256,24 @@ class UsersResourceTest {
     @Test
     void testAddUserWhenSQLExceptionIsThrow() {
         MockLogService logservice = new MockLogService();
-        User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
+        User user = User.with()
+            .userid(-1)
+            .username("newuser")
+            .email("newuser@gmail.com")
+            .firstname("New")
+            .lastname("User")
+            .build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(user)
+            .password1("secret")
+            .password2("secret")
+            .build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.addUser(passwords);
             });
@@ -276,7 +316,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Role>> userroles = resource.addUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+        Map<String, List<Role>> userroles = resource.addUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
         assertThat(userroles.size()).isPositive();
     }
 
@@ -290,7 +330,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserRoles userroles = new UserRoles(new User(), Arrays.asList(new Role()));
+        UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.addUserRole(userroles);
             });
@@ -305,7 +345,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Role>> userroles = resource.removeUserRole(new UserRoles(new User(), Arrays.asList(new Role())));
+        Map<String, List<Role>> userroles = resource.removeUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
         assertThat(userroles.size()).isPositive();
     }
 
@@ -319,7 +359,7 @@ class UsersResourceTest {
         resource.logservice = logservice;
         resource.usermanagement = usermanagement;
 
-        UserRoles userroles = new UserRoles(new User(), Arrays.asList(new Role()));
+        UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.removeUserRole(userroles);
             });

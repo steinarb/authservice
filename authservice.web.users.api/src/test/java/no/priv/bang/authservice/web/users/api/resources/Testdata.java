@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Steinar Bang
+ * Copyright 2020-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,41 @@ import no.priv.bang.osgiservice.users.User;
 public class Testdata {
 
     public static List<User> createUsers() {
-        User admin = new User(1, "admin", "admin@gmail.com", "Admin", "Istrator");
-        User on = new User(2, "on", "olanordmann2345@gmail.com", "Ola", "Nordmann");
-        User kn = new User(3, "kn", "karinordmann3456@gmail.com", "Kari", "Nordmann");
-        User jad = new User(4, "jad", "janedoe7896@gmail.com", "Jane", "Doe");
-        User jod = new User(5, "jod", "johndoe6789@gmail.com", "John", "Doe");
+        User admin = User.with()
+            .userid(1)
+            .username("admin")
+            .email("admin@gmail.com")
+            .firstname("Admin")
+            .lastname("Istrator")
+            .build();
+        User on = User.with()
+            .userid(2)
+            .username("on")
+            .email("olanordmann2345@gmail.com")
+            .firstname("Ola")
+            .lastname("Nordmann")
+            .build();
+        User kn = User.with()
+            .userid(3)
+            .username("kn")
+            .email("karinordmann3456@gmail.com")
+            .firstname("Kari")
+            .lastname("Nordmann")
+            .build();
+        User jad = User.with()
+            .userid(4)
+            .username("jad")
+            .email("janedoe7896@gmail.com")
+            .firstname("Jane")
+            .lastname("Doe")
+            .build();
+        User jod = User.with()
+            .userid(5)
+            .username("jod")
+            .email("johndoe6789@gmail.com")
+            .firstname("John")
+            .lastname("Doe")
+            .build();
         return Arrays.asList(admin, on, kn, jad, jod);
     }
 
@@ -55,9 +85,21 @@ public class Testdata {
     }
 
     public static List<Role> createRoles() {
-        Role admin = new Role(1, "admin", "Administrate stuff");
-        Role caseworker = new Role(2, "caseworker", "Respond to cases");
-        Role visitor = new Role(3, "visitor", "Just browsing");
+        Role admin = Role.with()
+            .id(1)
+            .rolename("admin")
+            .description("Administrate stuff")
+            .build();
+        Role caseworker = Role.with()
+            .id(2)
+            .rolename("caseworker")
+            .description("Respond to cases")
+            .build();
+        Role visitor = Role.with()
+            .id(3)
+            .rolename("visitor")
+            .description("Just browsing")
+            .build();
         return Arrays.asList(admin, caseworker, visitor);
     }
 
@@ -78,11 +120,31 @@ public class Testdata {
     }
 
     public static List<Permission> createPermissions() {
-        Permission user_admin_api_read = new Permission(1, "user_admin_api_read", "User admin read access");
-        Permission user_admin_api_write = new Permission(2, "user_admin_api_write", "User admin write access");
-        Permission caseworker_read = new Permission(3, "caseworker_read", "Caseworker read access");
-        Permission caseworker_write = new Permission(4, "caseworker_write", "Caseworker write access");
-        Permission user_read = new Permission(5, "user_read", "User read access");
+        Permission user_admin_api_read = Permission.with()
+            .id(1)
+            .permissionname("user_admin_api_read")
+            .description("User admin read access")
+            .build();
+        Permission user_admin_api_write = Permission.with()
+            .id(2)
+            .permissionname("user_admin_api_write")
+            .description("User admin write access")
+            .build();
+        Permission caseworker_read = Permission.with()
+            .id(3)
+            .permissionname("caseworker_read")
+            .description("Caseworker read access")
+            .build();
+        Permission caseworker_write = Permission.with()
+            .id(4)
+            .permissionname("caseworker_write")
+            .description("Caseworker write access")
+            .build();
+        Permission user_read = Permission.with()
+            .id(5)
+            .permissionname("user_read")
+            .description("User read access")
+            .build();
         return Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read);
     }
 

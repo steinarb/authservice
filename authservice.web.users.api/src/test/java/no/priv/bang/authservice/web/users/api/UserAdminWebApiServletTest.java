@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Steinar Bang
+ * Copyright 2018-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ class UserAdminWebApiServletTest {
         // Send a UserAndPasswords object where a User object is expected
         List<User> originalUsers = createUsers();
         User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
 
         MockHttpServletRequest request = buildPostUrl("/user/modify");
         String postBody = mapper.writeValueAsString(passwords);
@@ -142,7 +142,7 @@ class UserAdminWebApiServletTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenReturn(originalUsers);
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
 
         MockHttpServletRequest request = buildPostUrl("/passwords/update");
         String postBody = mapper.writeValueAsString(passwords);
@@ -161,13 +161,23 @@ class UserAdminWebApiServletTest {
     void testAddUser() throws Exception {
         MockLogService logservice = new MockLogService();
         List<User> originalUsers = createUsers();
-        User user = new User(-1, "newuser", "newuser@gmail.com", "New", "User");
+        User user = User.with()
+            .userid(-1)
+            .username("newuser")
+            .email("newuser@gmail.com")
+            .firstname("New")
+            .lastname("User")
+            .build();
         List<User> usersWithAddedUser = new ArrayList<>(originalUsers);
         usersWithAddedUser.add(user);
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenReturn(usersWithAddedUser);
 
-        UserAndPasswords passwords = new UserAndPasswords(user, "secret", "secret", false);
+        UserAndPasswords passwords = UserAndPasswords.with()
+            .user(user)
+            .password1("secret")
+            .password2("secret")
+            .build();
 
         MockHttpServletRequest request = buildPostUrl("/user/add");
         String postBody = mapper.writeValueAsString(passwords);
@@ -253,7 +263,7 @@ class UserAdminWebApiServletTest {
     @Test
     void testModifyRole() throws Exception {
         MockLogService logservice = new MockLogService();
-        Role role = new Role(1, "somerole", "Some role");
+        Role role = Role.with().id(1).rolename("somerole").description("Some role").build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyRole(any())).thenReturn(Arrays.asList(role));
 
@@ -273,7 +283,7 @@ class UserAdminWebApiServletTest {
     @Test
     void testAddRole() throws Exception {
         MockLogService logservice = new MockLogService();
-        Role role = new Role(1, "somerole", "Some role");
+        Role role = Role.with().id(1).rolename("somerole").description("Some role").build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenReturn(Arrays.asList(role));
 
@@ -361,7 +371,7 @@ class UserAdminWebApiServletTest {
     @Test
     void testModifyPermission() throws Exception {
         MockLogService logservice = new MockLogService();
-        Permission permission = new Permission(1, "somepermission", "Some permission");
+        Permission permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenReturn(Arrays.asList(permission));
 
@@ -381,7 +391,7 @@ class UserAdminWebApiServletTest {
     @Test
     void testAddPermission() throws Exception {
         MockLogService logservice = new MockLogService();
-        Permission permission = new Permission(1, "somepermission", "Some permission");
+        Permission permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenReturn(Arrays.asList(permission));
 

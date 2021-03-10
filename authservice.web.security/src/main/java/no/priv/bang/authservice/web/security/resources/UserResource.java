@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,13 @@ public class UserResource extends LoggedInUserResource {
 
             int userid = loggedInUser.get().getUserid();
             String username = loggedInUser.get().getUsername();
-            User userWithValuesFromForm = new User(userid, username, email, firstname, lastname);
+            User userWithValuesFromForm = User.with()
+                .userid(userid)
+                .username(username)
+                .email(email)
+                .firstname(firstname)
+                .lastname(lastname)
+                .build();
             List<User> updatedUsers = useradmin.modifyUser(userWithValuesFromForm);
             Optional<User> updatedUser = updatedUsers.stream().filter(u -> userid == u.getUserid()).findFirst();
             if (!updatedUser.isPresent()) {
