@@ -37,7 +37,7 @@
         <osgi-service.version>1.6.1</osgi-service.version>
         <service-adapters.version>1.0.1</service-adapters.version>
         <osgi.version>7.0.0</osgi.version>
-        <osgi.service.version>1.3.0</osgi.service.version>
+        <osgi.service.version>1.4.0</osgi.service.version>
         <osgi.log.version>1.3.0</osgi.log.version>
         <bang-servlet.version>1.4.0</bang-servlet.version>
         <pax.jdbc.version>1.3.1</pax.jdbc.version>
