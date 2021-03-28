@@ -30,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <maven.bundle.plugin.version>3.5.1</maven.bundle.plugin.version>
+        <maven.bundle.plugin.version>5.1.1</maven.bundle.plugin.version>
         <karaf.version>4.2.11</karaf.version>
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <mockrunner.version>2.0.4</mockrunner.version>
