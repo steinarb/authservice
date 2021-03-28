@@ -46,9 +46,7 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfo() throws SQLException {
-        MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
@@ -62,9 +60,7 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfoWrongPassword() throws SQLException {
-        MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1add".toCharArray());
@@ -81,9 +77,7 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfoWrongUsername() throws SQLException {
-        MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
@@ -91,7 +85,6 @@ class AuthserviceDbRealmTest {
         assertThrows(UnknownAccountException.class, () -> {
                 realm.getAuthenticationInfo(token);
             });
-        assertEquals(0, logservice.getLogmessages().size());
     }
 
     /***
@@ -117,9 +110,7 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetRolesForUsers() throws SQLException {
-        MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
@@ -138,9 +129,7 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetRolesForAdministrators() throws SQLException {
-        MockLogService logservice = new MockLogService();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.activate();
         AuthenticationToken token = new UsernamePasswordToken("on", "ola12".toCharArray());

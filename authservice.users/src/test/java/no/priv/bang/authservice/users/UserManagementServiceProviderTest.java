@@ -261,7 +261,6 @@ class UserManagementServiceProviderTest {
 
         // Check that the new password works
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();
@@ -427,7 +426,6 @@ class UserManagementServiceProviderTest {
         // Check that the password of the new user is as expected
         User user = users.stream().filter(u -> "jsmith".equals(u.getUsername())).findFirst().get();
         AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        realm.setLogservice(logservice);
         realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();

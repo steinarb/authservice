@@ -8,17 +8,9 @@ import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.log.LogService;
 
 @Component( service=Realm.class, immediate=true )
 public class AuthserviceDbRealm extends JdbcRealm {
-
-    LogService logservice;
-
-    @Reference
-    public void setLogservice(LogService logservice) {
-        this.logservice = logservice;
-    }
 
     @Override
     @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
