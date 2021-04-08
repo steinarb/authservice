@@ -21,7 +21,12 @@ public class AuthserviceIntegrationTest extends KarafTestSupport {
 
     @Configuration
     public Option[] config() {
-        final MavenArtifactUrlReference authserviceFeatureRepo = maven().groupId("no.priv.bang.authservice").artifactId("karaf").version("LATEST").type("xml").classifier("features");
+        final MavenArtifactUrlReference authserviceFeatureRepo = maven()
+            .groupId("no.priv.bang.authservice")
+            .artifactId("karaf")
+            .version("LATEST")
+            .type("xml")
+            .classifier("features");
         Option[] options = new Option[] {
             features(authserviceFeatureRepo)
         };
