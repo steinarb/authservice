@@ -37,10 +37,9 @@
         <service-adapters.version>1.1.2</service-adapters.version>
         <beans.version>1.1.2</beans.version>
         <bang-osgi-service.version>1.7.2</bang-osgi-service.version>
-        <bang-servlet.version>1.5.1</bang-servlet.version>
+        <bang-servlet.version>1.5.3</bang-servlet.version>
         <shiro.version>1.7.0</shiro.version>
         <snakeyaml.version>1.17</snakeyaml.version>
-        <jersey.version>2.33</jersey.version>
         <open-iconic.version>1.1.1</open-iconic.version>
         <sonar.cpd.exclusions>
             **/TestLiquibaseRunner.java,
@@ -82,23 +81,18 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>no.priv.bang.servlet</groupId>
+                <artifactId>servlet-bom</artifactId>
+                <version>${bang-servlet.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>no.priv.bang.osgi.service.adapters</groupId>
                 <artifactId>adapters-bom</artifactId>
                 <version>${service-adapters.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.servlet</groupId>
-                <artifactId>servlet.frontend</artifactId>
-                <version>${bang-servlet.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.servlet</groupId>
-                <artifactId>servlet.jersey</artifactId>
-                <version>${bang-servlet.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.shiro</groupId>
@@ -110,24 +104,6 @@
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-web</artifactId>
                 <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.containers</groupId>
-                <artifactId>jersey-container-servlet</artifactId>
-                <version>${jersey.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.inject</groupId>
-                <artifactId>jersey-hk2</artifactId>
-                <version>${jersey.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.media</groupId>
-                <artifactId>jersey-media-json-jackson</artifactId>
-                <version>${jersey.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
