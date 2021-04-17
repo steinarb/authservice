@@ -30,6 +30,7 @@
         <module>karaf</module>
         <module>authservice.tests</module>
         <module>jacoco-coverage-report</module>
+        <module>authservice-bom</module>
     </modules>
 
     <properties>
