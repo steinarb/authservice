@@ -35,7 +35,7 @@
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <service-adapters.version>1.1.1</service-adapters.version>
-        <beans.version>1.1.1</beans.version>
+        <beans.version>1.1.2</beans.version>
         <bang-osgi-service.version>1.7.1</bang-osgi-service.version>
         <bang-servlet.version>1.5.1</bang-servlet.version>
         <shiro.version>1.7.0</shiro.version>
@@ -64,6 +64,13 @@
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
                 <version>${junit.jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.priv.bang.beans</groupId>
+                <artifactId>beans-bom</artifactId>
+                <version>${beans.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -107,12 +114,6 @@
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-web</artifactId>
                 <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.beans</groupId>
-                <artifactId>beans.immutable</artifactId>
-                <version>${beans.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
