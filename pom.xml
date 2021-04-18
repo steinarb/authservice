@@ -36,7 +36,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <service-adapters.version>1.1.1</service-adapters.version>
         <beans.version>1.1.2</beans.version>
-        <bang-osgi-service.version>1.7.1</bang-osgi-service.version>
+        <bang-osgi-service.version>1.7.2</bang-osgi-service.version>
         <bang-servlet.version>1.5.1</bang-servlet.version>
         <shiro.version>1.7.0</shiro.version>
         <snakeyaml.version>1.17</snakeyaml.version>
@@ -75,6 +75,13 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>no.priv.bang.osgiservice</groupId>
+                <artifactId>osgiservice-bom</artifactId>
+                <version>${bang-osgi-service.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>no.priv.bang.osgi.service.adapters</groupId>
                 <artifactId>adapters.logservice</artifactId>
                 <version>${service-adapters.version}</version>
@@ -85,12 +92,6 @@
                 <artifactId>service-mocks</artifactId>
                 <version>${service-adapters.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.osgiservice</groupId>
-                <artifactId>osgiservice.users</artifactId>
-                <version>${bang-osgi-service.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.servlet</groupId>
