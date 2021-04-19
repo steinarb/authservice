@@ -196,7 +196,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/karaf/1.13.1/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/1.13.2/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -411,6 +411,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                                                          |
 |--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2021-04-19] |  1.13.2 | Provide a Bill of Materials to clients of the authserice                                                                                                                         |
 | [2021-04-15] |  1.13.1 | Get maven dependencies and maven plugin config from a parent POM                                                                                                                 |
 | [2021-04-12] |  1.13.0 | Built with karaf 4.3.0 and OSGi 7                                                                                                                                                |
 | [2021-03-21] |  1.12.3 | Get maven dependencies from the karaf 4.2.11 BoM                                                                                                                                 |
