@@ -38,7 +38,7 @@
         <service-adapters.version>1.1.2</service-adapters.version>
         <beans.version>1.1.2</beans.version>
         <bang-osgi-service.version>1.7.2</bang-osgi-service.version>
-        <bang-servlet.version>1.5.3</bang-servlet.version>
+        <bang-servlet.version>1.5.4</bang-servlet.version>
         <shiro.version>1.7.0</shiro.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <open-iconic.version>1.1.1</open-iconic.version>
