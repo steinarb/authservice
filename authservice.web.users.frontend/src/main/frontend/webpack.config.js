@@ -18,9 +18,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/,
-                query: {
+                loader: ['babel-loader?' + JSON.stringify({
                     cacheDirectory: true,
                     presets: [
                         '@babel/preset-env',
@@ -29,7 +27,8 @@ module.exports = {
                     plugins: [
                         ["@babel/transform-runtime"],
                     ],
-                }
+                }), 'eslint-loader'],
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
