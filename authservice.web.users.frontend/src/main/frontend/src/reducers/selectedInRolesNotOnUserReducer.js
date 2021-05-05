@@ -7,7 +7,7 @@ import { emptyRole } from '../constants';
 
 const selectedInRolesNotOnUserReducer = createReducer(emptyRole.id, {
     [ROLES_NOT_ON_USER_SELECTED]: (state, action) => action.payload,
-    [ROLES_NOT_ON_USER_CLEAR]: (state, action) => emptyRole.id,
+    [ROLES_NOT_ON_USER_CLEAR]: () => emptyRole.id,
 });
 
 export default selectedInRolesNotOnUserReducer;

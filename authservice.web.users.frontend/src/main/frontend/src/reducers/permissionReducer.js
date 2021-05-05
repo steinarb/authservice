@@ -7,7 +7,7 @@ import { emptyPermission } from '../constants';
 
 const permissionReducer = createReducer({ ...emptyPermission }, {
     [PERMISSION_UPDATE]: (state, action) => ({ ...state, ...action.payload }),
-    [PERMISSION_CLEAR]: (state, action) => ({ ...emptyPermission }),
+    [PERMISSION_CLEAR]: () => ({ ...emptyPermission }),
 });
 
 export default permissionReducer;

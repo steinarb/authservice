@@ -11,7 +11,7 @@ const passwordsReducer = createReducer({ ...emptyUserAndPasswords }, {
         const passwordsNotIdentical = checkIfPasswordsAreNotIdentical(passwords);
         return { ...passwords, passwordsNotIdentical };
     },
-    [PASSWORDS_CLEAR]: (state, action) => ({ ...emptyUserAndPasswords }),
+    [PASSWORDS_CLEAR]: () => ({ ...emptyUserAndPasswords }),
 });
 
 export default passwordsReducer;

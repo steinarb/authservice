@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from './bootstrap/Container';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
-function Home(props) {
+function Home() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">

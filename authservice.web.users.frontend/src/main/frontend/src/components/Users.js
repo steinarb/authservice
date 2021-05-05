@@ -3,7 +3,7 @@ import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
-function Users(props) {
+function Users() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">

@@ -99,7 +99,7 @@ function mapStateToProps(state) {
         rolesOnUser: state.rolesOnUser,
         selectedInRolesOnUser: state.selectedInRolesOnUser,
     };
-};
+}
 
 const mapDispatchToProps = dispatch => {
     return {

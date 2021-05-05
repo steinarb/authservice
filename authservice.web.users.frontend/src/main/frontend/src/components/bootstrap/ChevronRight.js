@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const ChevronRight = (props) => {
+export function ChevronRight() {
     return (
         <span className="oi oi-chevron-right" title="chevron right" aria-hidden="true"></span>
     );

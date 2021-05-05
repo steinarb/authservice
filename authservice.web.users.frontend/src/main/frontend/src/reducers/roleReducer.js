@@ -7,7 +7,7 @@ import {
 
 const roleReducer = createReducer({ ...emptyRole }, {
     [ROLE_UPDATE]: (state, action) => ({ ...state, ...action.payload }),
-    [ROLE_CLEAR]: (state, action) => ({ ...emptyRole }),
+    [ROLE_CLEAR]: () => ({ ...emptyRole }),
 });
 
 export default roleReducer;

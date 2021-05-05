@@ -3,7 +3,7 @@ import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { StyledLinkRight } from './bootstrap/StyledLinkRight';
 
-export default function Roles(props) {
+export default function Roles() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">

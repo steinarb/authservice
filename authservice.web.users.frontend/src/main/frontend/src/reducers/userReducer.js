@@ -8,8 +8,8 @@ import {
 
 const userReducer = createReducer({ ...emptyUser }, {
     [USER_UPDATE]: (state, action) => ({ ...state, ...action.payload }),
-    [USER_CLEAR]: (state, action) => ({ ...emptyUser }),
-    [USERS_RECEIVED]: (state, action) => ({ ...emptyUser }),
+    [USER_CLEAR]: () => ({ ...emptyUser }),
+    [USERS_RECEIVED]: () => ({ ...emptyUser }),
 });
 
 export default userReducer;

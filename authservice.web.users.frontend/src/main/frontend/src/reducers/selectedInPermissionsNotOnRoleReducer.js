@@ -7,7 +7,7 @@ import { emptyPermission } from '../constants';
 
 const selectedInPermissionsNotOnRoleReducer = createReducer(emptyPermission.id, {
     [PERMISSIONS_NOT_ON_ROLE_SELECTED]: (state, action) => action.payload,
-    [PERMISSIONS_NOT_ON_ROLE_CLEAR]: (state, action) => emptyPermission.id,
+    [PERMISSIONS_NOT_ON_ROLE_CLEAR]: () => emptyPermission.id,
 });
 
 export default selectedInPermissionsNotOnRoleReducer;
