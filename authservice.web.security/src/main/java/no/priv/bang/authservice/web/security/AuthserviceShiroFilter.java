@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Steinar Bang
+ * Copyright 2018-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package no.priv.bang.authservice.web.security;
 
+import static org.osgi.service.http.whiteboard.HttpWhiteboardConstants.*;
+
 import javax.servlet.Filter;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.Realm;
@@ -26,7 +28,8 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelect;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardFilterPattern;
 
 
 /***
@@ -35,14 +38,9 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  *
  * The filter maps URLs in the webapp to users and roles.
  */
-@Component(
-    property= {
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN+"=/*",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
-        "servletNames=authservice"},
-    service=Filter.class,
-    immediate=true
-)
+@Component(service=Filter.class, immediate=true)
+@HttpWhiteboardContextSelect("(" + HTTP_WHITEBOARD_CONTEXT_NAME + "=authservice)")
+@HttpWhiteboardFilterPattern("/*")
 public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     private Realm realm;

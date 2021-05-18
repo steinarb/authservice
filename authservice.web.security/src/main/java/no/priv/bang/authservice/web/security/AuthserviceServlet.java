@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,16 @@
 package no.priv.bang.authservice.web.security;
 
 
+import static org.osgi.service.http.whiteboard.HttpWhiteboardConstants.*;
+
 import javax.servlet.Servlet;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelect;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardServletName;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardServletPattern;
 import org.osgi.service.log.LogService;
 
 import no.priv.bang.osgiservice.users.UserManagementService;
@@ -35,14 +39,10 @@ import no.priv.bang.servlet.jersey.JerseyServlet;
  * functionality both for checking the login state, and for
  * logging in a user
  */
-@Component(
-    property= {
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN+"=/*",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=(" + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME +"=authservice)",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_NAME+"=authservice"},
-    service=Servlet.class,
-    immediate=true
-)
+@Component(service=Servlet.class, immediate=true)
+@HttpWhiteboardContextSelect("(" + HTTP_WHITEBOARD_CONTEXT_NAME + "=authservice)")
+@HttpWhiteboardServletName("authservice")
+@HttpWhiteboardServletPattern("/*")
 public class AuthserviceServlet extends JerseyServlet {
     private static final long serialVersionUID = 6064420153498760622L;
 

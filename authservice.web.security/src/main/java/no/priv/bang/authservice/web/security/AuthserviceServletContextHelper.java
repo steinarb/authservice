@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,8 @@ package no.priv.bang.authservice.web.security;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.http.context.ServletContextHelper;
-import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContext;
 
-@Component(
-    property= {
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME+"=authservice",
-        HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_PATH+"=/authservice"},
-    service=ServletContextHelper.class,
-    immediate=true
-)
+@Component(service=ServletContextHelper.class, immediate=true)
+@HttpWhiteboardContext(name = "authservice", path = "/authservice")
 public class AuthserviceServletContextHelper extends ServletContextHelper { }
