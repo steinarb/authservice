@@ -76,7 +76,6 @@ class UserAdminWebApiServletTest {
         assertThat(users.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUsersWhenExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();

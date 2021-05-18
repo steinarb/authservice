@@ -52,7 +52,6 @@ class RolesResourceTest {
         assertThat(roles.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetRolesWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -82,7 +81,6 @@ class RolesResourceTest {
         assertEquals(originalRoles.size(), roles.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testModifyRoleWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -116,7 +114,6 @@ class RolesResourceTest {
         assertThat(roles.size()).isGreaterThan(originalRoles.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddRoleWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -145,7 +142,6 @@ class RolesResourceTest {
         assertThat(rolespermissions.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetRolesPermissionsWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -173,7 +169,6 @@ class RolesResourceTest {
         assertThat(rolespermissions.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddRolesPermissionsWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -202,7 +197,6 @@ class RolesResourceTest {
         assertThat(rolespermissions.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testRemoveRolesPermissionsWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();

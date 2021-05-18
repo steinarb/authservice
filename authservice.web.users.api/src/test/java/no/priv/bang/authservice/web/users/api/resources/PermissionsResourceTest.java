@@ -47,7 +47,6 @@ class PermissionsResourceTest {
         assertThat(permissions.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetPermissionsWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -77,7 +76,6 @@ class PermissionsResourceTest {
         assertEquals(originalPermissions.size(), permissions.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testModifyPermissionWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();
@@ -111,7 +109,6 @@ class PermissionsResourceTest {
         assertThat(permissions.size()).isGreaterThan(originalPermissions.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddPermissionWhenExceptionIsThrown() {
         LogService logservice = new MockLogService();

@@ -105,7 +105,6 @@ class UserManagementServiceProviderTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUserWhenSQLExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
@@ -137,7 +136,6 @@ class UserManagementServiceProviderTest {
         assertThat(roles.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetRolesForUserWhenSqlExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
@@ -167,7 +165,6 @@ class UserManagementServiceProviderTest {
         assertThat(permissions.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetPermissionsForUserWhenSQLExceptionIsThrown() throws Exception {
         UserManagementServiceProvider provider = new UserManagementServiceProvider();
@@ -184,7 +181,6 @@ class UserManagementServiceProviderTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testListUsersWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -202,7 +198,6 @@ class UserManagementServiceProviderTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testModifyUserWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -343,7 +338,6 @@ class UserManagementServiceProviderTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testUpdatePasswordWithWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -546,7 +540,6 @@ class UserManagementServiceProviderTest {
         assertThat(numberOfLogMessagesAfterUpdate).isGreaterThan(numberOfLogMessagesBeforeUpdate);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetRolesWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -617,7 +610,6 @@ class UserManagementServiceProviderTest {
         assertThat(numberOfLogMessagesAfterUpdate).isGreaterThan(numberOfLogMessagesBeforeUpdate);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetPermissionsWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -682,7 +674,6 @@ class UserManagementServiceProviderTest {
         assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole4.get(user.getUsername()).size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testUserRolesOperationsWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -756,7 +747,6 @@ class UserManagementServiceProviderTest {
         assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole4.get(role.getRolename()).size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testRolesPermissionsOperationsWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();

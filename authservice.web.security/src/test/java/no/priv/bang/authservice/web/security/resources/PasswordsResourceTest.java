@@ -70,7 +70,6 @@ class PasswordsResourceTest extends ShiroTestBase {
         assertEquals(200, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testChangePasswordForCurrentUserPasswordsDontMatch() {
         int userid = 2;
@@ -94,7 +93,6 @@ class PasswordsResourceTest extends ShiroTestBase {
         assertEquals(400, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testChangePasswordForCurrentUserPasswordsIsEmpty() {
         int userid = 2;
@@ -118,7 +116,6 @@ class PasswordsResourceTest extends ShiroTestBase {
         assertEquals(400, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testChangePasswordForCurrentWithNoSecurityContext() {
         int userid = 2;
@@ -142,7 +139,6 @@ class PasswordsResourceTest extends ShiroTestBase {
         assertEquals(500, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testChangePasswordForCurrentWithNullPrincipal() {
         int userid = 2;
@@ -166,7 +162,6 @@ class PasswordsResourceTest extends ShiroTestBase {
         assertEquals(500, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testChangePasswordForCurrentWithUserNotLoggedIn() {
         int userid = 2;

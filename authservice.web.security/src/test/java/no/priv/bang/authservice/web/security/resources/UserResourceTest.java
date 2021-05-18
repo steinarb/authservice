@@ -180,7 +180,6 @@ class UserResourceTest extends ShiroTestBase {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetExceptionWhenFetchingUsers() throws Exception {
         // Mock the injected OSGi services
@@ -373,7 +372,6 @@ class UserResourceTest extends ShiroTestBase {
         assertEquals(500, response.getStatus());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testSubmitExceptionOnUserModify() throws Exception {
         // Mock the injected OSGi services

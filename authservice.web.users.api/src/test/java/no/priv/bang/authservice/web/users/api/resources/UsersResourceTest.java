@@ -53,7 +53,6 @@ class UsersResourceTest {
         assertThat(users.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUsersWhenExceptionIsThrown() {
         MockLogService logservice = new MockLogService();
@@ -83,7 +82,6 @@ class UsersResourceTest {
         assertEquals(originalUsers.size(), users.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testModifyUserWhenExceptionIsThrown() {
         MockLogService logservice = new MockLogService();
@@ -120,7 +118,6 @@ class UsersResourceTest {
         assertEquals(originalUsers.size(), users.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testUpdatePasswordWhenPasswordsArentIdentical() {
         MockLogService logservice = new MockLogService();
@@ -142,7 +139,6 @@ class UsersResourceTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testUpdatePasswordWhenPasswordsIsEmpty() {
         MockLogService logservice = new MockLogService();
@@ -160,7 +156,6 @@ class UsersResourceTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testUpdatePasswordWhenSQLExceptionOccurs() {
         MockLogService logservice = new MockLogService();
@@ -202,7 +197,6 @@ class UsersResourceTest {
         assertThat(users.size()).isGreaterThan(originalUsers.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddUserWhenPasswordsAreNotIdentical() {
         MockLogService logservice = new MockLogService();
@@ -225,7 +219,6 @@ class UsersResourceTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddUserWhenPasswordIsEmpty() {
         MockLogService logservice = new MockLogService();
@@ -252,7 +245,6 @@ class UsersResourceTest {
             });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddUserWhenSQLExceptionIsThrow() {
         MockLogService logservice = new MockLogService();
@@ -292,7 +284,6 @@ class UsersResourceTest {
         assertThat(userroles.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetUserRolesWhenExceptionIsThrown() {
         MockLogService logservice = new MockLogService();
@@ -320,7 +311,6 @@ class UsersResourceTest {
         assertThat(userroles.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testAddUserRolesWhenExceptionIsThrown() {
         MockLogService logservice = new MockLogService();
@@ -349,7 +339,6 @@ class UsersResourceTest {
         assertThat(userroles.size()).isPositive();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testRemoveUserRolesWhenExceptionIsThrown() {
         MockLogService logservice = new MockLogService();

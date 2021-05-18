@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,6 @@ class ProductionLiquibaseRunnerTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
@@ -89,7 +88,6 @@ class ProductionLiquibaseRunnerTest {
         assertEquals(1, logservice.getLogmessages().size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testCreateSchemaWhenLockExceptionIsThrown() throws Exception {
         MockLogService logservice = new MockLogService();
