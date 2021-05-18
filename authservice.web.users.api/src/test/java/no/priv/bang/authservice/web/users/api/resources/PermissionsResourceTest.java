@@ -40,7 +40,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenReturn(createPermissions());
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.getPermissions();
@@ -54,7 +54,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenThrow(AuthserviceException.class);
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -70,7 +70,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenReturn(originalPermissions);
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.modifyPermission(permission);
@@ -86,7 +86,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenThrow(AuthserviceException.class);
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -104,7 +104,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenReturn(updatedPermissions);
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.addPermission(permission);
@@ -119,7 +119,7 @@ class PermissionsResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenThrow(AuthserviceException.class);
         PermissionsResource resource = new PermissionsResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {

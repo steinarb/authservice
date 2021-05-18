@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.Permission;
@@ -40,10 +41,14 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 public class RolesResource extends ResourceBase {
 
     @Inject
-    LogService logservice;
+    UserManagementService usermanagement;
+
+    Logger logger;
 
     @Inject
-    UserManagementService usermanagement;
+    void setLogservice(LogService logservice) {
+        this.logger = logservice.getLogger(getClass());
+    }
 
     @GET
     @Path("/roles")
@@ -52,7 +57,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.getRoles();
         } catch (AuthserviceException e) {
             String message = "Failed to get roles";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message);
         }
     }
@@ -65,7 +70,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.modifyRole(role);
         } catch (AuthserviceException e) {
             String message = String.format("Failed to modify role %s", role.getRolename());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -78,7 +83,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.addRole(role);
         } catch (AuthserviceException e) {
             String message = String.format("Failed to add role %s", role.getRolename());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -90,7 +95,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.getRolesPermissions();
         } catch (AuthserviceException e) {
             String message = "Failed to get all role to permission mappings";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -103,7 +108,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.addRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {
             String message = String.format("Failed to add permissions to role %s", rolepermissions.getRole().getRolename());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -116,7 +121,7 @@ public class RolesResource extends ResourceBase {
             return usermanagement.removeRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {
             String message = String.format("Failed to remove permissions from role %s", rolepermissions.getRole().getRolename());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }

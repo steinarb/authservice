@@ -32,6 +32,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
@@ -45,11 +46,18 @@ public class PasswordsResource extends LoggedInUserResource {
 
     private static final String PASSWORD_HTML = "web/password.html"; // NOSONAR No variables holding secrets here, just the name of an HTML file
 
-    @Inject
-    LogService logservice;
+    private LogService logservice;
+
+    Logger logger;
 
     @Inject
     UserManagementService useradmin;
+
+    @Inject
+    void setLogservice(LogService logservice) {
+        this.logservice = logservice;
+        this.logger = logservice.getLogger(getClass());
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -63,7 +71,7 @@ public class PasswordsResource extends LoggedInUserResource {
         try {
             Optional<User> user = findLoggedInUser(logservice, useradmin);
             if (!user.isPresent()) {
-                logservice.log(LogService.LOG_ERROR, "No user in the database matching the logged in user when changing password");
+                logger.error("No user in the database matching the logged in user when changing password");
                 return createInternalServerErrorResponse();
             }
 

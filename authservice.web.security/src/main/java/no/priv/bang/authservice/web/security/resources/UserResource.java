@@ -35,6 +35,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
@@ -46,10 +47,17 @@ public class UserResource extends LoggedInUserResource {
     String htmlFile = "web/user.html";
 
     @Inject
-    LogService logservice;
+    UserManagementService useradmin;
+
+    private LogService logservice;
+
+    Logger logger;
 
     @Inject
-    UserManagementService useradmin;
+    void setLogservice(LogService logservice) {
+        this.logservice = logservice;
+        this.logger = logservice.getLogger(getClass());
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -66,7 +74,7 @@ public class UserResource extends LoggedInUserResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (Exception e) {
             String message = "Failed to get the user information form";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
         }
     }
@@ -93,7 +101,7 @@ public class UserResource extends LoggedInUserResource {
             Optional<User> updatedUser = updatedUsers.stream().filter(u -> userid == u.getUserid()).findFirst();
             if (!updatedUser.isPresent()) {
                 String message = String.format("Updated user not found, userid: %d  username: %s", userid, username);
-                logservice.log(LogService.LOG_ERROR, message);
+                logger.error(message);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
             }
 
@@ -104,7 +112,7 @@ public class UserResource extends LoggedInUserResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (Exception e) {
             String message = "Failed to update the user data";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
         }
     }

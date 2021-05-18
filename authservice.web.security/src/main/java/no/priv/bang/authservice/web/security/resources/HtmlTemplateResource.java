@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 public class HtmlTemplateResource {
 
@@ -35,8 +36,9 @@ public class HtmlTemplateResource {
         try (InputStream body = getClasspathResource(htmlFile)) {
             return Jsoup.parse(body, "UTF-8", "");
         } catch (IOException e) {
+            Logger logger = logservice.getLogger(getClass());
             String message = "Got exception loading the index.html file";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message, e);
         }
     }

@@ -60,7 +60,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -76,7 +76,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyUser(any())).thenReturn(originalUsers);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<User> users = resource.modifyUser(user);
@@ -92,7 +92,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyUser(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -108,7 +108,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenReturn(originalUsers);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with()
@@ -129,7 +129,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with()
@@ -151,7 +151,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
@@ -169,7 +169,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
@@ -194,7 +194,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenReturn(usersWithAddedUser);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
@@ -216,7 +216,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
@@ -239,7 +239,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordEmptyException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with()
@@ -266,7 +266,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserAndPasswords passwords = UserAndPasswords.with()
@@ -285,7 +285,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.getUserRoles();
@@ -299,7 +299,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -313,7 +313,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.addUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
@@ -327,7 +327,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
@@ -342,7 +342,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenReturn(Testdata.createUserroles());
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.removeUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
@@ -356,7 +356,7 @@ class UsersResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenThrow(AuthserviceException.class);
         UsersResource resource = new UsersResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();

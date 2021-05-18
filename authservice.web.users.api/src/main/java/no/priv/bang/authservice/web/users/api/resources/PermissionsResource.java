@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.Permission;
@@ -37,10 +38,14 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 public class PermissionsResource extends ResourceBase {
 
     @Inject
-    LogService logservice;
+    UserManagementService usermanagement;
+
+    Logger logger;
 
     @Inject
-    UserManagementService usermanagement;
+    void setLogservice(LogService logservice) {
+        this.logger = logservice.getLogger(getClass());
+    }
 
     @GET
     @Path("/permissions")
@@ -49,7 +54,7 @@ public class PermissionsResource extends ResourceBase {
             return usermanagement.getPermissions();
         } catch (AuthserviceException e) {
             String message = "User management service failed to get the list of permissions";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -62,7 +67,7 @@ public class PermissionsResource extends ResourceBase {
             return usermanagement.modifyPermission(permission);
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to modify permission %s", permission.getPermissionname());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -75,7 +80,7 @@ public class PermissionsResource extends ResourceBase {
             return usermanagement.addPermission(permission);
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to add permission %s", permission.getPermissionname());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }

@@ -38,6 +38,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
@@ -56,12 +57,12 @@ import no.priv.bang.osgiservice.users.UserRoles;
  */
 @Component(service=UserManagementService.class, immediate=true)
 public class UserManagementServiceProvider implements UserManagementService {
-    private LogService logservice;
+    private Logger logger;
     private DataSource datasource;
 
     @Reference
     public void setLogservice(LogService logservice) {
-        this.logservice = logservice;
+        this.logger = logservice.getLogger(getClass());
     }
 
     @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
@@ -85,13 +86,13 @@ public class UserManagementServiceProvider implements UserManagementService {
                     }
 
                     String message = String.format("User \"%s\" not found", username);
-                    logservice.log(LogService.LOG_WARNING, message);
+                    logger.warn(message);
                     throw new AuthserviceException(message);
                 }
             }
         } catch (SQLException e) {
             String message = String.format("Unable to fetch user \"%s\" from the database", username);
-            logservice.log(LogService.LOG_ERROR, message);
+            logger.error(message);
             throw new AuthserviceException(message);
         }
     }
@@ -105,7 +106,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("Unable to fetch roles for user \"%s\" from the database", username);
-            logservice.log(LogService.LOG_ERROR, message);
+            logger.error(message);
             throw new AuthserviceException(message);
         }
     }
@@ -131,7 +132,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("Unable to fetch roles for user \"%s\" from the database", username);
-            logservice.log(LogService.LOG_ERROR, message);
+            logger.error(message);
             throw new AuthserviceException(message);
         }
     }
@@ -151,7 +152,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the list of users";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -169,7 +170,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to update user with id %d", user.getUserid());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -180,19 +181,19 @@ public class UserManagementServiceProvider implements UserManagementService {
     public List<User> updatePassword(UserAndPasswords userAndPasswords) {
         if (userAndPasswords.getPassword1() == null || userAndPasswords.getPassword1().isEmpty()) {
             String message = "Failed to set password: Password can't be empty";
-            logservice.log(LogService.LOG_WARNING, message);
+            logger.warn(message);
             throw new AuthservicePasswordEmptyException(message);
         }
 
         if (userAndPasswords.getUser() == null) {
             String message = "Failed to set password: User can't be empty";
-            logservice.log(LogService.LOG_WARNING, message);
+            logger.warn(message);
             throw new AuthservicePasswordEmptyException(message);
         }
 
         if (!userAndPasswords.getPassword1().equals(userAndPasswords.getPassword2())) {
             String message = "Failed to set password: Passwords not identical";
-            logservice.log(LogService.LOG_WARNING, message);
+            logger.warn(message);
             throw new AuthservicePasswordsNotIdenticalException(message);
         }
 
@@ -208,13 +209,13 @@ public class UserManagementServiceProvider implements UserManagementService {
                 int rowcount = statement.executeUpdate();
                 if (rowcount < 1) {
                     String message = String.format("Failed to set password: userId %d didn't match any user in the database", userId);
-                    logservice.log(LogService.LOG_WARNING, message);
+                    logger.warn(message);
                     throw new AuthserviceException(message);
                 }
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to change password for user with id %d", userId);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -246,7 +247,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to add user with username %s", newUserWithPasswords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -266,7 +267,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the list of roles";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -281,12 +282,12 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.setInt(3, roleid);
                 int updated = statement.executeUpdate();
                 if (updated < 1) {
-                    logservice.log(LogService.LOG_WARNING, String.format("No rows were changed when updating role with id %d", roleid));
+                    logger.warn(String.format("No rows were changed when updating role with id %d", roleid));
                 }
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to modify role with id %d", roleid);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -304,7 +305,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to add role with rolename %s", rolename);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -331,7 +332,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the list of permissions";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -346,12 +347,12 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.setInt(3, permissionid);
                 int updated = statement.executeUpdate();
                 if (updated < 1) {
-                    logservice.log(LogService.LOG_WARNING, String.format("No rows were changed when updating permission with id %d", permissionid));
+                    logger.warn(String.format("No rows were changed when updating permission with id %d", permissionid));
                 }
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to modify permission with id %d", permissionid);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -369,7 +370,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to add permission with permission name %s", permissionname);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -397,7 +398,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the user to role mappings";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -418,7 +419,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to add roles to user %s", user.getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -439,7 +440,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 }
             } catch (SQLException e) {
                 String message = String.format("UserManagmentService failed to delete roles from user %s", user.getUsername());
-                logservice.log(LogService.LOG_ERROR, message, e);
+                logger.error(message, e);
                 throw new AuthserviceException(message, e);
             }
         }
@@ -472,7 +473,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = "UserManagmentService failed to get the roles to permissions mapping";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -493,7 +494,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to add roles to user %s", role.getRolename());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
@@ -514,7 +515,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 }
             } catch (SQLException e) {
                 String message = String.format("UserManagmentService failed to delete permissions from role %s", role.getRolename());
-                logservice.log(LogService.LOG_ERROR, message, e);
+                logger.error(message, e);
                 throw new AuthserviceException(message, e);
             }
         }
@@ -549,7 +550,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to find existing roles for user %s", username);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }
@@ -570,7 +571,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             String message = String.format("UserManagmentService failed to find existing permissions for role %s", rolename);
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }

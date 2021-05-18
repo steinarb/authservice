@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
@@ -43,10 +44,14 @@ import no.priv.bang.osgiservice.users.UserRoles;
 public class UsersResource extends ResourceBase {
 
     @Inject
-    LogService logservice;
+    UserManagementService usermanagement;
+
+    Logger logger;
 
     @Inject
-    UserManagementService usermanagement;
+    void setLogservice(LogService logservice) {
+        this.logger = logservice.getLogger(getClass());
+    }
 
     @GET
     @Path("/users")
@@ -54,7 +59,7 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.getUsers();
         } catch (AuthserviceException e) {
-            logservice.log(LogService.LOG_ERROR, "User management service failed to fetch the list of all user in the database", e);
+            logger.error("User management service failed to fetch the list of all user in the database", e);
             throw new InternalServerErrorException("Failed to retrieve the list of users. See the log for details");
         }
     }
@@ -67,7 +72,7 @@ public class UsersResource extends ResourceBase {
             return usermanagement.modifyUser(user);
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed to modify user %s", user.getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -80,15 +85,15 @@ public class UsersResource extends ResourceBase {
             return usermanagement.updatePassword(passwords);
         } catch (AuthservicePasswordsNotIdenticalException e) {
             String message = String.format("Password update failure for user %s: Passwords not identical", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthservicePasswordEmptyException e) {
             String message = String.format("Password update failure for user %s: Passwords is empty", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthserviceException e) {
             String message = String.format("Password update failure for user %s: internal server error", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + ". See log file for details!");
         }
     }
@@ -101,15 +106,15 @@ public class UsersResource extends ResourceBase {
             return usermanagement.addUser(passwords);
         } catch (AuthservicePasswordsNotIdenticalException e) {
             String message = String.format("Failed to add new user %s: Passwords not identical", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthservicePasswordEmptyException e) {
             String message = String.format("Failed to add new user %s: Passwords is empty", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthserviceException e) {
             String message = String.format("Failed to add new user %s: internal server error", passwords.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + ". See log file for details!");
         }
     }
@@ -121,7 +126,7 @@ public class UsersResource extends ResourceBase {
             return usermanagement.getUserRoles();
         } catch (AuthserviceException e) {
             String message = "User management service failed to retrieve the user to roles mappings";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -134,7 +139,7 @@ public class UsersResource extends ResourceBase {
             return usermanagement.addUserRoles(userroles);
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed add roles to user %s", userroles.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }
@@ -147,7 +152,7 @@ public class UsersResource extends ResourceBase {
             return usermanagement.removeUserRoles(userroles);
         } catch (AuthserviceException e) {
             String message = String.format("User management service failed remove roles to user %s", userroles.getUser().getUsername());
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
     }

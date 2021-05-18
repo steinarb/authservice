@@ -56,7 +56,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -87,7 +87,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is not logged into shiro
@@ -110,7 +110,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that a user is logged into shiro
@@ -143,7 +143,7 @@ class UserResourceTest extends ShiroTestBase {
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
         resource.htmlFile = "web/notafile.html";
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -192,7 +192,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -232,7 +232,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -271,7 +271,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -302,7 +302,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is not logged into shiro
@@ -330,7 +330,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -359,7 +359,7 @@ class UserResourceTest extends ShiroTestBase {
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
         resource.htmlFile = "web/notafile.html";
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro
@@ -388,7 +388,7 @@ class UserResourceTest extends ShiroTestBase {
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
         UserResource resource = new UserResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
         // Ensure that the expected user is logged into shiro

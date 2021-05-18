@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Steinar Bang
+ * Copyright 2019-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
@@ -35,8 +36,9 @@ public class LoggedInUserResource extends HtmlTemplateResource {
             List<User> users = useradmin.getUsers();
             return users.stream().filter(u -> username.equals(u.getUsername())).findFirst();
         } catch (Exception e) {
+            Logger logger = logservice.getLogger(LoggedInUserResource.class);
             String message = "Failed to find the logged in user when changing the password";
-            logservice.log(LogService.LOG_ERROR, message, e);
+            logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
     }

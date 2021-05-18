@@ -45,7 +45,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRoles()).thenReturn(createRoles());
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.getRoles();
@@ -59,7 +59,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRoles()).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -75,7 +75,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyRole(any())).thenReturn(originalRoles);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.modifyRole(role);
@@ -91,7 +91,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyRole(any())).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -109,7 +109,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenReturn(updatedRoles);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.addRole(role);
@@ -124,7 +124,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -138,7 +138,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRolesPermissions()).thenReturn(createRolesPermissions());
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
@@ -152,7 +152,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRolesPermissions()).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> {
@@ -166,7 +166,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRolePermissions(any())).thenReturn(createRolesPermissions());
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
@@ -180,7 +180,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRolePermissions(any())).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         RolePermissions rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
@@ -195,7 +195,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeRolePermissions(any())).thenReturn(createRolesPermissions());
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
@@ -209,7 +209,7 @@ class RolesResourceTest {
         UserManagementService usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeRolePermissions(any())).thenThrow(AuthserviceException.class);
         RolesResource resource = new RolesResource();
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         RolePermissions rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();

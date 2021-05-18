@@ -61,7 +61,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "secret";
@@ -85,7 +85,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "zecret";
@@ -109,7 +109,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "";
         String password2 = "";
@@ -133,7 +133,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "secret";
@@ -157,7 +157,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "secret";
@@ -181,7 +181,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         UserManagementService useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "secret";
@@ -197,7 +197,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         PasswordsResource resource = new PasswordsResource();
         MockLogService logservice = new MockLogService();
         UserManagementService useradmin = mock(UserManagementService.class);
-        resource.logservice = logservice;
+        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         String password1 = "secret";
         String password2 = "secret";
