@@ -282,6 +282,14 @@ class AuthserviceResourceTest extends ShiroTestBase {
             });
     }
 
+    @Test
+    void testUnauthorized() {
+        AuthserviceResource resource = new AuthserviceResource();
+        InputStream htmlfile = resource.getUnauthorized();
+        String html = new BufferedReader(new InputStreamReader(htmlfile)).lines().collect(Collectors.joining("+n"));
+        assertThat(html).contains("You are logged in, but do not have access to this URL");
+    }
+
     private void lockAccount(String username) {
         getShiroAccountFromRealm(username).setLocked(true);
     }

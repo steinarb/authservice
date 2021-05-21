@@ -69,10 +69,10 @@ public class AuthserviceResource extends HtmlTemplateResource {
     }
 
     @GET
-    @Produces("text/css")
-    @Path("open-iconic/font/css/open-iconic-bootstrap.min.css")
-    public InputStream getOpenIconicCss() {
-        return getClass().getClassLoader().getResourceAsStream("open-iconic/font/css/open-iconic-bootstrap.min.css");
+    @Produces(MediaType.TEXT_HTML)
+    @Path("unauthorized")
+    public InputStream getUnauthorized() {
+        return getClass().getClassLoader().getResourceAsStream("web/unauthorized.html");
     }
 
     @GET
@@ -203,6 +203,13 @@ public class AuthserviceResource extends HtmlTemplateResource {
     void updateOriginalUri(FormElement form, String originalUri) {
         Elements originalUriHidden = form.select("input[id=originalUri]");
         originalUriHidden.val(originalUri);
+    }
+
+    @GET
+    @Produces("text/css")
+    @Path("open-iconic/font/css/open-iconic-bootstrap.min.css")
+    public InputStream getOpenIconicCss() {
+        return getClass().getClassLoader().getResourceAsStream("open-iconic/font/css/open-iconic-bootstrap.min.css");
     }
 
 }
