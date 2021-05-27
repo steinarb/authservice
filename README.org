@@ -8,6 +8,14 @@ This project contains a set of [[https://karaf.apache.org/manual/latest/#_featur
  1. Providing a [[Forms based login for nginx][forms based login mechanism for nginx]] (Note: the webapp provides only authentication. No authorization of individual URLs. All authenticated users get in)
  2. Providing a "poor man's single sign-on" for web applications running in the same apache karaf instance
 
+** Relationship with apache shiro
+
+This project is an application that uses [[https://shiro.apache.org][apache shiro]] to provide authentication and authorization.
+
+Authservice creates a JDBC database for a [[https://shiro.apache.org/realm.html][shiro realm]] with users, roles and permission, and an admin GUI to adminstrate the database content.
+
+It also creates a simple self-service GUI for logged in users to change their user info (name, email) and for users to modify their own passwords.
+
 ** Status of the project
 
 [[https://travis-ci.org/steinarb/authservice][file:https://travis-ci.org/steinarb/authservice.svg?branch=master]] [[https://coveralls.io/r/steinarb/authservice][file:https://coveralls.io/repos/steinarb/authservice/badge.svg]] [[https://sonarcloud.io/dashboard?id=no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=alert_status#.svg]] [[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]] [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
