@@ -46,13 +46,8 @@
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.service.component.annotations</artifactId>
+            <artifactId>osgi.cmpn</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.service.log</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.priv.bang.osgi.service.adapters</groupId>
