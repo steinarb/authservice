@@ -287,7 +287,9 @@
         <profile>
             <id>nexusDeployRelease</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skipNexusDeployRelease</name>
+                </property>
             </activation>
             <build>
                 <plugins>
