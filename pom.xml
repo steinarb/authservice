@@ -8,7 +8,7 @@
         <version>1.0.9</version>
     </parent>
     <groupId>no.priv.bang.authservice</groupId>
-    <artifactId>authservice</artifactId>
+    <artifactId>authservice-parent</artifactId>
     <version>1.14.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
@@ -17,18 +17,7 @@
     <description>A drop-in shiro user database for apache karaf web whiteboard, with user administration UI and user self-service password and user info change. In addition can serve as forms based authentication for nginx</description>
 
     <modules>
-        <module>authservice.definitions</module>
-        <module>authservice.db.liquibase</module>
-        <module>authservice.db.liquibase.test</module>
-        <module>authservice.db.liquibase.production</module>
-        <module>authservice.web.security.dbrealm</module>
-        <module>authservice.web.security.memorysession</module>
-        <module>authservice.web.security</module>
-        <module>authservice.users</module>
-        <module>authservice.web.users.api</module>
-        <module>authservice.web.users.frontend</module>
-        <module>karaf</module>
-        <module>authservice.tests</module>
+        <module>authservice</module>
         <module>jacoco-coverage-report</module>
         <module>authservice-bom</module>
     </modules>
@@ -48,82 +37,8 @@
             **/UserAdminWebApiServlet.java,
             **/UsersResource.java
         </sonar.cpd.exclusions>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../jacoco-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../jacoco-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.karaf</groupId>
-                <artifactId>karaf-bom</artifactId>
-                <version>${karaf.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.beans</groupId>
-                <artifactId>beans-bom</artifactId>
-                <version>${beans.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.osgiservice</groupId>
-                <artifactId>osgiservice-bom</artifactId>
-                <version>${bang-osgi-service.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.servlet</groupId>
-                <artifactId>servlet-bom</artifactId>
-                <version>${bang-servlet.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.priv.bang.osgi.service.adapters</groupId>
-                <artifactId>adapters-bom</artifactId>
-                <version>${service-adapters.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-web</artifactId>
-                <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars.bower</groupId>
-                <artifactId>open-iconic</artifactId>
-                <version>${open-iconic.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>1.11.3</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
