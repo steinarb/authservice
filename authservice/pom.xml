@@ -33,6 +33,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>no.priv.bang.pom</groupId>
+                <artifactId>bang-bom</artifactId>
+                <version>${bang-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.karaf</groupId>
                 <artifactId>karaf-bom</artifactId>
                 <version>${karaf.version}</version>
@@ -61,6 +68,13 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>no.priv.bang.karaf</groupId>
+                <artifactId>jersey-feature-bom</artifactId>
+                <version>${jersey-feature.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>no.priv.bang.servlet</groupId>
                 <artifactId>servlet-bom</artifactId>
                 <version>${bang-servlet.version}</version>
@@ -70,7 +84,7 @@
             <dependency>
                 <groupId>no.priv.bang.osgi.service.adapters</groupId>
                 <artifactId>adapters-bom</artifactId>
-                <version>${service-adapters.version}</version>
+                <version>${osgi-service-adapters.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
