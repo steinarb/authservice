@@ -204,7 +204,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/karaf/1.13.5/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/1.13.6/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -419,7 +419,8 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                                                          |
 |--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [2021-01-06] |  1.13.5 | Get OSGi 7 and OSGi 7 compendium versions from the karaf BoM                                                                                                                     |
+| [2021-06-12] |  1.13.6 | Stop dependencyManagement version leakage from the authservice BoM                                                                                                               |
+| [2021-06-01] |  1.13.5 | Get OSGi 7 and OSGi 7 compendium versions from the karaf BoM                                                                                                                     |
 | [2021-05-24] |  1.13.4 | Use eslint in frontend, upgrade frontend deps, use OSGi 7  web whiteboard annotations                                                                                            |
 | [2021-05-02] |  1.13.3 | servlet 1.5.4, bootstrap 4.6.0 and node.js 14.16.1                                                                                                                               |
 | [2021-04-19] |  1.13.2 | Provide a Bill of Materials to clients of the authserice                                                                                                                         |
