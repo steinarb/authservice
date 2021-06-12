@@ -115,6 +115,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <releaseProfiles>release-sign-artifact</releaseProfiles>
+                    <tagNameFormat>authservice-@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
