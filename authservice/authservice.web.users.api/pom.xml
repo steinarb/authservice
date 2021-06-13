@@ -105,11 +105,6 @@
             <classifier>features</classifier>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>no.priv.bang.osgi.service.adapters</groupId>
             <artifactId>adapters.logservice</artifactId>
             <scope>test</scope>
