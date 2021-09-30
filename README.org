@@ -204,7 +204,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/karaf/1.13.9/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/1.13.10/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -417,57 +417,58 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 ** Release history
 
-| Date         | Version | Comment                                                                                                                                                                          |
-|--------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [2021-07-25] |  1.13.9 | Use PostgreSQL JDBC driver 4.2.23                                                                                                                                                |
-| [2021-06-15] |  1.13.8 | Use jersey 2.34 and jackson 12.3                                                                                                                                                 |
-| [2021-06-13] |  1.13.7 | Add shiro dependencies to the authservice BoM                                                                                                                                    |
-| [2021-06-12] |  1.13.6 | Stop dependencyManagement version leakage from the authservice BoM                                                                                                               |
-| [2021-06-01] |  1.13.5 | Get OSGi 7 and OSGi 7 compendium versions from the karaf BoM                                                                                                                     |
-| [2021-05-24] |  1.13.4 | Use eslint in frontend, upgrade frontend deps, use OSGi 7  web whiteboard annotations                                                                                            |
-| [2021-05-02] |  1.13.3 | servlet 1.5.4, bootstrap 4.6.0 and node.js 14.16.1                                                                                                                               |
-| [2021-04-19] |  1.13.2 | Provide a Bill of Materials to clients of the authserice                                                                                                                         |
-| [2021-04-15] |  1.13.1 | Get maven dependencies and maven plugin config from a parent POM                                                                                                                 |
-| [2021-04-12] |  1.13.0 | Built with karaf 4.3.0 and OSGi 7                                                                                                                                                |
-| [2021-03-21] |  1.12.3 | Get maven dependencies from the karaf 4.2.11 BoM                                                                                                                                 |
-| [2021-03-14] |  1.12.2 | Use beans with builders from UserManagementService 1.6.1                                                                                                                         |
-| [2021-01-24] |  1.12.1 | Use jersey 2.33 and JerseyServlet 1.4.0                                                                                                                                          |
-| [2021-01-19] |  1.12.0 | Use shiro 1.7.0                                                                                                                                                                  |
-| [2021-01-14] | 1.11.17 | fix build problems during release caused by the authservice.tests integration test                                                                                               |
-| [2021-01-14] | 1.11.16 | use axios 0.21.1 to fix github security alert, big rewrite of user admin frontend: use saga, redux simplification, use bootstrap navbar                                          |
-| [2020-10-10] | 1.11.15 | Use PostgreSQL JDBC driver 42.2.17                                                                                                                                               |
-| [2020-09-26] | 1.11.14 | Use PostgreSQL JDBC driver 42.2.12                                                                                                                                               |
-| [2020-09-12] | 1.11.13 | Fix startup problem because InjectionFactory can't be found                                                                                                                      |
-| [2020-09-11] | 1.11.12 | Remove servicemix javax.inject from maven build and runtime dependencies                                                                                                         |
-| [2020-07-29] | 1.11.11 | Use version 1.2.3 of FrontendServlet and JerseyServlet, fix sonar issues, build with karaf 4.2.8                                                                                 |
-| [2020-07-29] | 1.11.10 | Use version 1.2.0 of FrontendServlet and JerseyServlet                                                                                                                           |
-| [2020-07-22] |  1.11.9 | Use liquibase 3.8.0                                                                                                                                                              |
-| [2020-04-10] |  1.11.7 | Use jersey 2.30.1 and jackson 2.10.3                                                                                                                                             |
-| [2020-04-01] |  1.11.6 | Remove the use of deprecated classes and methods in the shiro setup                                                                                                              |
-| [2020-03-26] |  1.11.5 | Use pax-web 7.2.14 (the version used by karaf 4.2.8)                                                                                                                             |
-| [2020-03-05] |  1.11.4 | Use runtime and compile dependency to jackson-databind 2.9.10.3 to fix security issue CVE-2020-8840                                                                              |
-| [2020-02-29] |  1.11.3 | Upgrade PostgreSQL JDBC to 42.2.10, react to 16.13.0, redux to 7.2.0, reduxjs toolkit to 1.2.5 and react-router to 5.1.2                                                         |
-| [2020-02-27] |  1.11.2 | Uses [[https://github.com/steinarb/servlet#jersey][JerseyServlet]] to implement the REST API, no functional changes (but different runtime dependencies)                                                                         |
-| [2020-02-24] |  1.11.1 | Use Shiro 1.5.1 to fix [[https://issues.apache.org/jira/browse/SHIRO-742][SHIRO-742]]                                                                                                                                                 |
-| [2020-02-08] |  1.11.0 | Use Shiro 1.5.0 and the JdbcRealm with base64 encoded salt from Shiro 1.5.0 (/Note/! This version isn't usable because of [[https://issues.apache.org/jira/browse/SHIRO-742][SHIRO-742)]]                                             |
-| [2020-02-08] |  1.10.0 | Use jersey 2.30 and jackson 2.9.10.2 (/Note/! [[https://github.com/eclipse-ee4j/jersey/issues/4156][jersey 2.28 doesn't work on OSGi with JDK8]] so with JDK8 you need this version of authservice)                                      |
-| [2020-01-14] |   1.9.0 | Use FrontendServlet to serve the react frontend and styling                                                                                                                      |
-| [2019-12-31] |   1.8.0 | Let Immutable provide hashCode() and equals() implementation to user management beans                                                                                            |
-| [2019-12-07] |   1.7.1 | Move pax-jdbc-config from the master feature repository to the template feature.xml files of the liquibase PreHook maven modules                                                 |
-| [2019-11-15] |   1.7.0 | Replace DatabaseService with pax-jdbc-config (opens for using other RDBMSes than PostgreSQL and derby)                                                                           |
-| [2019-11-05] |   1.6.0 | Upgrade jackson to 2.9.10.1 to fix github security alert, use DataServiceBase                                                                                                    |
-| [2019-10-16] |   1.5.4 | Use DatabaseService from osgi-service 1.3.0                                                                                                                                      |
-| [2019-09-29] |   1.5.3 | Start authservice without updating liquibase schema if lock is held until liquibase lock timeout (5 minutes)                                                                     |
-| [2019-09-25] |   1.5.2 | Upgrade jackson to 2.9.10 to fix github security alert                                                                                                                           |
-| [2019-09-24] |   1.5.1 | Remove leftover reference to feature  postgresql-jdbc-karaf that broke feature loading in karaf                                                                                  |
-| [2019-09-23] |   1.5.0 | Use PostgreSQL JDBC driver version 4.2.8, which has its own karaf feature                                                                                                        |
-| [2019-08-02] |   1.4.0 | Better bootstrap styling of links, frontend version upgrades, PostgreSQL JDBC plugin that survives reloads, fix github security warning about jackson-databind                   |
-| [2019-06-10] |   1.3.0 | Make authservice build with openjdk-11                                                                                                                                           |
-| [2019-05-26] |   1.2.0 | Upgrade apache shiro to version 1.4.1 and upgrade jackson to version 2.9.9, fix webapp <title>                                                                                   |
-| [2019-05-01] |   1.1.0 | useradmin frontend cleanup, update PostgreSQL driver to newest version (42.2.5), [[https://github.com/steinarb/authservice/issues/1][fix issue #1]] (PostgreSQL DataSource fails after JDBC driver bundle restart)                     |
-| [2019-04-15] |   1.0.2 | Upgrade apache shiro from version 1.3.1 to version 1.3.2                                                                                                                         |
-| [2019-04-12] |   1.0.1 | Avoid constraint name conflict caused by copy-paste from ukelonn liquibase schema, fix aggregate javadoc, ensure user admin with role useradmin is always created if not present |
-| [2019-04-02] |   1.0.0 | Initial release                                                                                                                                                                  |
+| Date             | Version | Comment                                                                                                                                                                          |
+|------------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2021-09-30 Thu] | 1.13.10 | Use jsoup 1.14.3 and axios 0.21.4                                                                                                                                                |
+| [2021-07-25]     |  1.13.9 | Use PostgreSQL JDBC driver 4.2.23                                                                                                                                                |
+| [2021-06-15]     |  1.13.8 | Use jersey 2.34 and jackson 12.3                                                                                                                                                 |
+| [2021-06-13]     |  1.13.7 | Add shiro dependencies to the authservice BoM                                                                                                                                    |
+| [2021-06-12]     |  1.13.6 | Stop dependencyManagement version leakage from the authservice BoM                                                                                                               |
+| [2021-06-01]     |  1.13.5 | Get OSGi 7 and OSGi 7 compendium versions from the karaf BoM                                                                                                                     |
+| [2021-05-24]     |  1.13.4 | Use eslint in frontend, upgrade frontend deps, use OSGi 7  web whiteboard annotations                                                                                            |
+| [2021-05-02]     |  1.13.3 | servlet 1.5.4, bootstrap 4.6.0 and node.js 14.16.1                                                                                                                               |
+| [2021-04-19]     |  1.13.2 | Provide a Bill of Materials to clients of the authserice                                                                                                                         |
+| [2021-04-15]     |  1.13.1 | Get maven dependencies and maven plugin config from a parent POM                                                                                                                 |
+| [2021-04-12]     |  1.13.0 | Built with karaf 4.3.0 and OSGi 7                                                                                                                                                |
+| [2021-03-21]     |  1.12.3 | Get maven dependencies from the karaf 4.2.11 BoM                                                                                                                                 |
+| [2021-03-14]     |  1.12.2 | Use beans with builders from UserManagementService 1.6.1                                                                                                                         |
+| [2021-01-24]     |  1.12.1 | Use jersey 2.33 and JerseyServlet 1.4.0                                                                                                                                          |
+| [2021-01-19]     |  1.12.0 | Use shiro 1.7.0                                                                                                                                                                  |
+| [2021-01-14]     | 1.11.17 | fix build problems during release caused by the authservice.tests integration test                                                                                               |
+| [2021-01-14]     | 1.11.16 | use axios 0.21.1 to fix github security alert, big rewrite of user admin frontend: use saga, redux simplification, use bootstrap navbar                                          |
+| [2020-10-10]     | 1.11.15 | Use PostgreSQL JDBC driver 42.2.17                                                                                                                                               |
+| [2020-09-26]     | 1.11.14 | Use PostgreSQL JDBC driver 42.2.12                                                                                                                                               |
+| [2020-09-12]     | 1.11.13 | Fix startup problem because InjectionFactory can't be found                                                                                                                      |
+| [2020-09-11]     | 1.11.12 | Remove servicemix javax.inject from maven build and runtime dependencies                                                                                                         |
+| [2020-07-29]     | 1.11.11 | Use version 1.2.3 of FrontendServlet and JerseyServlet, fix sonar issues, build with karaf 4.2.8                                                                                 |
+| [2020-07-29]     | 1.11.10 | Use version 1.2.0 of FrontendServlet and JerseyServlet                                                                                                                           |
+| [2020-07-22]     |  1.11.9 | Use liquibase 3.8.0                                                                                                                                                              |
+| [2020-04-10]     |  1.11.7 | Use jersey 2.30.1 and jackson 2.10.3                                                                                                                                             |
+| [2020-04-01]     |  1.11.6 | Remove the use of deprecated classes and methods in the shiro setup                                                                                                              |
+| [2020-03-26]     |  1.11.5 | Use pax-web 7.2.14 (the version used by karaf 4.2.8)                                                                                                                             |
+| [2020-03-05]     |  1.11.4 | Use runtime and compile dependency to jackson-databind 2.9.10.3 to fix security issue CVE-2020-8840                                                                              |
+| [2020-02-29]     |  1.11.3 | Upgrade PostgreSQL JDBC to 42.2.10, react to 16.13.0, redux to 7.2.0, reduxjs toolkit to 1.2.5 and react-router to 5.1.2                                                         |
+| [2020-02-27]     |  1.11.2 | Uses [[https://github.com/steinarb/servlet#jersey][JerseyServlet]] to implement the REST API, no functional changes (but different runtime dependencies)                                                                         |
+| [2020-02-24]     |  1.11.1 | Use Shiro 1.5.1 to fix [[https://issues.apache.org/jira/browse/SHIRO-742][SHIRO-742]]                                                                                                                                                 |
+| [2020-02-08]     |  1.11.0 | Use Shiro 1.5.0 and the JdbcRealm with base64 encoded salt from Shiro 1.5.0 (/Note/! This version isn't usable because of [[https://issues.apache.org/jira/browse/SHIRO-742][SHIRO-742)]]                                             |
+| [2020-02-08]     |  1.10.0 | Use jersey 2.30 and jackson 2.9.10.2 (/Note/! [[https://github.com/eclipse-ee4j/jersey/issues/4156][jersey 2.28 doesn't work on OSGi with JDK8]] so with JDK8 you need this version of authservice)                                      |
+| [2020-01-14]     |   1.9.0 | Use FrontendServlet to serve the react frontend and styling                                                                                                                      |
+| [2019-12-31]     |   1.8.0 | Let Immutable provide hashCode() and equals() implementation to user management beans                                                                                            |
+| [2019-12-07]     |   1.7.1 | Move pax-jdbc-config from the master feature repository to the template feature.xml files of the liquibase PreHook maven modules                                                 |
+| [2019-11-15]     |   1.7.0 | Replace DatabaseService with pax-jdbc-config (opens for using other RDBMSes than PostgreSQL and derby)                                                                           |
+| [2019-11-05]     |   1.6.0 | Upgrade jackson to 2.9.10.1 to fix github security alert, use DataServiceBase                                                                                                    |
+| [2019-10-16]     |   1.5.4 | Use DatabaseService from osgi-service 1.3.0                                                                                                                                      |
+| [2019-09-29]     |   1.5.3 | Start authservice without updating liquibase schema if lock is held until liquibase lock timeout (5 minutes)                                                                     |
+| [2019-09-25]     |   1.5.2 | Upgrade jackson to 2.9.10 to fix github security alert                                                                                                                           |
+| [2019-09-24]     |   1.5.1 | Remove leftover reference to feature  postgresql-jdbc-karaf that broke feature loading in karaf                                                                                  |
+| [2019-09-23]     |   1.5.0 | Use PostgreSQL JDBC driver version 4.2.8, which has its own karaf feature                                                                                                        |
+| [2019-08-02]     |   1.4.0 | Better bootstrap styling of links, frontend version upgrades, PostgreSQL JDBC plugin that survives reloads, fix github security warning about jackson-databind                   |
+| [2019-06-10]     |   1.3.0 | Make authservice build with openjdk-11                                                                                                                                           |
+| [2019-05-26]     |   1.2.0 | Upgrade apache shiro to version 1.4.1 and upgrade jackson to version 2.9.9, fix webapp <title>                                                                                   |
+| [2019-05-01]     |   1.1.0 | useradmin frontend cleanup, update PostgreSQL driver to newest version (42.2.5), [[https://github.com/steinarb/authservice/issues/1][fix issue #1]] (PostgreSQL DataSource fails after JDBC driver bundle restart)                     |
+| [2019-04-15]     |   1.0.2 | Upgrade apache shiro from version 1.3.1 to version 1.3.2                                                                                                                         |
+| [2019-04-12]     |   1.0.1 | Avoid constraint name conflict caused by copy-paste from ukelonn liquibase schema, fix aggregate javadoc, ensure user admin with role useradmin is always created if not present |
+| [2019-04-02]     |   1.0.0 | Initial release                                                                                                                                                                  |
 
 ** License
 
