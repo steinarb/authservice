@@ -17,7 +17,6 @@ package no.priv.bang.authservice.web.security.resources;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;

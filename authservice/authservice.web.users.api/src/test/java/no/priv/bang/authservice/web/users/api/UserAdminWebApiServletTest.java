@@ -16,7 +16,6 @@
 package no.priv.bang.authservice.web.users.api;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
