@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
+    SELECT_USER,
+    USERNAME_FIELD_MODIFIED,
+    EMAIL_FIELD_MODIFIED,
+    FIRSTNAME_FIELD_MODIFIED,
+    LASTNAME_FIELD_MODIFIED,
+    MODIFY_USER_BUTTON_CLICKED,
     USERS_REQUEST,
-    USER_UPDATE,
     USER_CLEAR,
-    USER_MODIFY,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -14,8 +18,12 @@ import {FormField } from './bootstrap/FormField';
 
 function UserModify(props) {
     const {
+        userid,
+        username,
+        email,
+        firstname,
+        lastname,
         users,
-        user,
         onUsersChange,
         onUsername,
         onEmail,
@@ -43,7 +51,8 @@ function UserModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                                <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
                         </FormField>
@@ -51,31 +60,31 @@ function UserModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="username">Username</FormLabel>
                         <FormField>
-                            <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
+                            <input id="username" className="form-control" type="text" value={username} onChange={onUsername} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Email address</FormLabel>
                         <FormField>
-                            <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
+                            <input id="email" className="form-control" type="text" value={email} onChange={onEmail} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="firstname">First name</FormLabel>
                         <FormField>
-                            <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
+                            <input id="firstname" className="form-control" type="text" value={firstname} onChange={onFirstname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="lastname">Last name</FormLabel>
                         <FormField>
-                            <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
+                            <input id="lastname" className="form-control" type="text" value={lastname} onChange={onLastname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <div className="col-5"/>
                         <FormField>
-                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedUser(user)}>Lagre endringer av bruker</button>
+                            <button className="btn btn-primary form-control" onClick={onSaveUpdatedUser}>Lagre endringer av bruker</button>
                         </FormField>
                     </FormRow>
                 </Container>
@@ -86,8 +95,12 @@ function UserModify(props) {
 
 const mapStateToProps = (state) => {
     return {
+        userid: state.userid,
+        username: state.username,
+        email: state.email,
+        firstname: state.firstname,
+        lastname: state.lastname,
         users: state.users,
-        user: state.user,
     };
 };
 
@@ -95,16 +108,12 @@ const mapDispatchToProps = dispatch => {
     return {
         onUsers: () => dispatch(USERS_REQUEST()),
         onUserClear: () => dispatch(USER_CLEAR()),
-        onUsersChange: (e, users) => {
-            const userid = parseInt(e.target.value, 10);
-            const user = users.find(u => u.userid === userid);
-            dispatch(USER_UPDATE({ ...user }));
-        },
-        onUsername: e => dispatch(USER_UPDATE({ username: e.target.value })),
-        onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
-        onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
-        onLastname: e => dispatch(USER_UPDATE({ lastname: e.target.value })),
-        onSaveUpdatedUser: (user) => dispatch(USER_MODIFY(user)),
+        onUsersChange: e => dispatch(SELECT_USER(parseInt(e.target.value))),
+        onUsername: e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value)),
+        onEmail: e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value)),
+        onFirstname: e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value)),
+        onLastname: e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value)),
+        onSaveUpdatedUser: () => dispatch(MODIFY_USER_BUTTON_CLICKED()),
     };
 };
 

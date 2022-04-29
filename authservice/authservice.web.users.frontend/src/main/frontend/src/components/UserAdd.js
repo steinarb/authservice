@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
-    USER_UPDATE,
+    USERNAME_FIELD_MODIFIED,
+    EMAIL_FIELD_MODIFIED,
+    FIRSTNAME_FIELD_MODIFIED,
+    LASTNAME_FIELD_MODIFIED,
+    PASSWORD1_FIELD_MODIFIED,
+    PASSWORD2_FIELD_MODIFIED,
+    ADD_USER_BUTTON_CLICKED,
     USER_CLEAR,
-    PASSWORDS_UPDATE,
     PASSWORDS_CLEAR,
-    USER_ADD,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -15,8 +19,12 @@ import {FormField } from './bootstrap/FormField';
 
 function UserAdd(props) {
     const {
-        user,
-        passwords,
+        username,
+        email,
+        firstname,
+        lastname,
+        password1,
+        password2,
         passwordsNotIdentical,
         onUsername,
         onEmail,
@@ -46,42 +54,42 @@ function UserAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="username">Username</FormLabel>
                         <FormField>
-                            <input id="username" className="form-control" type="text" value={user.username} onChange={onUsername} />
+                            <input id="username" className="form-control" type="text" value={username} onChange={onUsername} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Email address</FormLabel>
                         <FormField>
-                            <input id="email" className="form-control" type="text" value={user.email} onChange={onEmail} />
+                            <input id="email" className="form-control" type="text" value={email} onChange={onEmail} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="firstname">First name</FormLabel>
                         <FormField>
-                            <input id="firstname" className="form-control" type="text" value={user.firstname} onChange={onFirstname} />
+                            <input id="firstname" className="form-control" type="text" value={firstname} onChange={onFirstname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="lastname">Last name</FormLabel>
                         <FormField>
-                            <input id="lastname" className="form-control" type="text" value={user.lastname} onChange={onLastname} />
+                            <input id="lastname" className="form-control" type="text" value={lastname} onChange={onLastname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password">Password:</FormLabel>
                         <FormField>
-                            <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
+                            <input id="password" className="form-control" type='password' value={password1} onChange={onPassword1} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                         <FormField>
-                            <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
+                            <input id="password2" className="form-control" type='password' value={password2} onChange={onPassword2} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={() => onAddUser(passwords, user)}>Opprett bruker</button>
+                        <button className="btn btn-primary form-control" onClick={onAddUser}>Opprett bruker</button>
                     </FormRow>
                 </Container>
             </form>
@@ -91,9 +99,13 @@ function UserAdd(props) {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user,
-        passwords: state.passwords,
-        passwordsNotIdentical: state.passwords.passwordsNotIdentical,
+        username: state.username,
+        email: state.email,
+        firstname: state.firstname,
+        lastname: state.lastname,
+        password1: state.password1,
+        password2: state.password2,
+        passwordsNotIdentical: state.passwordsNotIdentical,
     };
 };
 
@@ -101,13 +113,13 @@ const mapDispatchToProps = dispatch => {
     return {
         onUserClear: () => dispatch(USER_CLEAR()),
         onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
-        onUsername: e => dispatch(USER_UPDATE({ username: e.target.value })),
-        onEmail: e => dispatch(USER_UPDATE({ email: e.target.value })),
-        onFirstname: e => dispatch(USER_UPDATE({ firstname: e.target.value })),
-        onLastname: e => dispatch(USER_UPDATE({ lastname: e.target.value })),
-        onPassword1: e => dispatch(PASSWORDS_UPDATE({ password1: e.target.value })),
-        onPassword2: e => dispatch(PASSWORDS_UPDATE({ password2: e.target.value })),
-        onAddUser: (passwords, user) => dispatch(USER_ADD({ ...passwords, user })),
+        onUsername: e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value)),
+        onEmail: e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value)),
+        onFirstname: e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value)),
+        onLastname: e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value)),
+        onPassword1: e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value)),
+        onPassword2: e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value)),
+        onAddUser: () => dispatch(ADD_USER_BUTTON_CLICKED()),
     };
 };
 

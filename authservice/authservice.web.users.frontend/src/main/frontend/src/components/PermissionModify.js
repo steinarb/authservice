@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
+    SELECT_PERMISSION,
     PERMISSIONS_REQUEST,
     PERMISSION_CLEAR,
-    PERMISSION_UPDATE,
-    PERMISSION_MODIFY,
+    PERMISSION_DESCRIPTION_FIELD_MODIFIED,
+    PERMISSIONNAME_FIELD_MODIFIED,
+    MODIFY_PERMISSION_BUTTON_CLICKED,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -15,7 +17,9 @@ import {FormField } from './bootstrap/FormField';
 function PermissionModify(props) {
     const {
         permissions,
-        permission,
+        permissionid,
+        permissionname,
+        description,
         onPermissionsChange,
         onPermissionname,
         onDescription,
@@ -41,7 +45,8 @@ function PermissionModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissions">Select permission</FormLabel>
                         <FormField>
-                            <select id="permissions" className="form-control" onChange={e => onPermissionsChange(e, permissions)} value={permission.id}>
+                            <select id="permissions" className="form-control" onChange={onPermissionsChange} value={permissionid}>
+                                <option key="-1" value="-1" />
                                 {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
                             </select>
                         </FormField>
@@ -49,17 +54,17 @@ function PermissionModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                         <FormField>
-                            <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
+                            <input id="permissionname" className="form-control" type="text" value={permissionname} onChange={onPermissionname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="description">Permission description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
+                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPermission(permission)}>Save changes to permission</button>
+                        <button className="btn btn-primary form-control" onClick={onSaveUpdatedPermission}>Save changes to permission</button>
                     </FormRow>
                 </Container>
             </form>
@@ -70,7 +75,9 @@ function PermissionModify(props) {
 const mapStateToProps = (state) => {
     return {
         permissions: state.permissions,
-        permission: state.permission,
+        permissionid: state.permissionid,
+        permissionname: state.permissionname,
+        description: state.permissionDescription,
     };
 };
 
@@ -78,14 +85,10 @@ const mapDispatchToProps = dispatch => {
     return {
         onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
         onPermissionClear: () => dispatch(PERMISSION_CLEAR()),
-        onPermissionsChange: (e, permissions) => {
-            const id = parseInt(e.target.value, 10);
-            const permission = permissions.find(p => p.id === id);
-            dispatch(PERMISSION_UPDATE({ ...permission }));
-        },
-        onPermissionname: e => dispatch(PERMISSION_UPDATE({ permissionname: e.target.value })),
-        onDescription: e => dispatch(PERMISSION_UPDATE({ description: e.target.value })),
-        onSaveUpdatedPermission: permission => dispatch(PERMISSION_MODIFY(permission)),
+        onPermissionsChange: e => dispatch(SELECT_PERMISSION(parseInt(e.target.value))),
+        onPermissionname: e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value)),
+        onDescription: e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
+        onSaveUpdatedPermission: () => dispatch(MODIFY_PERMISSION_BUTTON_CLICKED()),
     };
 };
 

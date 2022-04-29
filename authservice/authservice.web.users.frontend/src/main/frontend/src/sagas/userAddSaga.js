@@ -1,11 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    USER_ADD,
-    USER_CLEAR,
-    PASSWORDS_CLEAR,
-    USERS_RECEIVED,
-    USERS_ERROR,
+    SAVE_ADDED_USER_REQUEST,
+    SAVE_ADDED_USER_RECEIVE,
+    SAVE_ADDED_USER_FAILURE,
 } from '../actiontypes';
 
 function postUserAdd(userAndPasswords) {
@@ -17,14 +15,12 @@ function* addUser(action) {
         const userAndPasswords = action.payload;
         const response = yield call(postUserAdd, userAndPasswords);
         const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(USERS_RECEIVED(users));
-        yield put(USER_CLEAR());
-        yield put(PASSWORDS_CLEAR());
+        yield put(SAVE_ADDED_USER_RECEIVE(users));
     } catch (error) {
-        yield put(USERS_ERROR(error));
+        yield put(SAVE_ADDED_USER_FAILURE(error));
     }
 }
 
 export default function* userAddSaga() {
-    yield takeLatest(USER_ADD, addUser);
+    yield takeLatest(SAVE_ADDED_USER_REQUEST, addUser);
 }

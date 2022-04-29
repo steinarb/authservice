@@ -2,16 +2,16 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
-    USER_UPDATE,
     USER_CLEAR,
+    SELECT_USER,
     ROLES_REQUEST,
     USERROLES_REQUEST,
-    ROLES_NOT_ON_USER_SELECTED,
-    ROLES_ON_USER_SELECTED,
-    USER_ADD_ROLES,
-    USER_REMOVE_ROLES,
+    SELECT_ROLES_NOT_ON_USER,
+    SELECT_ROLES_ON_USER,
+    ADD_USER_ROLE_BUTTON_CLICKED,
+    REMOVE_USER_ROLE_BUTTON_CLICKED,
+
 } from '../actiontypes';
-import { emptyRole } from '../constants';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
 import { ChevronLeft } from './bootstrap/ChevronLeft';
@@ -19,11 +19,12 @@ import { ChevronRight } from './bootstrap/ChevronRight';
 import {FormRow } from './bootstrap/FormRow';
 import {FormLabel } from './bootstrap/FormLabel';
 import {FormField } from './bootstrap/FormField';
+import { isUnselected } from '../reducers/common';
 
 function UserRoles(props) {
     const {
         users,
-        user,
+        userid,
         rolesNotOnUser,
         selectedInRolesNotOnUser,
         rolesOnUser,
@@ -46,8 +47,8 @@ function UserRoles(props) {
         onUserRoles();
     }, [onUsers, onEmptyUser, onRoles, onUserRoles]);
 
-    const addRoleDisabled = selectedInRolesNotOnUser === emptyRole.id;
-    const removeRoleDisabled = selectedInRolesOnUser === emptyRole.id;
+    const addRoleDisabled = isUnselected(selectedInRolesNotOnUser);
+    const removeRoleDisabled = isUnselected(selectedInRolesOnUser);
 
     return (
         <div>
@@ -61,7 +62,8 @@ function UserRoles(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                                <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
                         </FormField>
@@ -70,16 +72,18 @@ function UserRoles(props) {
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="rolesnotonuser">Roles not on user</label>
                             <select id="rolesnotonuser" className="form-control" multiselect="true" size="10" onChange={onRolesNotOnUserSelected} value={selectedInRolesNotOnUser}>
+                                <option key="-1" value="-1" />
                                 {rolesNotOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <button disabled={addRoleDisabled} className="btn btn-primary form-control" onClick={() => onAddRole(selectedInRolesNotOnUser)}>Add role &nbsp;<ChevronRight/></button>
-                            <button disabled={removeRoleDisabled} className="btn btn-primary form-control" onClick={() => onRemoveRole(selectedInRolesOnUser)}><ChevronLeft/>&nbsp; Remove role</button>
+                            <button disabled={addRoleDisabled} className="btn btn-primary form-control" onClick={onAddRole}>Add role &nbsp;<ChevronRight/></button>
+                            <button disabled={removeRoleDisabled} className="btn btn-primary form-control" onClick={onRemoveRole}><ChevronLeft/>&nbsp; Remove role</button>
                         </div>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="rolesonuser">Role on user</label>
                             <select id="rolesonuser" className="form-control" multiselect="true" size="10" onChange={onRolesOnUserSelected} value={selectedInRolesOnUser}>
+                                <option key="-1" value="-1" />
                                 {rolesOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
                         </div>
@@ -93,7 +97,7 @@ function UserRoles(props) {
 function mapStateToProps(state) {
     return {
         users: state.users,
-        user: state.user,
+        userid: state.userid,
         rolesNotOnUser: state.rolesNotOnUser,
         selectedInRolesNotOnUser: state.selectedInRolesNotOnUser,
         rolesOnUser: state.rolesOnUser,
@@ -107,15 +111,11 @@ const mapDispatchToProps = dispatch => {
         onEmptyUser: () => dispatch(USER_CLEAR()),
         onRoles: () => dispatch(ROLES_REQUEST()),
         onUserRoles: () => dispatch(USERROLES_REQUEST()),
-        onUsersChange: (e, users) => {
-            const userid = parseInt(e.target.value, 10);
-            const user = users.find(u => u.userid === userid);
-            dispatch(USER_UPDATE({ ...user }));
-        },
-        onRolesNotOnUserSelected: e => dispatch(ROLES_NOT_ON_USER_SELECTED(parseInt(e.target.value, 10))),
-        onAddRole: roleid => dispatch(USER_ADD_ROLES(roleid)),
-        onRolesOnUserSelected: e => dispatch(ROLES_ON_USER_SELECTED(parseInt(e.target.value, 10))),
-        onRemoveRole: roleid => dispatch(USER_REMOVE_ROLES(roleid)),
+        onUsersChange: e => dispatch(SELECT_USER(parseInt(e.target.value))),
+        onRolesNotOnUserSelected: e => dispatch(SELECT_ROLES_NOT_ON_USER(parseInt(e.target.value, 10))),
+        onAddRole: () => dispatch(ADD_USER_ROLE_BUTTON_CLICKED()),
+        onRolesOnUserSelected: e => dispatch(SELECT_ROLES_ON_USER(parseInt(e.target.value, 10))),
+        onRemoveRole: () => dispatch(REMOVE_USER_ROLE_BUTTON_CLICKED()),
     };
 };
 

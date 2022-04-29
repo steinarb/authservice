@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     USERS_REQUEST,
-    USER_UPDATE,
+    SELECT_USER,
+    PASSWORD1_FIELD_MODIFIED,
+    PASSWORD2_FIELD_MODIFIED,
+    CHANGE_PASSWORD_BUTTON_CLICKED,
     USER_CLEAR,
-    PASSWORDS_UPDATE,
     PASSWORDS_CLEAR,
-    PASSWORDS_MODIFY,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -16,9 +17,10 @@ import {FormField } from './bootstrap/FormField';
 
 function UserChangePasswords(props) {
     const {
-        user,
+        userid,
         users,
-        passwords,
+        password1,
+        password2,
         passwordsNotIdentical,
         onUsersChange,
         onPassword1,
@@ -47,7 +49,8 @@ function UserChangePasswords(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={e => onUsersChange(e, users)} value={user.userid}>
+                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                                <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
                         </FormField>
@@ -55,19 +58,19 @@ function UserChangePasswords(props) {
                     <FormRow>
                         <FormLabel htmlFor="password">Password:</FormLabel>
                         <FormField>
-                            <input id="password" className="form-control" type='password' value={passwords.password1} onChange={onPassword1} />
+                            <input id="password" className="form-control" type='password' value={password1} onChange={onPassword1} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                         <FormField>
-                            <input id="password2" className="form-control" type='password' value={passwords.password2} onChange={onPassword2} />
+                            <input id="password2" className="form-control" type='password' value={password2} onChange={onPassword2} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormField>
-                            <button className="btn btn-primary form-control" onClick={() => onSaveUpdatedPassword(passwords, user)}>Change password</button>
+                            <button className="btn btn-primary form-control" onClick={onSaveUpdatedPassword}>Change password</button>
                         </FormField>
                     </FormRow>
                 </Container>
@@ -78,10 +81,11 @@ function UserChangePasswords(props) {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user,
+        userid: state.userid,
         users: state.users,
-        passwords: state.passwords,
-        passwordsNotIdentical: state.passwords.passwordsNotIdentical,
+        password1: state.password1,
+        password2: state.password2,
+        passwordsNotIdentical: state.passwordsNotIdentical,
     };
 };
 
@@ -90,14 +94,10 @@ const mapDispatchToProps = dispatch => {
         onUsers: () => dispatch(USERS_REQUEST()),
         onUserClear: () => dispatch(USER_CLEAR()),
         onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
-        onUsersChange: (e, users) => {
-            const userid = parseInt(e.target.value, 10);
-            const user = users.find(u => u.userid === userid);
-            dispatch(USER_UPDATE({ ...user }));
-        },
-        onPassword1: e => dispatch(PASSWORDS_UPDATE({ password1: e.target.value })),
-        onPassword2: e => dispatch(PASSWORDS_UPDATE({ password2: e.target.value })),
-        onSaveUpdatedPassword: (passwords, user) => dispatch(PASSWORDS_MODIFY({ ...passwords, user })),
+        onUsersChange: e => dispatch(SELECT_USER(parseInt(e.target.value))),
+        onPassword1: e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value)),
+        onPassword2: e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value)),
+        onSaveUpdatedPassword: () => dispatch(CHANGE_PASSWORD_BUTTON_CLICKED()),
     };
 };
 

@@ -1,9 +1,9 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    USER_ADD_ROLES,
-    USERROLES_RECEIVED,
-    USERROLES_ERROR,
+    USER_ADD_ROLE_REQUEST,
+    USER_ADD_ROLE_RECEIVE,
+    USER_ADD_ROLE_FAILURE,
 } from '../actiontypes';
 
 function postUserAddRoles(userAndRoles) {
@@ -12,18 +12,14 @@ function postUserAddRoles(userAndRoles) {
 
 function* userAddRoles(action) {
     try {
-        const user = yield select(state => state.user);
-        const allRoles = yield select(state => state.roles);
-        const roles = allRoles.filter(r => r.id === action.payload);
-        const userAndRoles = { user, roles };
-        const response = yield call(postUserAddRoles, userAndRoles);
+        const response = yield call(postUserAddRoles, action.payload);
         const userroles = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(USERROLES_RECEIVED(userroles));
+        yield put(USER_ADD_ROLE_RECEIVE(userroles));
     } catch (error) {
-        yield put(USERROLES_ERROR(error));
+        yield put(USER_ADD_ROLE_FAILURE(error));
     }
 }
 
 export default function* userAddRolesSaga() {
-    yield takeLatest(USER_ADD_ROLES, userAddRoles);
+    yield takeLatest(USER_ADD_ROLE_REQUEST, userAddRoles);
 }

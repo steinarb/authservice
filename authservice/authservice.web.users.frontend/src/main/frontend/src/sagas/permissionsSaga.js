@@ -2,8 +2,8 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     PERMISSIONS_REQUEST,
-    PERMISSIONS_RECEIVED,
-    PERMISSIONS_ERROR,
+    PERMISSIONS_RECEIVE,
+    PERMISSIONS_FAILURE,
 } from '../actiontypes';
 
 function getPermissions() {
@@ -14,9 +14,9 @@ function* requestPermissions() {
     try {
         const response = yield call(getPermissions);
         const permissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(PERMISSIONS_RECEIVED(permissions));
+        yield put(PERMISSIONS_RECEIVE(permissions));
     } catch (error) {
-        yield put(PERMISSIONS_ERROR(error));
+        yield put(PERMISSIONS_FAILURE(error));
     }
 }
 

@@ -1,15 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { emptyPermission } from '../constants';
 import {
-    PERMISSIONS_RECEIVED,
+    PERMISSIONS_RECEIVE,
+    SAVE_MODIFIED_PERMISSION_RECEIVE,
 } from '../actiontypes';
 
 const permissionsReducer = createReducer([], {
-    [ PERMISSIONS_RECEIVED]: (state, action) => {
-        const permissions = action.payload;
-        permissions.unshift(emptyPermission);
-        return permissions;
-    },
+    [ PERMISSIONS_RECEIVE]: (state, action) => action.payload,
+    [ SAVE_MODIFIED_PERMISSION_RECEIVE]: (state, action) => action.payload,
 });
 
 export default permissionsReducer;

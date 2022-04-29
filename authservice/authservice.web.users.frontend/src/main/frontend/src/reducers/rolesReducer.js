@@ -1,13 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { emptyRole } from '../constants';
-import { ROLES_RECEIVED } from '../actiontypes';
+import {
+    ROLES_RECEIVE,
+    SAVE_MODIFIED_ROLE_RECEIVE,
+    SAVE_ADDED_ROLE_RECEIVE,
+} from '../actiontypes';
 
 const rolesReducer = createReducer([], {
-    [ROLES_RECEIVED]: (state, action) => {
-        const roles = action.payload;
-        roles.unshift(emptyRole);
-        return roles;
-    },
+    [ROLES_RECEIVE]: (state, action) => action.payload,
+    [SAVE_MODIFIED_ROLE_RECEIVE]: (state, action) => action.payload,
+    [SAVE_ADDED_ROLE_RECEIVE]: (state, action) => action.payload,
 });
 
 export default rolesReducer;

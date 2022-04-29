@@ -2,8 +2,8 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     USERS_REQUEST,
-    USERS_RECEIVED,
-    USERS_ERROR,
+    USERS_RECEIVE,
+    USERS_FAILURE,
 } from '../actiontypes';
 
 function getUsers() {
@@ -14,9 +14,9 @@ function* requestUsers() {
     try {
         const response = yield call(getUsers);
         const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(USERS_RECEIVED(users));
+        yield put(USERS_RECEIVE(users));
     } catch (error) {
-        yield put(USERS_ERROR(error));
+        yield put(USERS_FAILURE(error));
     }
 }
 

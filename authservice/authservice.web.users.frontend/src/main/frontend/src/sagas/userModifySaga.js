@@ -1,10 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    USER_MODIFY,
-    USER_CLEAR,
-    USERS_RECEIVED,
-    USERS_ERROR,
+    SAVE_MODIFIED_USER_REQUEST,
+    SAVE_MODIFIED_USER_RECEIVE,
+    SAVE_MODIFIED_USER_FAILURE,
 } from '../actiontypes';
 
 function postUserModify(user) {
@@ -16,13 +15,12 @@ function* modifyUser(action) {
         const user = action.payload;
         const response = yield call(postUserModify, user);
         const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(USERS_RECEIVED(users));
-        yield put(USER_CLEAR());
+        yield put(SAVE_MODIFIED_USER_RECEIVE(users));
     } catch (error) {
-        yield put(USERS_ERROR(error));
+        yield put(SAVE_MODIFIED_USER_FAILURE(error));
     }
 }
 
 export default function* userModifySaga() {
-    yield takeLatest(USER_MODIFY, modifyUser);
+    yield takeLatest(SAVE_MODIFIED_USER_REQUEST, modifyUser);
 }

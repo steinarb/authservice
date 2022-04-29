@@ -1,43 +1,61 @@
 import { combineReducers } from 'redux';
 import users from './usersReducer';
-import user from './userReducer';
+import userid from './useridReducer';
+import username from './usernameReducer';
+import email from './emailReducer';
+import firstname from './firstnameReducer';
+import lastname from './lastnameReducer';
 import userroles from './userrolesReducer';
 import rolesNotOnUser from './rolesNotOnUserReducer';
 import selectedInRolesNotOnUser from './selectedInRolesNotOnUserReducer';
 import rolesOnUser from './rolesOnUserReducer';
 import selectedInRolesOnUser from './selectedInRolesOnUserReducer';
-import passwords from './passwordsReducer';
+import password1 from './password1Reducer';
+import password2 from './password2Reducer';
+import passwordsNotIdentical from './passwordsNotIdenticalReducer';
 import roles from './rolesReducer';
-import role from './roleReducer';
+import roleid from './roleidReducer';
+import rolename from './rolenameReducer';
+import roleDescription from './roleDescriptionReducer';
 import rolepermissions from './rolepermissionsReducer';
 import permissionsNotOnRole from './permissionsNotOnRoleReducer';
 import selectedInPermissionsNotOnRole from './selectedInPermissionsNotOnRoleReducer';
 import permissionsOnRole from './permissionsOnRoleReducer';
 import selectedInPermissionsOnRole from './selectedInPermissionsOnRoleReducer';
 import permissions from './permissionsReducer';
-import permission from './permissionReducer';
-import formfield from './formfieldReducer';
+import permissionid from './permissionidReducer';
+import permissionname from './permissionnameReducer';
+import permissionDescription from './permissionDescriptionReducer';
 import errors from './errorsReducer';
 
 const rootsReducer = combineReducers({
     users,
-    user,
+    userid,
+    username,
+    email,
+    firstname,
+    lastname,
     userroles,
     rolesNotOnUser,
     selectedInRolesNotOnUser,
     rolesOnUser,
     selectedInRolesOnUser,
-    passwords,
+    password1,
+    password2,
+    passwordsNotIdentical,
     roles,
-    role,
+    roleid,
+    rolename,
+    roleDescription,
     rolepermissions,
     permissionsNotOnRole,
     selectedInPermissionsNotOnRole,
     permissionsOnRole,
     selectedInPermissionsOnRole,
     permissions,
-    permission,
-    formfield,
+    permissionid,
+    permissionname,
+    permissionDescription,
     errors,
 });
 

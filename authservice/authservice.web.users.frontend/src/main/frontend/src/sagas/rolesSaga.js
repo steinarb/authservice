@@ -2,8 +2,8 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     ROLES_REQUEST,
-    ROLES_RECEIVED,
-    ROLES_ERROR,
+    ROLES_RECEIVE,
+    ROLES_FAILURE,
 } from '../actiontypes';
 
 function getRoles() {
@@ -14,9 +14,9 @@ function* requestRoles() {
     try {
         const response = yield call(getRoles);
         const roles = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(ROLES_RECEIVED(roles));
+        yield put(ROLES_RECEIVE(roles));
     } catch (error) {
-        yield put(ROLES_ERROR(error));
+        yield put(ROLES_FAILURE(error));
     }
 }
 

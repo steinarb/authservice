@@ -1,11 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    USER_CLEAR,
-    PASSWORDS_MODIFY,
-    PASSWORDS_CLEAR,
-    USERS_RECEIVED,
-    USERS_ERROR,
+    SAVE_PASSWORDS_MODIFY_REQUEST,
+    SAVE_PASSWORDS_MODIFY_RECEIVE,
+    SAVE_PASSWORDS_MODIFY_FAILURE,
 } from '../actiontypes';
 
 function postUserAdd(userAndPasswords) {
@@ -17,14 +15,12 @@ function* addUser(action) {
         const userAndPasswords = action.payload;
         const response = yield call(postUserAdd, userAndPasswords);
         const users = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(USER_CLEAR());
-        yield put(USERS_RECEIVED(users));
-        yield put(PASSWORDS_CLEAR());
+        yield put(SAVE_PASSWORDS_MODIFY_RECEIVE(users));
     } catch (error) {
-        yield put(USERS_ERROR(error));
+        yield put(SAVE_PASSWORDS_MODIFY_FAILURE(error));
     }
 }
 
 export default function* passwordsModifySaga() {
-    yield takeLatest(PASSWORDS_MODIFY, addUser);
+    yield takeLatest(SAVE_PASSWORDS_MODIFY_REQUEST, addUser);
 }

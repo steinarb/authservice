@@ -1,10 +1,9 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    ROLE_REMOVE_PERMISSIONS,
-    ROLEPERMISSIONS_RECEIVED,
-    ROLEPERMISSIONS_ERROR,
-    PERMISSIONS_ON_ROLE_CLEAR,
+    REMOVE_PERMISSON_FROM_ROLE_REQUEST,
+    REMOVE_PERMISSON_FROM_ROLE_RECEIVE,
+    REMOVE_PERMISSON_FROM_ROLE_FAILURE,
 } from '../actiontypes';
 
 function postRoleRemovePermissions(roleAndPermissions) {
@@ -13,19 +12,14 @@ function postRoleRemovePermissions(roleAndPermissions) {
 
 function* roleRemovePermissions(action) {
     try {
-        const role = yield select(state => state.role);
-        const permissionsOnRole = yield select(state => state.permissionsOnRole);
-        const permissions = permissionsOnRole.filter(p => p.id === action.payload);
-        const roleAndPermissions = { role, permissions };
-        const response = yield call(postRoleRemovePermissions, roleAndPermissions);
+        const response = yield call(postRoleRemovePermissions, action.payload);
         const rolepermissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(PERMISSIONS_ON_ROLE_CLEAR());
-        yield put(ROLEPERMISSIONS_RECEIVED(rolepermissions));
+        yield put(REMOVE_PERMISSON_FROM_ROLE_RECEIVE(rolepermissions));
     } catch (error) {
-        yield put(ROLEPERMISSIONS_ERROR(error));
+        yield put(REMOVE_PERMISSON_FROM_ROLE_FAILURE(error));
     }
 }
 
 export default function* roleRemovePermissionsSaga() {
-    yield takeLatest(ROLE_REMOVE_PERMISSIONS, roleRemovePermissions);
+    yield takeLatest(REMOVE_PERMISSON_FROM_ROLE_REQUEST, roleRemovePermissions);
 }

@@ -1,10 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    ROLE_MODIFY,
-    ROLE_CLEAR,
-    ROLES_RECEIVED,
-    ROLES_ERROR,
+    SAVE_MODIFIED_ROLE_REQUEST,
+    SAVE_MODIFIED_ROLE_RECEIVE,
+    SAVE_MODIFIED_ROLE_FAILURE,
 } from '../actiontypes';
 
 function postRoleModify(role) {
@@ -13,16 +12,14 @@ function postRoleModify(role) {
 
 function* modifyRole(action) {
     try {
-        const role = action.payload;
-        const response = yield call(postRoleModify, role);
+        const response = yield call(postRoleModify, action.payload);
         const roles = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(ROLES_RECEIVED(roles));
-        yield put(ROLE_CLEAR());
+        yield put(SAVE_MODIFIED_ROLE_RECEIVE(roles));
     } catch (error) {
-        yield put(ROLES_ERROR(error));
+        yield put(SAVE_MODIFIED_ROLE_FAILURE(error));
     }
 }
 
 export default function* roleModifySaga() {
-    yield takeLatest(ROLE_MODIFY, modifyRole);
+    yield takeLatest(SAVE_MODIFIED_ROLE_REQUEST, modifyRole);
 }

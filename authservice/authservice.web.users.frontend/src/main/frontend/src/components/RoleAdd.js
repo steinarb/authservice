@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     ROLE_CLEAR,
-    ROLE_UPDATE,
-    ROLE_ADD,
+    ROLENAME_FIELD_MODIFIED,
+    ROLE_DESCRIPTION_FIELD_MODIFIED,
+    ADD_ROLE_BUTTON_CLICKED,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -13,7 +14,8 @@ import {FormField } from './bootstrap/FormField';
 
 function RoleAdd(props) {
     const {
-        role,
+        rolename,
+        description,
         onRolename,
         onDescription,
         onAddRole,
@@ -36,17 +38,17 @@ function RoleAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="rolename">Role name</FormLabel>
                         <FormField>
-                            <input id="rolename" className="form-control" type="text" value={role.rolename} onChange={onRolename} />
+                            <input id="rolename" className="form-control" type="text" value={rolename} onChange={onRolename} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="description">Role description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={role.description} onChange={onDescription} />
+                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={() => onAddRole(role)}>Add new role</button>
+                        <button className="btn btn-primary form-control" onClick={onAddRole}>Add new role</button>
                     </FormRow>
                 </Container>
             </form>
@@ -57,15 +59,17 @@ function RoleAdd(props) {
 const mapStateToProps = (state) => {
     return {
         role: state.role,
+        rolename: state.rolename,
+        description: state.roleDescription,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onRoleClear: () => dispatch(ROLE_CLEAR()),
-        onRolename: e => dispatch(ROLE_UPDATE({ rolename: e.target.value })),
-        onDescription: e => dispatch(ROLE_UPDATE({ description: e.target.value })),
-        onAddRole: (role) => dispatch(ROLE_ADD(role)),
+        onRolename: e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value)),
+        onDescription: e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
+        onAddRole: () => dispatch(ADD_ROLE_BUTTON_CLICKED()),
     };
 };
 

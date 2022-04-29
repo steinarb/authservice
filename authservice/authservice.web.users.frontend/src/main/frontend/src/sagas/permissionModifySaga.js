@@ -1,10 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    PERMISSION_MODIFY,
-    PERMISSION_CLEAR,
-    PERMISSIONS_RECEIVED,
-    PERMISSIONS_ERROR,
+    SAVE_MODIFIED_PERMISSION_REQUEST,
+    SAVE_MODIFIED_PERMISSION_RECEIVE,
+    SAVE_MODIFIED_PERMISSION_FAILURE,
 } from '../actiontypes';
 
 function postPermissionModify(permission) {
@@ -13,16 +12,14 @@ function postPermissionModify(permission) {
 
 function* modifyPermission(action) {
     try {
-        const permission = action.payload;
-        const response = yield call(postPermissionModify, permission);
+        const response = yield call(postPermissionModify, action.payload);
         const permissions = (response.headers['content-type'] === 'application/json') ? response.data : [];
-        yield put(PERMISSIONS_RECEIVED(permissions));
-        yield put(PERMISSION_CLEAR());
+        yield put(SAVE_MODIFIED_PERMISSION_RECEIVE(permissions));
     } catch (error) {
-        yield put(PERMISSIONS_ERROR(error));
+        yield put(SAVE_MODIFIED_PERMISSION_FAILURE(error));
     }
 }
 
 export default function* permissionModifySaga() {
-    yield takeLatest(PERMISSION_MODIFY, modifyPermission);
+    yield takeLatest(SAVE_MODIFIED_PERMISSION_REQUEST, modifyPermission);
 }

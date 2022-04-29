@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
     PERMISSION_CLEAR,
-    PERMISSION_UPDATE,
-    PERMISSION_ADD,
+    PERMISSION_DESCRIPTION_FIELD_MODIFIED,
+    PERMISSIONNAME_FIELD_MODIFIED,
+    ADD_NEW_PERMISSION_BUTTON_CLICKED,
 } from '../actiontypes';
 import { Container } from './bootstrap/Container';
 import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
@@ -13,7 +14,8 @@ import {FormField } from './bootstrap/FormField';
 
 function PermissionAdd(props) {
     const {
-        permission,
+        permissionname,
+        description,
         onPermissionClear,
         onPermissionname,
         onDescription,
@@ -36,17 +38,17 @@ function PermissionAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                         <FormField>
-                            <input id="permissionname" className="form-control" type="text" value={permission.permissionname} onChange={onPermissionname} />
+                            <input id="permissionname" className="form-control" type="text" value={permissionname} onChange={onPermissionname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Permission description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={permission.description} onChange={onDescription} />
+                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button onClick={() => onAddPermission(permission)}>Add new permission</button>
+                        <button className="btn btn-primary form-control" onClick={onAddPermission}>Add new permission</button>
                     </FormRow>
                 </Container>
             </form>
@@ -56,16 +58,17 @@ function PermissionAdd(props) {
 
 const mapStateToProps = (state) => {
     return {
-        permission: state.permission,
+        permissionname: state.permissionname,
+        description: state.permissionDescription,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onPermissionClear: () => dispatch(PERMISSION_CLEAR()),
-        onPermissionname: e => dispatch(PERMISSION_UPDATE({ permissionname: e.target.value })),
-        onDescription: e => dispatch(PERMISSION_UPDATE({ description: e.target.value })),
-        onAddPermission: permission => dispatch(PERMISSION_ADD(permission)),
+        onPermissionname: e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value)),
+        onDescription: e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
+        onAddPermission: () => dispatch(ADD_NEW_PERMISSION_BUTTON_CLICKED()),
     };
 };
 

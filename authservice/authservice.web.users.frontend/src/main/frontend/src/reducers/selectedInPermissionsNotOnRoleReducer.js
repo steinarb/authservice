@@ -1,13 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    PERMISSIONS_NOT_ON_ROLE_SELECTED,
-    PERMISSIONS_NOT_ON_ROLE_CLEAR,
+    SELECT_PERMISSIONS_NOT_ON_ROLE,
 } from '../actiontypes';
 import { emptyPermission } from '../constants';
 
 const selectedInPermissionsNotOnRoleReducer = createReducer(emptyPermission.id, {
-    [PERMISSIONS_NOT_ON_ROLE_SELECTED]: (state, action) => action.payload,
-    [PERMISSIONS_NOT_ON_ROLE_CLEAR]: () => emptyPermission.id,
+    [SELECT_PERMISSIONS_NOT_ON_ROLE]: (state, action) => action.payload,
 });
 
 export default selectedInPermissionsNotOnRoleReducer;

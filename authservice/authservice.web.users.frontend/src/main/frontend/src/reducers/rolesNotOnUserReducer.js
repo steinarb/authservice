@@ -1,10 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    ROLES_NOT_ON_USER_UPDATE,
+    SET_ROLES_NOT_ON_USER,
+    SELECT_USER,
 } from '../actiontypes';
+import { isUnselected } from './common';
+const defaultValue = [];
 
 const rolesNotOnUserReducer = createReducer([], {
-    [ROLES_NOT_ON_USER_UPDATE]: (state, action) => action.payload,
+    [SET_ROLES_NOT_ON_USER]: (state, action) => action.payload,
+    [SELECT_USER]: (state, action) => isUnselected(action.payload) ? defaultValue : state,
 });
 
 export default rolesNotOnUserReducer;
