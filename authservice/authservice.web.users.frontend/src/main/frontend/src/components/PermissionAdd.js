@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     PERMISSION_CLEAR,
     PERMISSION_DESCRIPTION_FIELD_MODIFIED,
@@ -16,15 +16,12 @@ function PermissionAdd(props) {
     const {
         permissionname,
         description,
-        onPermissionClear,
-        onPermissionname,
-        onDescription,
-        onAddPermission,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onPermissionClear();
-    },[onPermissionClear]);
+       dispatch(PERMISSION_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -45,7 +42,7 @@ function PermissionAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={permissionname}
-                                onChange={onPermissionname} />
+                                onChange={e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -56,13 +53,13 @@ function PermissionAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={description}
-                                onChange={onDescription} />
+                                onChange={e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={onAddPermission}>
+                            onClick={() => dispatch(ADD_NEW_PERMISSION_BUTTON_CLICKED())}>
                             Add new permission</button>
                     </FormRow>
                 </Container>
@@ -78,13 +75,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onPermissionClear: () => dispatch(PERMISSION_CLEAR()),
-        onPermissionname: e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value)),
-        onDescription: e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
-        onAddPermission: () => dispatch(ADD_NEW_PERMISSION_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PermissionAdd);
+export default connect(mapStateToProps)(PermissionAdd);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     USERNAME_FIELD_MODIFIED,
     EMAIL_FIELD_MODIFIED,
@@ -26,21 +26,13 @@ function UserAdd(props) {
         password1,
         password2,
         passwordsNotIdentical,
-        onUsername,
-        onEmail,
-        onFirstname,
-        onLastname,
-        onPassword1,
-        onPassword2,
-        onAddUser,
-        onUserClear,
-        onPasswordsClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onUserClear();
-        onPasswordsClear();
-    },[onUserClear, onPasswordsClear]);
+        dispatch(USER_CLEAR());
+        dispatch(PASSWORDS_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -59,7 +51,7 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={username}
-                                onChange={onUsername} />
+                                onChange={e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -70,7 +62,7 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={email}
-                                onChange={onEmail} />
+                                onChange={e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -81,7 +73,7 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={firstname}
-                                onChange={onFirstname} />
+                                onChange={e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -92,7 +84,7 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={lastname}
-                                onChange={onLastname} />
+                                onChange={e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -103,7 +95,7 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="password"
                                 value={password1}
-                                onChange={onPassword1} />
+                                onChange={e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -114,14 +106,14 @@ function UserAdd(props) {
                                 className="form-control"
                                 type="password"
                                 value={password2}
-                                onChange={onPassword2} />
+                                onChange={e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value))} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={onAddUser}>
+                            onClick={() => dispatch(ADD_USER_BUTTON_CLICKED())}>
                             Opprett bruker</button>
                     </FormRow>
                 </Container>
@@ -142,18 +134,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onUserClear: () => dispatch(USER_CLEAR()),
-        onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
-        onUsername: e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value)),
-        onEmail: e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value)),
-        onFirstname: e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value)),
-        onLastname: e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value)),
-        onPassword1: e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value)),
-        onPassword2: e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value)),
-        onAddUser: () => dispatch(ADD_USER_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserAdd);
+export default connect(mapStateToProps)(UserAdd);

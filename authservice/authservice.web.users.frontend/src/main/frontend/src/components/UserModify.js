@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     SELECT_USER,
     USERNAME_FIELD_MODIFIED,
@@ -24,20 +24,13 @@ function UserModify(props) {
         firstname,
         lastname,
         users,
-        onUsersChange,
-        onUsername,
-        onEmail,
-        onFirstname,
-        onLastname,
-        onSaveUpdatedUser,
-        onUsers,
-        onUserClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onUsers();
-        onUserClear();
-    },[onUsers, onUserClear]);
+        dispatch(USERS_REQUEST());
+        dispatch(USER_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -54,7 +47,7 @@ function UserModify(props) {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={onUsersChange}
+                                onChange={e => dispatch(SELECT_USER(parseInt(e.target.value)))}
                                 value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
@@ -69,7 +62,7 @@ function UserModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={username}
-                                onChange={onUsername} />
+                                onChange={e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -80,7 +73,7 @@ function UserModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={email}
-                                onChange={onEmail} />
+                                onChange={e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -91,7 +84,7 @@ function UserModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={firstname}
-                                onChange={onFirstname} />
+                                onChange={e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -102,7 +95,7 @@ function UserModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={lastname}
-                                onChange={onLastname} />
+                                onChange={e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -110,7 +103,7 @@ function UserModify(props) {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
-                                onClick={onSaveUpdatedUser}>
+                                onClick={() => dispatch(MODIFY_USER_BUTTON_CLICKED())}>
                                 Lagre endringer av bruker</button>
                         </FormField>
                     </FormRow>
@@ -131,17 +124,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onUsers: () => dispatch(USERS_REQUEST()),
-        onUserClear: () => dispatch(USER_CLEAR()),
-        onUsersChange: e => dispatch(SELECT_USER(parseInt(e.target.value))),
-        onUsername: e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value)),
-        onEmail: e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value)),
-        onFirstname: e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value)),
-        onLastname: e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value)),
-        onSaveUpdatedUser: () => dispatch(MODIFY_USER_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserModify);
+export default connect(mapStateToProps)(UserModify);

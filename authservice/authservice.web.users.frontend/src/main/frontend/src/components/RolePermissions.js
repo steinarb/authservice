@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     ROLES_REQUEST,
     SELECT_ROLE,
@@ -28,23 +28,15 @@ function RolePermissions(props) {
         selectedInPermissionsNotOnRole,
         permissionsOnRole,
         selectedInPermissionsOnRole,
-        onRolesChange,
-        onPermissionsNotOnRoleSelected,
-        onAddPermission,
-        onPermissionsOnRoleSelected,
-        onRemovePermission,
-        onRoles,
-        onRoleClear,
-        onPermissions,
-        onRolePermissions,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onRoles();
-        onRoleClear();
-        onPermissions();
-        onRolePermissions();
-    },[onRoles, onRoleClear, onPermissions, onRolePermissions]);
+        dispatch(ROLES_REQUEST());
+        dispatch(ROLE_CLEAR());
+        dispatch(PERMISSIONS_REQUEST());
+        dispatch(ROLEPERMISSIONS_REQUEST());
+    },[]);
 
     const addPermissionDisabled = isUnselected(selectedInPermissionsNotOnRole);
     const removePermissionDisabled = isUnselected(selectedInPermissionsOnRole);
@@ -64,7 +56,7 @@ function RolePermissions(props) {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={onRolesChange}
+                                onChange={e => dispatch(SELECT_ROLE(parseInt(e.target.value)))}
                                 value={roleid}
                             >
                                 <option key="-1" value="-1" />
@@ -80,7 +72,7 @@ function RolePermissions(props) {
                                 className="form-control"
                                 multiselect="true"
                                 size="10"
-                                onChange={onPermissionsNotOnRoleSelected}
+                                onChange={e => dispatch(SELECT_PERMISSIONS_NOT_ON_ROLE(parseInt(e.target.value, 10)))}
                                 value={selectedInPermissionsNotOnRole}
                             >
                                 <option key="-1" value="-1" />
@@ -91,12 +83,12 @@ function RolePermissions(props) {
                             <button
                                 disabled={addPermissionDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={onAddPermission}>
+                                onClick={() => dispatch(ADD_PERMISSION_TO_ROLE_BUTTON_CLICKED())}>
                                 Add permission &nbsp;<ChevronRight/></button>
                             <button
                                 disabled={removePermissionDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={onRemovePermission}>
+                                onClick={() => dispatch(REMOVE_PERMISSION_FROM_ROLE_BUTTON_CLICKED())}>
                                 <ChevronLeft/>&nbsp; Remove permission</button>
                         </div>
                         <div className="no-gutters col-sm-4">
@@ -106,7 +98,7 @@ function RolePermissions(props) {
                                 className="form-control"
                                 multiselect="true"
                                 size="10"
-                                onChange={onPermissionsOnRoleSelected}
+                                onChange={e => dispatch(SELECT_PERMISSIONS_ON_ROLE(parseInt(e.target.value, 10)))}
                                 value={selectedInPermissionsOnRole}>
                                 <option key="-1" value="-1" />
                                 {permissionsOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
@@ -130,18 +122,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onRoles: () => dispatch(ROLES_REQUEST()),
-        onRoleClear: () => dispatch(ROLE_CLEAR()),
-        onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
-        onRolePermissions: () => dispatch(ROLEPERMISSIONS_REQUEST()),
-        onRolesChange: e => dispatch(SELECT_ROLE(parseInt(e.target.value))),
-        onPermissionsNotOnRoleSelected: e => dispatch(SELECT_PERMISSIONS_NOT_ON_ROLE(parseInt(e.target.value, 10))),
-        onAddPermission: () => dispatch(ADD_PERMISSION_TO_ROLE_BUTTON_CLICKED()),
-        onPermissionsOnRoleSelected: e => dispatch(SELECT_PERMISSIONS_ON_ROLE(parseInt(e.target.value, 10))),
-        onRemovePermission: () => dispatch(REMOVE_PERMISSION_FROM_ROLE_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RolePermissions);
+export default connect(mapStateToProps)(RolePermissions);

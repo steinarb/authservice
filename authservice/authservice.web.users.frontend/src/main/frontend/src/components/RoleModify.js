@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     ROLES_REQUEST,
     ROLE_CLEAR,
@@ -20,18 +20,13 @@ function RoleModify(props) {
         roleid,
         rolename,
         description,
-        onRolesChange,
-        onRolename,
-        onDescription,
-        onSaveUpdatedRole,
-        onRoles,
-        onRoleClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onRoles();
-        onRoleClear();
-    },[onRoles, onRoleClear]);
+        dispatch(ROLES_REQUEST());
+        dispatch(ROLE_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -48,7 +43,7 @@ function RoleModify(props) {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={onRolesChange}
+                                onChange={e => dispatch(SELECT_ROLE(parseInt(e.target.value)))}
                                 value={roleid}
                             >
                                 <option key="-1" value="-1" />
@@ -64,7 +59,7 @@ function RoleModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={rolename}
-                                onChange={onRolename} />
+                                onChange={e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -75,13 +70,13 @@ function RoleModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={description}
-                                onChange={onDescription} />
+                                onChange={e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={onSaveUpdatedRole}>
+                            onClick={() => dispatch(MODIFY_ROLE_BUTTON_CLICKED())}>
                             Save changes to role</button>
                     </FormRow>
                 </Container>
@@ -99,15 +94,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onRoles: () => dispatch(ROLES_REQUEST()),
-        onRoleClear: () => dispatch(ROLE_CLEAR()),
-        onRolesChange: e => dispatch(SELECT_ROLE(parseInt(e.target.value))),
-        onRolename: e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value)),
-        onDescription: e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
-        onSaveUpdatedRole: () => dispatch(MODIFY_ROLE_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RoleModify);
+export default connect(mapStateToProps)(RoleModify);

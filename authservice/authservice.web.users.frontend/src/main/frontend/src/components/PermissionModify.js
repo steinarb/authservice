@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     SELECT_PERMISSION,
     PERMISSIONS_REQUEST,
@@ -20,18 +20,13 @@ function PermissionModify(props) {
         permissionid,
         permissionname,
         description,
-        onPermissionsChange,
-        onPermissionname,
-        onDescription,
-        onSaveUpdatedPermission,
-        onPermissions,
-        onPermissionClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onPermissions();
-        onPermissionClear();
-    },[onPermissions, onPermissionClear]);
+        dispatch(PERMISSIONS_REQUEST());
+        dispatch(PERMISSION_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -50,7 +45,7 @@ function PermissionModify(props) {
                             <select
                                 id="permissions"
                                 className="form-control"
-                                onChange={onPermissionsChange}
+                                onChange={e => dispatch(SELECT_PERMISSION(parseInt(e.target.value)))}
                                 value={permissionid}
                             >
                                 <option key="-1" value="-1" />
@@ -66,7 +61,7 @@ function PermissionModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={permissionname}
-                                onChange={onPermissionname} />
+                                onChange={e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -77,13 +72,13 @@ function PermissionModify(props) {
                                 className="form-control"
                                 type="text"
                                 value={description}
-                                onChange={onDescription} />
+                                onChange={e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={onSaveUpdatedPermission}>
+                            onClick={() => dispatch(MODIFY_PERMISSION_BUTTON_CLICKED())}>
                             Save changes to permission</button>
                     </FormRow>
                 </Container>
@@ -101,15 +96,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onPermissions: () => dispatch(PERMISSIONS_REQUEST()),
-        onPermissionClear: () => dispatch(PERMISSION_CLEAR()),
-        onPermissionsChange: e => dispatch(SELECT_PERMISSION(parseInt(e.target.value))),
-        onPermissionname: e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value)),
-        onDescription: e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
-        onSaveUpdatedPermission: () => dispatch(MODIFY_PERMISSION_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PermissionModify);
+export default connect(mapStateToProps)(PermissionModify);

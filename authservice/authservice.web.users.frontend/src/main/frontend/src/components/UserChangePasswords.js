@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     USERS_REQUEST,
     SELECT_USER,
@@ -22,20 +22,14 @@ function UserChangePasswords(props) {
         password1,
         password2,
         passwordsNotIdentical,
-        onUsersChange,
-        onPassword1,
-        onPassword2,
-        onSaveUpdatedPassword,
-        onUsers,
-        onUserClear,
-        onPasswordsClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onUsers();
-        onUserClear();
-        onPasswordsClear();
-    },[onUsers, onUserClear, onPasswordsClear]);
+        dispatch(USERS_REQUEST());
+        dispatch(USER_CLEAR());
+        dispatch(PASSWORDS_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -52,7 +46,7 @@ function UserChangePasswords(props) {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={onUsersChange}
+                                onChange={e => dispatch(SELECT_USER(parseInt(e.target.value)))}
                                 value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
@@ -67,7 +61,7 @@ function UserChangePasswords(props) {
                                 className="form-control"
                                 type="password"
                                 value={password1}
-                                onChange={onPassword1} />
+                                onChange={e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -78,7 +72,7 @@ function UserChangePasswords(props) {
                                 className="form-control"
                                 type="password"
                                 value={password2}
-                                onChange={onPassword2} />
+                                onChange={e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value))} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
@@ -86,7 +80,7 @@ function UserChangePasswords(props) {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
-                                onClick={onSaveUpdatedPassword}>
+                                onClick={() => dispatch(CHANGE_PASSWORD_BUTTON_CLICKED())}>
                                 Change password</button>
                         </FormField>
                     </FormRow>
@@ -106,16 +100,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onUsers: () => dispatch(USERS_REQUEST()),
-        onUserClear: () => dispatch(USER_CLEAR()),
-        onPasswordsClear: () => dispatch(PASSWORDS_CLEAR()),
-        onUsersChange: e => dispatch(SELECT_USER(parseInt(e.target.value))),
-        onPassword1: e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value)),
-        onPassword2: e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value)),
-        onSaveUpdatedPassword: () => dispatch(CHANGE_PASSWORD_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserChangePasswords);
+export default connect(mapStateToProps)(UserChangePasswords);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {
     ROLE_CLEAR,
     ROLENAME_FIELD_MODIFIED,
@@ -16,15 +16,12 @@ function RoleAdd(props) {
     const {
         rolename,
         description,
-        onRolename,
-        onDescription,
-        onAddRole,
-        onRoleClear,
     } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        onRoleClear();
-    },[onRoleClear]);
+        dispatch(ROLE_CLEAR());
+    },[]);
 
     return (
         <div>
@@ -43,7 +40,7 @@ function RoleAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={rolename}
-                                onChange={onRolename} />
+                                onChange={e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -54,13 +51,13 @@ function RoleAdd(props) {
                                 className="form-control"
                                 type="text"
                                 value={description}
-                                onChange={onDescription} />
+                                onChange={e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={onAddRole}>
+                            onClick={() => dispatch(ADD_ROLE_BUTTON_CLICKED())}>
                             Add new role</button>
                     </FormRow>
                 </Container>
@@ -77,13 +74,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onRoleClear: () => dispatch(ROLE_CLEAR()),
-        onRolename: e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value)),
-        onDescription: e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value)),
-        onAddRole: () => dispatch(ADD_ROLE_BUTTON_CLICKED()),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RoleAdd);
+export default connect(mapStateToProps)(RoleAdd);
