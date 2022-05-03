@@ -36,7 +36,9 @@ function PermissionModify(props) {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+                <StyledLinkLeft to="/authservice/useradmin/permissions">
+                    Up to permission adminstration
+                </StyledLinkLeft><br/>
                 <h1>Modify permission information</h1>
                 <div className="col-sm-2"></div>
             </nav>
@@ -45,7 +47,12 @@ function PermissionModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissions">Select permission</FormLabel>
                         <FormField>
-                            <select id="permissions" className="form-control" onChange={onPermissionsChange} value={permissionid}>
+                            <select
+                                id="permissions"
+                                className="form-control"
+                                onChange={onPermissionsChange}
+                                value={permissionid}
+                            >
                                 <option key="-1" value="-1" />
                                 {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
                             </select>
@@ -54,17 +61,30 @@ function PermissionModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                         <FormField>
-                            <input id="permissionname" className="form-control" type="text" value={permissionname} onChange={onPermissionname} />
+                            <input
+                                id="permissionname"
+                                className="form-control"
+                                type="text"
+                                value={permissionname}
+                                onChange={onPermissionname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="description">Permission description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
+                            <input
+                                id="description"
+                                className="form-control"
+                                type="text"
+                                value={description}
+                                onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={onSaveUpdatedPermission}>Save changes to permission</button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={onSaveUpdatedPermission}>
+                            Save changes to permission</button>
                     </FormRow>
                 </Container>
             </form>

@@ -29,7 +29,9 @@ function PermissionAdd(props) {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/permissions">Up to permission adminstration</StyledLinkLeft><br/>
+                <StyledLinkLeft to="/authservice/useradmin/permissions">
+                    Up to permission adminstration
+                </StyledLinkLeft><br/>
                 <h1>Add permission</h1>
                 <div className="col-sm-2"></div>
             </nav>
@@ -38,17 +40,30 @@ function PermissionAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="permissionname">Permission name</FormLabel>
                         <FormField>
-                            <input id="permissionname" className="form-control" type="text" value={permissionname} onChange={onPermissionname} />
+                            <input
+                                id="permissionname"
+                                className="form-control"
+                                type="text"
+                                value={permissionname}
+                                onChange={onPermissionname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Permission description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
+                            <input
+                                id="description"
+                                className="form-control"
+                                type="text"
+                                value={description}
+                                onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={onAddPermission}>Add new permission</button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={onAddPermission}>
+                            Add new permission</button>
                     </FormRow>
                 </Container>
             </form>

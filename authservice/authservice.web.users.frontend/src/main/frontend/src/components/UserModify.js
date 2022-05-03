@@ -51,7 +51,11 @@ function UserModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                            <select
+                                id="users"
+                                className="form-control"
+                                onChange={onUsersChange}
+                                value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
@@ -60,31 +64,54 @@ function UserModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="username">Username</FormLabel>
                         <FormField>
-                            <input id="username" className="form-control" type="text" value={username} onChange={onUsername} />
+                            <input
+                                id="username"
+                                className="form-control"
+                                type="text"
+                                value={username}
+                                onChange={onUsername} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Email address</FormLabel>
                         <FormField>
-                            <input id="email" className="form-control" type="text" value={email} onChange={onEmail} />
+                            <input
+                                id="email"
+                                className="form-control"
+                                type="text"
+                                value={email}
+                                onChange={onEmail} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="firstname">First name</FormLabel>
                         <FormField>
-                            <input id="firstname" className="form-control" type="text" value={firstname} onChange={onFirstname} />
+                            <input
+                                id="firstname"
+                                className="form-control"
+                                type="text"
+                                value={firstname}
+                                onChange={onFirstname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="lastname">Last name</FormLabel>
                         <FormField>
-                            <input id="lastname" className="form-control" type="text" value={lastname} onChange={onLastname} />
+                            <input
+                                id="lastname"
+                                className="form-control"
+                                type="text"
+                                value={lastname}
+                                onChange={onLastname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <div className="col-5"/>
                         <FormField>
-                            <button className="btn btn-primary form-control" onClick={onSaveUpdatedUser}>Lagre endringer av bruker</button>
+                            <button
+                                className="btn btn-primary form-control"
+                                onClick={onSaveUpdatedUser}>
+                                Lagre endringer av bruker</button>
                         </FormField>
                     </FormRow>
                 </Container>

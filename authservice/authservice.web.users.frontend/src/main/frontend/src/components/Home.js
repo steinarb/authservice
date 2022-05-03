@@ -1,12 +1,15 @@
 import React from 'react';
 import Container from './bootstrap/Container';
+import ChevronLeft from './bootstrap/ChevronLeft';
 import StyledLinkRight from './bootstrap/StyledLinkRight';
 
 function Home() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <a className="btn btn-primary left-align-cell" href="/authservice/"><span className="oi oi-chevron-left" title="chevron left" aria-hidden="true"></span>&nbsp;Up to authservice top</a>
+                <a className="btn btn-primary left-align-cell" href="/authservice/">
+                    <ChevronLeft/>&nbsp;Up to authservice top
+                </a>
                 <h1>User administration</h1>
                 <div className="col-sm-2"></div>
             </nav>

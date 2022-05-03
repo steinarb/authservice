@@ -38,17 +38,30 @@ function RoleAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="rolename">Role name</FormLabel>
                         <FormField>
-                            <input id="rolename" className="form-control" type="text" value={rolename} onChange={onRolename} />
+                            <input
+                                id="rolename"
+                                className="form-control"
+                                type="text"
+                                value={rolename}
+                                onChange={onRolename} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="description">Role description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
+                            <input
+                                id="description"
+                                className="form-control"
+                                type="text"
+                                value={description}
+                                onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={onAddRole}>Add new role</button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={onAddRole}>
+                            Add new role</button>
                     </FormRow>
                 </Container>
             </form>

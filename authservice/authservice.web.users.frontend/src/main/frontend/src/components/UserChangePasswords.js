@@ -49,7 +49,11 @@ function UserChangePasswords(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                            <select
+                                id="users"
+                                className="form-control"
+                                onChange={onUsersChange}
+                                value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
@@ -58,19 +62,32 @@ function UserChangePasswords(props) {
                     <FormRow>
                         <FormLabel htmlFor="password">Password:</FormLabel>
                         <FormField>
-                            <input id="password" className="form-control" type='password' value={password1} onChange={onPassword1} />
+                            <input
+                                id="password"
+                                className="form-control"
+                                type="password"
+                                value={password1}
+                                onChange={onPassword1} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                         <FormField>
-                            <input id="password2" className="form-control" type='password' value={password2} onChange={onPassword2} />
+                            <input
+                                id="password2"
+                                className="form-control"
+                                type="password"
+                                value={password2}
+                                onChange={onPassword2} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormField>
-                            <button className="btn btn-primary form-control" onClick={onSaveUpdatedPassword}>Change password</button>
+                            <button
+                                className="btn btn-primary form-control"
+                                onClick={onSaveUpdatedPassword}>
+                                Change password</button>
                         </FormField>
                     </FormRow>
                 </Container>

@@ -61,7 +61,12 @@ function RolePermissions(props) {
                     <FormRow>
                         <FormLabel htmlFor="roles">Select role</FormLabel>
                         <FormField>
-                            <select id="roles" className="form-control" onChange={onRolesChange} value={roleid}>
+                            <select
+                                id="roles"
+                                className="form-control"
+                                onChange={onRolesChange}
+                                value={roleid}
+                            >
                                 <option key="-1" value="-1" />
                                 {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
@@ -70,18 +75,39 @@ function RolePermissions(props) {
                     <FormRow>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="permissionsnotonrole">Permissions not on role</label>
-                            <select id="permissionsnotonrole" className="form-control" multiselect="true" size="10" onChange={onPermissionsNotOnRoleSelected} value={selectedInPermissionsNotOnRole}>
+                            <select
+                                id="permissionsnotonrole"
+                                className="form-control"
+                                multiselect="true"
+                                size="10"
+                                onChange={onPermissionsNotOnRoleSelected}
+                                value={selectedInPermissionsNotOnRole}
+                            >
                                 <option key="-1" value="-1" />
                                 {permissionsNotOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
                             </select>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <button disabled={addPermissionDisabled} className="btn btn-primary form-control" onClick={onAddPermission}>Add permission &nbsp;<ChevronRight/></button>
-                            <button disabled={removePermissionDisabled} className="btn btn-primary form-control" onClick={onRemovePermission}><ChevronLeft/>&nbsp; Remove permission</button>
+                            <button
+                                disabled={addPermissionDisabled}
+                                className="btn btn-primary form-control"
+                                onClick={onAddPermission}>
+                                Add permission &nbsp;<ChevronRight/></button>
+                            <button
+                                disabled={removePermissionDisabled}
+                                className="btn btn-primary form-control"
+                                onClick={onRemovePermission}>
+                                <ChevronLeft/>&nbsp; Remove permission</button>
                         </div>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="permissionsonrole">Permission on role</label>
-                            <select id="permissionsonrole" className="form-control" multiselect="true" size="10" onChange={onPermissionsOnRoleSelected} value={selectedInPermissionsOnRole}>
+                            <select
+                                id="permissionsonrole"
+                                className="form-control"
+                                multiselect="true"
+                                size="10"
+                                onChange={onPermissionsOnRoleSelected}
+                                value={selectedInPermissionsOnRole}>
                                 <option key="-1" value="-1" />
                                 {permissionsOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
                             </select>

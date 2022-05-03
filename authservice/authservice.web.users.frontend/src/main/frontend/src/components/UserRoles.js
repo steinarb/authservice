@@ -62,7 +62,10 @@ function UserRoles(props) {
                     <FormRow>
                         <FormLabel htmlFor="users">Select user</FormLabel>
                         <FormField>
-                            <select id="users" className="form-control" onChange={onUsersChange} value={userid}>
+                            <select
+                                id="users"
+                                className="form-control"
+                                onChange={onUsersChange} value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
@@ -71,18 +74,37 @@ function UserRoles(props) {
                     <FormRow>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="rolesnotonuser">Roles not on user</label>
-                            <select id="rolesnotonuser" className="form-control" multiselect="true" size="10" onChange={onRolesNotOnUserSelected} value={selectedInRolesNotOnUser}>
+                            <select
+                                id="rolesnotonuser"
+                                className="form-control" multiselect="true"
+                                size="10"
+                                onChange={onRolesNotOnUserSelected}
+                                value={selectedInRolesNotOnUser}>
                                 <option key="-1" value="-1" />
                                 {rolesNotOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
                         </div>
                         <div className="no-gutters col-sm-4">
-                            <button disabled={addRoleDisabled} className="btn btn-primary form-control" onClick={onAddRole}>Add role &nbsp;<ChevronRight/></button>
-                            <button disabled={removeRoleDisabled} className="btn btn-primary form-control" onClick={onRemoveRole}><ChevronLeft/>&nbsp; Remove role</button>
+                            <button
+                                disabled={addRoleDisabled}
+                                className="btn btn-primary form-control"
+                                onClick={onAddRole}>
+                                Add role &nbsp;<ChevronRight/></button>
+                            <button
+                                disabled={removeRoleDisabled}
+                                className="btn btn-primary form-control"
+                                onClick={onRemoveRole}>
+                                <ChevronLeft/>&nbsp; Remove role</button>
                         </div>
                         <div className="no-gutters col-sm-4">
                             <label htmlFor="rolesonuser">Role on user</label>
-                            <select id="rolesonuser" className="form-control" multiselect="true" size="10" onChange={onRolesOnUserSelected} value={selectedInRolesOnUser}>
+                            <select
+                                id="rolesonuser"
+                                className="form-control"
+                                multiselect="true"
+                                size="10"
+                                onChange={onRolesOnUserSelected}
+                                value={selectedInRolesOnUser}>
                                 <option key="-1" value="-1" />
                                 {rolesOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>

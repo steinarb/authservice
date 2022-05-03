@@ -45,7 +45,12 @@ function RoleModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="roles">Select role</FormLabel>
                         <FormField>
-                            <select id="roles" className="form-control" onChange={onRolesChange} value={roleid}>
+                            <select
+                                id="roles"
+                                className="form-control"
+                                onChange={onRolesChange}
+                                value={roleid}
+                            >
                                 <option key="-1" value="-1" />
                                 {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
@@ -54,17 +59,30 @@ function RoleModify(props) {
                     <FormRow>
                         <FormLabel htmlFor="rolename">Role name</FormLabel>
                         <FormField>
-                            <input id="rolename" className="form-control" type="text" value={rolename} onChange={onRolename} />
+                            <input
+                                id="rolename"
+                                className="form-control"
+                                type="text"
+                                value={rolename}
+                                onChange={onRolename} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Role description</FormLabel>
                         <FormField>
-                            <input id="description" className="form-control" type="text" value={description} onChange={onDescription} />
+                            <input
+                                id="description"
+                                className="form-control"
+                                type="text"
+                                value={description}
+                                onChange={onDescription} />
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={onSaveUpdatedRole}>Save changes to role</button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={onSaveUpdatedRole}>
+                            Save changes to role</button>
                     </FormRow>
                 </Container>
             </form>

@@ -54,42 +54,75 @@ function UserAdd(props) {
                     <FormRow>
                         <FormLabel htmlFor="username">Username</FormLabel>
                         <FormField>
-                            <input id="username" className="form-control" type="text" value={username} onChange={onUsername} />
+                            <input
+                                id="username"
+                                className="form-control"
+                                type="text"
+                                value={username}
+                                onChange={onUsername} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="email">Email address</FormLabel>
                         <FormField>
-                            <input id="email" className="form-control" type="text" value={email} onChange={onEmail} />
+                            <input
+                                id="email"
+                                className="form-control"
+                                type="text"
+                                value={email}
+                                onChange={onEmail} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="firstname">First name</FormLabel>
                         <FormField>
-                            <input id="firstname" className="form-control" type="text" value={firstname} onChange={onFirstname} />
+                            <input
+                                id="firstname"
+                                className="form-control"
+                                type="text"
+                                value={firstname}
+                                onChange={onFirstname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="lastname">Last name</FormLabel>
                         <FormField>
-                            <input id="lastname" className="form-control" type="text" value={lastname} onChange={onLastname} />
+                            <input
+                                id="lastname"
+                                className="form-control"
+                                type="text"
+                                value={lastname}
+                                onChange={onLastname} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password">Password:</FormLabel>
                         <FormField>
-                            <input id="password" className="form-control" type='password' value={password1} onChange={onPassword1} />
+                            <input
+                                id="password"
+                                className="form-control"
+                                type="password"
+                                value={password1}
+                                onChange={onPassword1} />
                         </FormField>
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="password2">Repeat password:</FormLabel>
                         <FormField>
-                            <input id="password2" className="form-control" type='password' value={password2} onChange={onPassword2} />
+                            <input
+                                id="password2"
+                                className="form-control"
+                                type="password"
+                                value={password2}
+                                onChange={onPassword2} />
                             { passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>
-                        <button className="btn btn-primary form-control" onClick={onAddUser}>Opprett bruker</button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={onAddUser}>
+                            Opprett bruker</button>
                     </FormRow>
                 </Container>
             </form>
