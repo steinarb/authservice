@@ -12,13 +12,13 @@ import {
     REMOVE_USER_ROLE_BUTTON_CLICKED,
 
 } from '../actiontypes';
-import { Container } from './bootstrap/Container';
-import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
-import { ChevronLeft } from './bootstrap/ChevronLeft';
-import { ChevronRight } from './bootstrap/ChevronRight';
-import {FormRow } from './bootstrap/FormRow';
-import {FormLabel } from './bootstrap/FormLabel';
-import {FormField } from './bootstrap/FormField';
+import Container from './bootstrap/Container';
+import StyledLinkLeft from './bootstrap/StyledLinkLeft';
+import ChevronLeft from './bootstrap/ChevronLeft';
+import ChevronRight from './bootstrap/ChevronRight';
+import FormRow from './bootstrap/FormRow';
+import FormLabel from './bootstrap/FormLabel';
+import FormField from './bootstrap/FormField';
 import { isUnselected } from '../reducers/common';
 
 function UserRoles(props) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const ContainerFluid = (props) => {
+export default function ContainerFluid(props) {
     return (
         <div className="col">
             {props.children}

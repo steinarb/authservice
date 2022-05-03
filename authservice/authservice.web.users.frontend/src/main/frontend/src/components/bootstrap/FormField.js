@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const FormField = (props) => {
+export default function FormField(props) {
     return (
         <div className="col-7">
             {props.children}

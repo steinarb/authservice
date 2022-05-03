@@ -10,11 +10,11 @@ import {
     USERS_REQUEST,
     USER_CLEAR,
 } from '../actiontypes';
-import { Container } from './bootstrap/Container';
-import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
-import {FormRow } from './bootstrap/FormRow';
-import {FormLabel } from './bootstrap/FormLabel';
-import {FormField } from './bootstrap/FormField';
+import Container from './bootstrap/Container';
+import StyledLinkLeft from './bootstrap/StyledLinkLeft';
+import FormRow from './bootstrap/FormRow';
+import FormLabel from './bootstrap/FormLabel';
+import FormField from './bootstrap/FormField';
 
 function UserModify(props) {
     const {

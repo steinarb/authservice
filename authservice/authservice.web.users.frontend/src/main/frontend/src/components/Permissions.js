@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import {
     PERMISSIONS_REQUEST,
 } from '../actiontypes';
-import { Container } from './bootstrap/Container';
-import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
-import { StyledLinkRight } from './bootstrap/StyledLinkRight';
+import Container from './bootstrap/Container';
+import StyledLinkLeft from './bootstrap/StyledLinkLeft';
+import StyledLinkRight from './bootstrap/StyledLinkRight';
 
 function Permissions() {
     return (

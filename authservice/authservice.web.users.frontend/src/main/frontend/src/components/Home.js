@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container } from './bootstrap/Container';
-import { StyledLinkRight } from './bootstrap/StyledLinkRight';
+import Container from './bootstrap/Container';
+import StyledLinkRight from './bootstrap/StyledLinkRight';
 
 function Home() {
     return (

@@ -8,11 +8,11 @@ import {
     ROLE_DESCRIPTION_FIELD_MODIFIED,
     MODIFY_ROLE_BUTTON_CLICKED,
 } from '../actiontypes';
-import { Container } from './bootstrap/Container';
-import { StyledLinkLeft } from './bootstrap/StyledLinkLeft';
-import {FormRow } from './bootstrap/FormRow';
-import {FormLabel } from './bootstrap/FormLabel';
-import {FormField } from './bootstrap/FormField';
+import Container from './bootstrap/Container';
+import StyledLinkLeft from './bootstrap/StyledLinkLeft';
+import FormRow from './bootstrap/FormRow';
+import FormLabel from './bootstrap/FormLabel';
+import FormField from './bootstrap/FormField';
 
 function RoleModify(props) {
     const {
