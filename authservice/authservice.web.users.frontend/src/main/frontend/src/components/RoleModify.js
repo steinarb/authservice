@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     ROLES_REQUEST,
     ROLE_CLEAR,
@@ -14,13 +14,11 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 
-function RoleModify(props) {
-    const {
-        roles,
-        roleid,
-        rolename,
-        description,
-    } = props;
+export default function RoleModify() {
+    const roles = useSelector(state => state.roles);
+    const roleid = useSelector(state => state.roleid);
+    const rolename = useSelector(state => state.rolename);
+    const description = useSelector(state => state.roleDescription);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -84,14 +82,3 @@ function RoleModify(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        roles: state.roles,
-        roleid: state.roleid,
-        rolename: state.rolename,
-        description: state.roleDescription,
-    };
-};
-
-export default connect(mapStateToProps)(RoleModify);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     SELECT_USER,
     USERNAME_FIELD_MODIFIED,
@@ -16,15 +16,13 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 
-function UserModify(props) {
-    const {
-        userid,
-        username,
-        email,
-        firstname,
-        lastname,
-        users,
-    } = props;
+export default function UserModify() {
+    const userid = useSelector(state => state.userid);
+    const username = useSelector(state => state.username);
+    const email = useSelector(state => state.email);
+    const firstname = useSelector(state => state.firstname);
+    const lastname = useSelector(state => state.lastname);
+    const users = useSelector(state => state.users);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -112,16 +110,3 @@ function UserModify(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        userid: state.userid,
-        username: state.username,
-        email: state.email,
-        firstname: state.firstname,
-        lastname: state.lastname,
-        users: state.users,
-    };
-};
-
-export default connect(mapStateToProps)(UserModify);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     ROLES_REQUEST,
     SELECT_ROLE,
@@ -20,15 +20,13 @@ import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 import { isUnselected } from '../reducers/common';
 
-function RolePermissions(props) {
-    const {
-        roles,
-        roleid,
-        permissionsNotOnRole,
-        selectedInPermissionsNotOnRole,
-        permissionsOnRole,
-        selectedInPermissionsOnRole,
-    } = props;
+export default function RolePermissions() {
+    const roles = useSelector(state => state.roles);
+    const roleid = useSelector(state => state.roleid);
+    const permissionsNotOnRole = useSelector(state => state.permissionsNotOnRole);
+    const selectedInPermissionsNotOnRole = useSelector(state => state.selectedInPermissionsNotOnRole);
+    const permissionsOnRole = useSelector(state => state.permissionsOnRole);
+    const selectedInPermissionsOnRole = useSelector(state => state.selectedInPermissionsOnRole);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -110,16 +108,3 @@ function RolePermissions(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        roles: state.roles,
-        roleid: state.roleid,
-        permissionsNotOnRole: state.permissionsNotOnRole,
-        selectedInPermissionsNotOnRole: state.selectedInPermissionsNotOnRole,
-        permissionsOnRole: state.permissionsOnRole,
-        selectedInPermissionsOnRole: state.selectedInPermissionsOnRole,
-    };
-};
-
-export default connect(mapStateToProps)(RolePermissions);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     PERMISSION_CLEAR,
     PERMISSION_DESCRIPTION_FIELD_MODIFIED,
@@ -12,11 +12,9 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 
-function PermissionAdd(props) {
-    const {
-        permissionname,
-        description,
-    } = props;
+export default function PermissionAdd() {
+    const permissionname = useSelector(state => state.permissionname);
+    const description = useSelector(state => state.permissionDescription);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -67,12 +65,3 @@ function PermissionAdd(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        permissionname: state.permissionname,
-        description: state.permissionDescription,
-    };
-};
-
-export default connect(mapStateToProps)(PermissionAdd);

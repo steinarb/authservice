@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     USERS_REQUEST,
     USER_CLEAR,
@@ -21,15 +21,13 @@ import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 import { isUnselected } from '../reducers/common';
 
-function UserRoles(props) {
-    const {
-        users,
-        userid,
-        rolesNotOnUser,
-        selectedInRolesNotOnUser,
-        rolesOnUser,
-        selectedInRolesOnUser,
-    } = props;
+export default function UserRoles() {
+    const users = useSelector(state => state.users);
+    const userid = useSelector(state => state.userid);
+    const rolesNotOnUser = useSelector(state => state.rolesNotOnUser);
+    const selectedInRolesNotOnUser = useSelector(state => state.selectedInRolesNotOnUser);
+    const rolesOnUser = useSelector(state => state.rolesOnUser);
+    const selectedInRolesOnUser = useSelector(state => state.selectedInRolesOnUser);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -107,16 +105,3 @@ function UserRoles(props) {
         </div>
     );
 }
-
-function mapStateToProps(state) {
-    return {
-        users: state.users,
-        userid: state.userid,
-        rolesNotOnUser: state.rolesNotOnUser,
-        selectedInRolesNotOnUser: state.selectedInRolesNotOnUser,
-        rolesOnUser: state.rolesOnUser,
-        selectedInRolesOnUser: state.selectedInRolesOnUser,
-    };
-}
-
-export default connect(mapStateToProps)(UserRoles);

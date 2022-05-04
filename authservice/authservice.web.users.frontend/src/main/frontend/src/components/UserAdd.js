@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     USERNAME_FIELD_MODIFIED,
     EMAIL_FIELD_MODIFIED,
@@ -17,16 +17,14 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 
-function UserAdd(props) {
-    const {
-        username,
-        email,
-        firstname,
-        lastname,
-        password1,
-        password2,
-        passwordsNotIdentical,
-    } = props;
+export default function UserAdd() {
+    const username = useSelector(state => state.username);
+    const email = useSelector(state => state.email);
+    const firstname = useSelector(state => state.firstname);
+    const lastname = useSelector(state => state.lastname);
+    const password1 = useSelector(state => state.password1);
+    const password2 = useSelector(state => state.password2);
+    const passwordsNotIdentical = useSelector(state => state.passwordsNotIdentical);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -121,17 +119,3 @@ function UserAdd(props) {
         </div>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        username: state.username,
-        email: state.email,
-        firstname: state.firstname,
-        lastname: state.lastname,
-        password1: state.password1,
-        password2: state.password2,
-        passwordsNotIdentical: state.passwordsNotIdentical,
-    };
-};
-
-export default connect(mapStateToProps)(UserAdd);
