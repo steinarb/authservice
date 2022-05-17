@@ -13,6 +13,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import { findSelectedPermission } from './common';
 
 export default function PermissionModify() {
     const permissions = useSelector(state => state.permissions);
@@ -43,7 +44,7 @@ export default function PermissionModify() {
                             <select
                                 id="permissions"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_PERMISSION(parseInt(e.target.value)))}
+                                onChange={e => dispatch(SELECT_PERMISSION(findSelectedPermission(e, permissions)))}
                                 value={permissionid}
                             >
                                 <option key="-1" value="-1" />
