@@ -13,6 +13,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import { findSelectedRole } from './common';
 
 export default function RoleModify() {
     const roles = useSelector(state => state.roles);
@@ -41,7 +42,7 @@ export default function RoleModify() {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_ROLE(parseInt(e.target.value)))}
+                                onChange={e => dispatch(SELECT_ROLE(findSelectedRole(e, roles)))}
                                 value={roleid}
                             >
                                 <option key="-1" value="-1" />

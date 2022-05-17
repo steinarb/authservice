@@ -44,7 +44,6 @@ export const ROLES_REQUEST = createAction('ROLES_REQUEST');
 export const ROLES_RECEIVE = createAction('ROLES_RECEIVE');
 export const ROLES_FAILURE = createAction('ROLES_FAILURE');
 export const SELECT_ROLE = createAction('SELECT_ROLE');
-export const SELECTED_ROLE = createAction('SELECTED_ROLE');
 export const ROLENAME_FIELD_MODIFIED = createAction('ROLENAME_FIELD_MODIFIED');
 export const ROLE_DESCRIPTION_FIELD_MODIFIED = createAction('ROLE_DESCRIPTION_FIELD_MODIFIED');
 export const MODIFY_ROLE_BUTTON_CLICKED = createAction('MODIFY_ROLE_BUTTON_CLICKED');

@@ -1,6 +1,6 @@
 import { takeLatest, select, put } from 'redux-saga/effects';
 import {
-    SELECTED_ROLE,
+    SELECT_ROLE,
     ROLEPERMISSIONS_RECEIVE,
     ADD_PERMISSON_TO_ROLE_RECEIVE,
     REMOVE_PERMISSON_FROM_ROLE_RECEIVE,
@@ -51,7 +51,7 @@ export default function* permissionsOnRoleSaga() {
     yield takeLatest(ROLEPERMISSIONS_RECEIVE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
     yield takeLatest(ADD_PERMISSON_TO_ROLE_RECEIVE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
     yield takeLatest(REMOVE_PERMISSON_FROM_ROLE_RECEIVE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
-    yield takeLatest(SELECTED_ROLE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
+    yield takeLatest(SELECT_ROLE, findPermissionsOnRolesAndFindPermissionsNotOnRoles);
     yield takeLatest(ADD_PERMISSION_TO_ROLE_BUTTON_CLICKED, addPermissionToRole);
     yield takeLatest(REMOVE_PERMISSION_FROM_ROLE_BUTTON_CLICKED, removePermissionFromRole);
 }

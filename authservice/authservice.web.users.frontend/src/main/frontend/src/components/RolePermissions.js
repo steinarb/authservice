@@ -19,6 +19,7 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 import { isUnselected } from '../reducers/common';
+import { findSelectedRole } from './common';
 
 export default function RolePermissions() {
     const roles = useSelector(state => state.roles);
@@ -54,7 +55,7 @@ export default function RolePermissions() {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_ROLE(parseInt(e.target.value)))}
+                                onChange={e => dispatch(SELECT_ROLE(findSelectedRole(e, roles)))}
                                 value={roleid}
                             >
                                 <option key="-1" value="-1" />

@@ -10,7 +10,7 @@ import {
 const defaultValue = -1;
 
 const roleidReducer = createReducer(defaultValue, {
-    [SELECT_ROLE]: (state, action) => action.payload,
+    [SELECT_ROLE]: (state, action) => action.payload.id,
     [ROLE_CLEAR]: () => defaultValue,
     [SAVE_MODIFIED_ROLE_RECEIVE]: () => defaultValue,
     [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,

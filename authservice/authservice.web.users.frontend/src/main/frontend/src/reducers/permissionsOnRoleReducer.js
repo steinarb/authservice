@@ -8,7 +8,7 @@ const defaultValue = [];
 
 const permissionsOnRoleReducer = createReducer(defaultValue, {
     [SET_PERMISSIONS_ON_ROLE]: (state, action) => action.payload,
-    [SELECT_ROLE]: (state, action) => isUnselected(action.payload) ? defaultValue : state,
+    [SELECT_ROLE]: (state, action) => isUnselected(action.payload.id) ? defaultValue : state,
 });
 
 export default permissionsOnRoleReducer;
