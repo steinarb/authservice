@@ -15,6 +15,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import { findSelectedUser } from './common';
 
 export default function UserModify() {
     const userid = useSelector(state => state.userid);
@@ -45,7 +46,7 @@ export default function UserModify() {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_USER(parseInt(e.target.value)))}
+                                onChange={e => dispatch(SELECT_USER(findSelectedUser(e, users)))}
                                 value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}

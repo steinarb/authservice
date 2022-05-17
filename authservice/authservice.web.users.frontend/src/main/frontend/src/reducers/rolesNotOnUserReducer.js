@@ -8,7 +8,7 @@ const defaultValue = [];
 
 const rolesNotOnUserReducer = createReducer([], {
     [SET_ROLES_NOT_ON_USER]: (state, action) => action.payload,
-    [SELECT_USER]: (state, action) => isUnselected(action.payload) ? defaultValue : state,
+    [SELECT_USER]: (state, action) => isUnselected(action.payload.userid) ? defaultValue : state,
 });
 
 export default rolesNotOnUserReducer;

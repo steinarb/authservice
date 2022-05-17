@@ -19,6 +19,7 @@ import ChevronRight from './bootstrap/ChevronRight';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import { findSelectedUser } from './common';
 import { isUnselected } from '../reducers/common';
 
 export default function UserRoles() {
@@ -55,7 +56,7 @@ export default function UserRoles() {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_USER(parseInt(e.target.value)))} value={userid}>
+                                onChange={e => dispatch(SELECT_USER(findSelectedUser(e, users)))} value={userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>

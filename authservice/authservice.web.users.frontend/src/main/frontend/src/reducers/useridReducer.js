@@ -10,7 +10,7 @@ import {
 const defaultValue = -1;
 
 const useridReducer = createReducer(defaultValue, {
-    [SELECT_USER]: (state, action) => action.payload,
+    [SELECT_USER]: (state, action) => action.payload.userid,
     [USER_CLEAR]: () => defaultValue,
     [SAVE_MODIFIED_USER_RECEIVE]: () => defaultValue,
     [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,

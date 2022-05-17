@@ -4,7 +4,6 @@ export const USERS_REQUEST = createAction('USERS_REQUEST');
 export const USERS_RECEIVE = createAction('USERS_RECEIVE');
 export const USERS_FAILURE = createAction('USERS_FAILURE');
 export const SELECT_USER = createAction('SELECT_USER');
-export const SELECTED_USER = createAction('SELECTED_USER');
 export const USERNAME_FIELD_MODIFIED = createAction('USERNAME_FIELD_MODIFIED');
 export const EMAIL_FIELD_MODIFIED = createAction('EMAIL_FIELD_MODIFIED');
 export const FIRSTNAME_FIELD_MODIFIED = createAction('FIRSTNAME_FIELD_MODIFIED');
