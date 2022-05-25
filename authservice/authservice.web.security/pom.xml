@@ -108,7 +108,7 @@
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>osgi.cmpn</artifactId>
+            <artifactId>org.osgi.service.component.annotations</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -208,6 +208,10 @@
                 <configuration>
                     <instructions>
                         <Export-Package>!*</Export-Package>
+                        <Import-Package>
+                            org.osgi.service.log;version="[1.4,2)",
+                            *
+                        </Import-Package>
                         <Include-Resource>
                             /=target/classes/,
                             /open-iconic/font/css/open-iconic-bootstrap.min.css=target/dependency/META-INF/resources/webjars/open-iconic/${open-iconic.version}/font/css/open-iconic-bootstrap.min.css,

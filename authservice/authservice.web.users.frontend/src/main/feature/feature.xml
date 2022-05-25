@@ -16,7 +16,7 @@
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
     <feature name="${karaf-feature-name}">
         <feature prerequisite="true">wrap</feature>
-        <feature>pax-http-whiteboard</feature>
+        <feature>http-whiteboard</feature>
         <feature>scr</feature>
         <feature>authservice-user-management-web-api</feature>
     </feature>

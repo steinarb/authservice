@@ -3,7 +3,7 @@
     <repository>mvn:no.priv.bang.authservice/authservice.definitions/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
     <feature name="${karaf-feature-name}">
-        <feature>pax-http-whiteboard</feature>
+        <feature>http-whiteboard</feature>
         <feature>scr</feature>
         <feature>authservice-definitions</feature>
         <feature>authservice-users</feature>
