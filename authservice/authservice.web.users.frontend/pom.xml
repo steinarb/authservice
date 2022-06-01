@@ -17,7 +17,7 @@
     <parent>
         <groupId>no.priv.bang.authservice</groupId>
         <artifactId>authservice</artifactId>
-        <version>1.15.0-SNAPSHOT</version>
+        <version>1.14.1</version>
     </parent>
 
 
@@ -198,4 +198,8 @@
             </plugin>
         </plugins>
     </build>
+
+  <scm>
+    <tag>authservice-1.14.1</tag>
+  </scm>
 </project>
