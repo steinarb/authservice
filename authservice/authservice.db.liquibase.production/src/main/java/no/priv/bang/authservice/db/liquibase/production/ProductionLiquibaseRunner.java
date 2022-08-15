@@ -52,7 +52,7 @@ public class ProductionLiquibaseRunner implements PreHook {
     public void prepare(DataSource datasource) throws SQLException {
         try {
             applyChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock(datasource);
-        } catch (LiquibaseException e) {
+        } catch (Exception e) {
             String message = "Failed to activate authservice PostgreSQL database component";
             logger.error(message, e);
             throw new AuthserviceException(message, e);

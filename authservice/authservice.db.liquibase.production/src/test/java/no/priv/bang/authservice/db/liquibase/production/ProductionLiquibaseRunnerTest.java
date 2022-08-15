@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,6 +110,7 @@ class ProductionLiquibaseRunnerTest {
         DatabaseMetaData metadata = mock(DatabaseMetaData.class);
         when(metadata.getDatabaseProductName()).thenReturn("mockdb");
         when(metadata.getSQLKeywords()).thenReturn("insert, select, delete");
+        when(metadata.getURL()).thenReturn("jdbc:mock:///authservice");
         ResultSet tables = mock(ResultSet.class);
         when(metadata.getTables(anyString(), anyString(), anyString(), any(String[].class))).thenReturn(tables);
         Statement stmnt = mock(Statement.class);
