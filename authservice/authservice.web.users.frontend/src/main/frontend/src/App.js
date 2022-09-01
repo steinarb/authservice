@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Home from './components/Home';
 import Users from './components/Users';
@@ -19,21 +19,21 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Switch>
-                    <Route exact path="/authservice/useradmin/" component={Home} />
-                    <Route path="/authservice/useradmin/users/modify" component={UserModify} />
-                    <Route path="/authservice/useradmin/users/roles" component={UserRoles} />
-                    <Route path="/authservice/useradmin/users/add" component={UserAdd} />
-                    <Route path="/authservice/useradmin/users/passwords" component={UserChangePasswords} />
-                    <Route path="/authservice/useradmin/users" component={Users} />
-                    <Route path="/authservice/useradmin/roles/modify" component={RoleModify} />
-                    <Route path="/authservice/useradmin/roles/permissions" component={RolePermissions} />
-                    <Route path="/authservice/useradmin/roles/add" component={RoleAdd} />
-                    <Route path="/authservice/useradmin/roles" component={Roles} />
-                    <Route path="/authservice/useradmin/permissions/modify" component={PermissionModify} />
-                    <Route path="/authservice/useradmin/permissions/add" component={PermissionAdd} />
-                    <Route path="/authservice/useradmin/permissions" component={Permissions} />
-                </Switch>
+                <Routes>
+                    <Route exact path="/authservice/useradmin/" element={<Home/>} />
+                    <Route path="/authservice/useradmin/users/modify" element={<UserModify/>} />
+                    <Route path="/authservice/useradmin/users/roles" element={<UserRoles/>} />
+                    <Route path="/authservice/useradmin/users/add" element={<UserAdd/>} />
+                    <Route path="/authservice/useradmin/users/passwords" element={<UserChangePasswords/>} />
+                    <Route path="/authservice/useradmin/users" element={<Users/>} />
+                    <Route path="/authservice/useradmin/roles/modify" element={<RoleModify/>} />
+                    <Route path="/authservice/useradmin/roles/permissions" element={<RolePermissions/>} />
+                    <Route path="/authservice/useradmin/roles/add" element={<RoleAdd/>} />
+                    <Route path="/authservice/useradmin/roles" element={<Roles/>} />
+                    <Route path="/authservice/useradmin/permissions/modify" element={<PermissionModify/>} />
+                    <Route path="/authservice/useradmin/permissions/add" element={<PermissionAdd/>} />
+                    <Route path="/authservice/useradmin/permissions" element={<Permissions/>} />
+                </Routes>
             </Router>
         );
     }
