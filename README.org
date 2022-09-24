@@ -18,11 +18,24 @@ It also creates a simple self-service GUI for logged in users to change their us
 
 ** Status of the project
 
-[[https://travis-ci.org/steinarb/authservice][file:https://travis-ci.org/steinarb/authservice.svg?branch=master]] [[https://coveralls.io/r/steinarb/authservice][file:https://coveralls.io/repos/steinarb/authservice/badge.svg]] [[https://sonarcloud.io/dashboard?id=no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=alert_status#.svg]] [[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]] [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
+[[https://github.com/steinarb/authservice/actions/workflows/authservice-maven-ci-build.yml][file:https://github.com/steinarb/authservice/actions/workflows/authservice-maven-ci-build.yml/badge.svg]]
+[[https://coveralls.io/github/steinarb/authservice][file:https://coveralls.io/repos/github/steinarb/authservice/badge.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=alert_status#.svg]]
+[[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]]
+[[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice.svg]]
 
-*** SonarCloud
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/images/project_badges/sonarcloud-white.svg]]
 
-[[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=ncloc#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=bugs#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=vulnerabilities#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=code_smells#.svg]] [[https://sonarcloud.io/dashboard/index/no.priv.bang.authservice%3Aauthservice][file:https://sonarcloud.io/api/project_badges/measure?project=no.priv.bang.authservice%3Aauthservice&metric=coverage#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=sqale_index#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=coverage#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=ncloc#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=code_smells#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=sqale_rating#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=security_rating#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=bugs#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=vulnerabilities#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=duplicated_lines_density#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=reliability_rating#.svg]]
 
 ** Installing on karaf
 /Note/: The instructions here don't describe a production enviroment, but they describe setting up something that will let the service be startet.
