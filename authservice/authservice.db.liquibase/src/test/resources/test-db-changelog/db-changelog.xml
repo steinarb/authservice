@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <include file="test-db-changelog/sql/initial_users.sql"/>
+    <include file="test-db-changelog/sql/initial_roles.sql"/>
+    <include file="test-db-changelog/sql/initial_user_roles.sql"/>
+    <include file="test-db-changelog/sql/initial_permissions.sql"/>
+    <include file="test-db-changelog/sql/initial_roles_permissions.sql"/>
+
+</databaseChangeLog>

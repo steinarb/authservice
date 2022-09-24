@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,11 @@ import javax.sql.DataSource;
 import org.ops4j.pax.jdbc.hook.PreHook;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
-
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 
 @Component(immediate=true, property = "name=authservicedb")
 public class TestLiquibaseRunner implements PreHook {
-
-    private Logger logger;
-
-    @Reference
-    public void setLogservice(LogService logservice) {
-        this.logger = logservice.getLogger(getClass());
-    }
 
     @Activate
     public void activate() {
@@ -46,17 +35,24 @@ public class TestLiquibaseRunner implements PreHook {
 
     @Override
     public void prepare(DataSource datasource) throws SQLException {
-        try {
-            try(Connection connection = datasource.getConnection()) {
-                AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
-                liquibase.createInitialSchema(connection);
-                liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
-                liquibase.updateSchema(connection);
-            }
+        AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
+
+        try (Connection connection = datasource.getConnection()) {
+            liquibase.createInitialSchema(connection);
         } catch (Exception e) {
-            String message = "Failed to activate authservice Derby test database component";
-            logger.error(message, e);
-            throw new AuthserviceException(message, e);
+            throw new AuthserviceException("Failed to create schema for authservice Derby test database component", e);
+        }
+
+        try (Connection connection = datasource.getConnection()) {
+            liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
+        } catch (Exception e) {
+            throw new AuthserviceException("Failed to insert mock data in authservice Derby test database component", e);
+        }
+
+        try (Connection connection = datasource.getConnection()) {
+            liquibase.updateSchema(connection);
+        } catch (Exception e) {
+            throw new AuthserviceException("Failed to update schema of authservice Derby test database component", e);
         }
     }
 

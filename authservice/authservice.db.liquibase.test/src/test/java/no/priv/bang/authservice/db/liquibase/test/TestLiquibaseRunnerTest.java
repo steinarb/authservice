@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package no.priv.bang.authservice.db.liquibase.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
@@ -31,16 +32,13 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class TestLiquibaseRunnerTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
 
     @Test
     void testCreateSchema() throws Exception {
-        MockLogService logservice = new MockLogService();
         TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        runner.setLogservice(logservice);
         runner.activate();
         DataSource datasource = createDatasource();
         runner.prepare(datasource);
@@ -72,16 +70,48 @@ class TestLiquibaseRunnerTest {
 
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
-        MockLogService logservice = new MockLogService();
         TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        runner.setLogservice(logservice);
         DataSource datasource = mock(DataSource.class);
         when(datasource.getConnection()).thenThrow(SQLException.class);
 
         runner.activate();
-        assertThrows(AuthserviceException.class, () -> {
-                runner.prepare(datasource);
-            });
+        AuthserviceException ex = assertThrows(
+            AuthserviceException.class,
+            () -> runner.prepare(datasource));
+        assertThat(ex.getMessage()).startsWith("Failed to create schema for authservice Derby test database component");
+    }
+
+    @Test
+    void testFailWhenInsertingMockData() throws Exception {
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        DataSource realdb = createDatasource();
+        DataSource datasource = spy(realdb);
+        when(datasource.getConnection())
+            .thenCallRealMethod()
+            .thenThrow(SQLException.class);
+
+        runner.activate();
+        AuthserviceException ex = assertThrows(
+            AuthserviceException.class,
+            () -> runner.prepare(datasource));
+        assertThat(ex.getMessage()).startsWith("Failed to insert mock data in authservice Derby test database component");
+    }
+
+    @Test
+    void testFailWhenUpdatingSchema() throws Exception {
+        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        DataSource realdb = createDatasource();
+        DataSource datasource = spy(realdb);
+        when(datasource.getConnection())
+            .thenCallRealMethod()
+            .thenCallRealMethod()
+            .thenThrow(SQLException.class);
+
+        runner.activate();
+        AuthserviceException ex = assertThrows(
+            AuthserviceException.class,
+            () -> runner.prepare(datasource));
+        assertThat(ex.getMessage()).startsWith("Failed to update schema of authservice Derby test database component");
     }
 
     private DataSource createDatasource() throws SQLException {

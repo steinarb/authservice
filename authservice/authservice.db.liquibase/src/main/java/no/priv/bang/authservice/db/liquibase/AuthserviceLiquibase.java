@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import no.priv.bang.authservice.definitions.AuthserviceException;
 
 public class AuthserviceLiquibase {
 
@@ -33,41 +34,44 @@ public class AuthserviceLiquibase {
     }
 
     public void applyChangelist(Connection connection, ClassLoader classLoader, String changelistClasspathResource) throws LiquibaseException {
-        Liquibase liquibase = createLiquibaseInstance(connection, classLoader, changelistClasspathResource);
-        liquibase.update("");
+        DatabaseConnection databaseConnection = new JdbcConnection(connection);
+        try(var classLoaderResourceAccessor = new ClassLoaderResourceAccessor(classLoader)) {
+            try(var liquibase = new Liquibase(changelistClasspathResource, classLoaderResourceAccessor, databaseConnection)) {
+                liquibase.update("");
+            }
+        } catch (Exception e) {
+            throw new AuthserviceException("Error applying liquibase changelist in authservice", e);
+        }
     }
 
     public void updateSchema(Connection connection) throws LiquibaseException {
         applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.1.0.xml");
     }
 
-    public boolean forceReleaseLocks(Connection connection, LogService logservice) throws LiquibaseException {
+    public boolean forceReleaseLocks(Connection connection, LogService logservice) {
         Logger logger = logservice.getLogger(getClass());
-        try {
-            Liquibase liquibase = createLiquibaseInstance(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
-            liquibase.forceReleaseLocks();
-            logger.info("Liquibase lock successfully forced, continuing without modifying the schema");
-            return true;
+        try(var classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader())) {
+            DatabaseConnection databaseConnection = new JdbcConnection(connection);
+            try(var liquibase = new Liquibase("authservice-db-changelog/db-changelog-1.0.0.xml", classLoaderResourceAccessor, databaseConnection)) {
+                liquibase.forceReleaseLocks();
+                logger.info("Liquibase lock successfully forced, continuing without modifying the schema");
+                return true;
+            }
         } catch (Exception e) {
             logger.warn("Authservice failed to force lock", e);
             return false;
         }
     }
 
-    private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {
-        Liquibase liquibase = createLiquibaseInstance(connection, changelistClasspathResource);
-        liquibase.update("");
-    }
-
-    private Liquibase createLiquibaseInstance(Connection connection, String changelistClasspathResource) throws LiquibaseException {
-        ClassLoader currentClassloader = getClass().getClassLoader();
-        return createLiquibaseInstance(connection, currentClassloader, changelistClasspathResource);
-    }
-
-    Liquibase createLiquibaseInstance(Connection connection, ClassLoader currentClassloader, String changelistClasspathResource) throws LiquibaseException {
+    private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) {
         DatabaseConnection databaseConnection = new JdbcConnection(connection);
-        ClassLoaderResourceAccessor classLoaderResourceAccessor = new ClassLoaderResourceAccessor(currentClassloader);
-        return new Liquibase(changelistClasspathResource, classLoaderResourceAccessor, databaseConnection);
+        try(var classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader())) {
+            try(var liquibase = new Liquibase(changelistClasspathResource, classLoaderResourceAccessor, databaseConnection)) {
+                liquibase.update("");
+            }
+        } catch (Exception e) {
+            throw new AuthserviceException("Error applying liquibase changelist in authservice", e);
+        }
     }
 
 }

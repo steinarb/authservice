@@ -19,7 +19,6 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 /***
  * Tests for class {@link AuthserviceDbRealm}.
@@ -33,9 +32,7 @@ class AuthserviceDbRealmTest {
         Properties properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         datasource = derbyDataSourceFactory.createDataSource(properties);
-        MockLogService logservice = new MockLogService();
         TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        runner.setLogservice(logservice);
         runner.activate();
         runner.prepare(datasource);
     }

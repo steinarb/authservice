@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Steinar Bang
+ * Copyright 2018-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import liquibase.exception.LiquibaseException;
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceShiroFilterTest {
 
@@ -54,9 +53,7 @@ class AuthserviceShiroFilterTest {
         Properties properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
         DataSource datasource = dataSourceFactory.createDataSource(properties);
-        MockLogService logservice = new MockLogService();
         TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        runner.setLogservice(logservice);
         runner.activate();
         runner.prepare(datasource);
         realm = new AuthserviceDbRealm();
