@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.getRoles();
-        assertThat(roles.size()).isPositive();
+        assertThat(roles).isNotEmpty();
     }
 
     @Test
@@ -111,7 +111,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Role> roles = resource.addRole(role);
-        assertThat(roles.size()).isGreaterThan(originalRoles.size());
+        assertThat(roles).hasSizeGreaterThan(originalRoles.size());
     }
 
     @Test
@@ -139,7 +139,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.getRolesPermissions();
-        assertThat(rolespermissions.size()).isPositive();
+        assertThat(rolespermissions).isNotEmpty();
     }
 
     @Test
@@ -166,7 +166,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.addRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
-        assertThat(rolespermissions.size()).isPositive();
+        assertThat(rolespermissions).isNotEmpty();
     }
 
     @Test
@@ -194,7 +194,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Permission>> rolespermissions = resource.removeRolePermissions(RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build());
-        assertThat(rolespermissions.size()).isPositive();
+        assertThat(rolespermissions).isNotEmpty();
     }
 
     @Test

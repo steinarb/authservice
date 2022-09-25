@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -187,7 +187,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
-        assertThat(users.size()).isGreaterThan(originalUsers.size());
+        assertThat(users).hasSizeGreaterThan(originalUsers.size());
     }
 
     @Test
@@ -204,7 +204,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test
@@ -221,7 +221,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test
@@ -238,7 +238,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test
@@ -255,7 +255,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -275,7 +275,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -295,7 +295,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -312,7 +312,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isPositive();
+        assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
@@ -329,7 +329,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isPositive();
+        assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
@@ -346,7 +346,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
-        assertThat(rolepermissions.size()).isPositive();
+        assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
@@ -363,7 +363,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -383,7 +383,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -403,7 +403,7 @@ class UserAdminWebApiServletTest {
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     private HttpServletRequest buildGetUrl(String resource) {

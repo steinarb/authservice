@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         List<User> users = resource.getUsers();
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
     }
 
     @Test
@@ -194,7 +194,7 @@ class UsersResourceTest {
 
         UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
         List<User> users = resource.addUser(passwords);
-        assertThat(users.size()).isGreaterThan(originalUsers.size());
+        assertThat(users).hasSizeGreaterThan(originalUsers.size());
     }
 
     @Test
@@ -281,7 +281,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.getUserRoles();
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test
@@ -308,7 +308,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.addUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test
@@ -336,7 +336,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         Map<String, List<Role>> userroles = resource.removeUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
-        assertThat(userroles.size()).isPositive();
+        assertThat(userroles).isNotEmpty();
     }
 
     @Test

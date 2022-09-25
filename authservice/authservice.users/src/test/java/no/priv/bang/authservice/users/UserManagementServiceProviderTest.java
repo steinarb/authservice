@@ -131,7 +131,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         List<Role> roles = provider.getRolesForUser(username);
-        assertThat(roles.size()).isPositive();
+        assertThat(roles).isNotEmpty();
     }
 
     @Test
@@ -160,7 +160,7 @@ class UserManagementServiceProviderTest {
 
         String username = "jod";
         List<Permission> permissions = provider.getPermissionsForUser(username);
-        assertThat(permissions.size()).isPositive();
+        assertThat(permissions).isNotEmpty();
     }
 
     @Test
@@ -223,7 +223,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<User> users = provider.getUsers();
-        assertThat(users.size()).isPositive();
+        assertThat(users).isNotEmpty();
         User firstUser = users.get(0);
         User modifiedUser = User.with(firstUser).firstname("John").lastname("Smith").build();
         List<User> updatedUsers = provider.modifyUser(modifiedUser);
@@ -413,7 +413,7 @@ class UserManagementServiceProviderTest {
             .password2(newUserPassword)
             .build();
         List<User> users = provider.addUser(newUserWithPasswords);
-        assertThat(users.size()).isGreaterThan(usersBeforeAddingOne.size());
+        assertThat(users).hasSizeGreaterThan(usersBeforeAddingOne.size());
 
         // Check that the password of the new user is as expected
         User user = users.stream().filter(u -> "jsmith".equals(u.getUsername())).findFirst().get();
@@ -494,11 +494,11 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<Role> originalRoles = provider.getRoles();
-        assertThat(originalRoles.size()).isPositive();
+        assertThat(originalRoles).isNotEmpty();
 
         Role dummy1 = Role.with().id(-1).rolename("dummy").description("dummy").build();
         List<Role> rolesAfterAdd = provider.addRole(dummy1);
-        assertThat(rolesAfterAdd.size()).isGreaterThan(originalRoles.size());
+        assertThat(rolesAfterAdd).hasSizeGreaterThan(originalRoles.size());
 
         // Verify that trying to insert a new role with the same rolename fails
         Role dummy2 = Role.with().id(-1).rolename("dummy").description("dummy").build();
@@ -564,11 +564,11 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         List<Permission> originalPermissions = provider.getPermissions();
-        assertThat(originalPermissions.size()).isPositive();
+        assertThat(originalPermissions).isNotEmpty();
 
         Permission dummy1 = Permission.with().id(-1).permissionname("dummy").description("dummy").build();
         List<Permission> permissionsAfterAdd = provider.addPermission(dummy1);
-        assertThat(permissionsAfterAdd.size()).isGreaterThan(originalPermissions.size());
+        assertThat(permissionsAfterAdd).hasSizeGreaterThan(originalPermissions.size());
 
         // Verify that trying to insert a new role with the same permissionname fails
         Permission dummy2 = Permission.with().id(-1).permissionname("dummy").description("dummy").build();
@@ -634,7 +634,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         Map<String, List<Role>> originalUserRoles = provider.getUserRoles();
-        assertThat(originalUserRoles.size()).isPositive();
+        assertThat(originalUserRoles).isNotEmpty();
 
         // Add a new user role
         User user = provider.getUsers().get(0);
@@ -642,7 +642,7 @@ class UserManagementServiceProviderTest {
         List<Role> originalRolesForUser = originalUserRoles.get(user.getUsername());
         UserRoles userroles = UserRoles.with().user(user).roles(Arrays.asList(newRole)).build();
         Map<String, List<Role>> userRolesAfterAddingRole = provider.addUserRoles(userroles );
-        assertThat(userRolesAfterAddingRole.get(user.getUsername()).size()).isGreaterThan(originalRolesForUser.size());
+        assertThat(userRolesAfterAddingRole.get(user.getUsername())).hasSizeGreaterThan(originalRolesForUser.size());
 
         // Add the same role again and verify that the role count doesn't increase
         Map<String, List<Role>> userRolesAfterAddingRole2 = provider.addUserRoles(userroles);
@@ -657,7 +657,7 @@ class UserManagementServiceProviderTest {
 
         // Remove the role
         Map<String, List<Role>> userRolesAfterRemovingRole = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(newRole)).build());
-        assertThat(userRolesAfterRemovingRole.get(user.getUsername()).size()).isLessThan(userRolesAfterAddingRole.get(user.getUsername()).size());
+        assertThat(userRolesAfterRemovingRole.get(user.getUsername())).hasSizeLessThan(userRolesAfterAddingRole.get(user.getUsername()).size());
 
         // Try removing the role again and observe that the count is the same
         Map<String, List<Role>> userRolesAfterRemovingRole2 = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(newRole)).build());
@@ -708,14 +708,14 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         Map<String, List<Permission>> originalRolesPermissions = provider.getRolesPermissions();
-        assertThat(originalRolesPermissions.size()).isPositive();
+        assertThat(originalRolesPermissions).isNotEmpty();
 
         // Add a new role permission
         Role role = provider.getRoles().get(1);
         Permission newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.getPermissionname())).findFirst().get();
         List<Permission> originalRolesForUser = originalRolesPermissions.get(role.getRolename());
         Map<String, List<Permission>> rolesPermissionsAfterAddingRole = provider.addRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertThat(rolesPermissionsAfterAddingRole.get(role.getRolename()).size()).isGreaterThan(originalRolesForUser.size());
+        assertThat(rolesPermissionsAfterAddingRole.get(role.getRolename())).hasSizeGreaterThan(originalRolesForUser.size());
 
         // Add the same permission again and verify that the role count doesn't increase
         Map<String, List<Permission>> rolesPermissionsAfterAddingRole2 = provider.addRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
@@ -730,7 +730,7 @@ class UserManagementServiceProviderTest {
 
         // Remove the role
         Map<String, List<Permission>> rolesPermissionsAfterRemovingRole = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertThat(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size()).isLessThan(rolesPermissionsAfterAddingRole.get(role.getRolename()).size());
+        assertThat(rolesPermissionsAfterRemovingRole.get(role.getRolename())).hasSizeLessThan(rolesPermissionsAfterAddingRole.get(role.getRolename()).size());
 
         // Try removing the role again and observe that the count is the same
         Map<String, List<Permission>> rolesPermissionsAfterRemovingRole2 = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());

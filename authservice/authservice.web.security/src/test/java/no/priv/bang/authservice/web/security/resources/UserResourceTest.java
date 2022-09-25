@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ class UserResourceTest extends ShiroTestBase {
         Document html = Jsoup.parse(responsebody);
         FormElement form = (FormElement) html.getElementsByTag("form").get(0);
         List<KeyVal> formdata = form.formData();
-        assertThat(formdata.size()).isPositive();
+        assertThat(formdata).isNotEmpty();
         assertEquals(user.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(user.getFirstname(), findFormvalue(formdata, "firstname").value());
         assertEquals(user.getLastname(), findFormvalue(formdata, "lastname").value());
@@ -247,7 +247,7 @@ class UserResourceTest extends ShiroTestBase {
         Document html = Jsoup.parse(responsebody);
         FormElement form = (FormElement) html.getElementsByTag("form").get(0);
         List<KeyVal> formdata = form.formData();
-        assertThat(formdata.size()).isPositive();
+        assertThat(formdata).isNotEmpty();
         assertEquals(updatedUser.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(updatedUser.getFirstname(), findFormvalue(formdata, "firstname").value());
         assertEquals(updatedUser.getLastname(), findFormvalue(formdata, "lastname").value());

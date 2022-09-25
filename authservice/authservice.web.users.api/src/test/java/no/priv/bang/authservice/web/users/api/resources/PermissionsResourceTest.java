@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.getPermissions();
-        assertThat(permissions.size()).isPositive();
+        assertThat(permissions).isNotEmpty();
     }
 
     @Test
@@ -106,7 +106,7 @@ class PermissionsResourceTest {
         resource.usermanagement = usermanagement;
 
         List<Permission> permissions = resource.addPermission(permission);
-        assertThat(permissions.size()).isGreaterThan(originalPermissions.size());
+        assertThat(permissions).hasSizeGreaterThan(originalPermissions.size());
     }
 
     @Test
