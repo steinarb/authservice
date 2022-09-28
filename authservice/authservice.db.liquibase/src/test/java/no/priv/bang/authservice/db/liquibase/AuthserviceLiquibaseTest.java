@@ -29,9 +29,11 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.logging.LogManager;
 
 import javax.sql.DataSource;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
@@ -42,6 +44,13 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceLiquibaseTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
+    
+    @BeforeAll
+    static void initialSetup() throws Exception {
+        try (var lpf = AuthserviceLiquibaseTest.class.getClassLoader().getResourceAsStream("logging.properties")) {
+        	LogManager.getLogManager().readConfiguration(lpf);
+        }
+    }
 
     @Test
     void testCreateSchema() throws Exception {
