@@ -39,6 +39,8 @@ public class AuthserviceLiquibase {
             try(var liquibase = new Liquibase(changelistClasspathResource, classLoaderResourceAccessor, databaseConnection)) {
                 liquibase.update("");
             }
+        } catch (LiquibaseException e) {
+            throw e;
         } catch (Exception e) {
             throw new AuthserviceException("Error applying liquibase changelist in authservice", e);
         }
@@ -63,12 +65,14 @@ public class AuthserviceLiquibase {
         }
     }
 
-    private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) {
+    private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {
         DatabaseConnection databaseConnection = new JdbcConnection(connection);
         try(var classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader())) {
             try(var liquibase = new Liquibase(changelistClasspathResource, classLoaderResourceAccessor, databaseConnection)) {
                 liquibase.update("");
             }
+        } catch (LiquibaseException e) {
+            throw e;
         } catch (Exception e) {
             throw new AuthserviceException("Error applying liquibase changelist in authservice", e);
         }

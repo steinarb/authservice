@@ -39,16 +39,18 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
 
+import liquibase.exception.ChangeLogParseException;
+import liquibase.exception.LockException;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceLiquibaseTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
-    
+
     @BeforeAll
     static void initialSetup() throws Exception {
         try (var lpf = AuthserviceLiquibaseTest.class.getClassLoader().getResourceAsStream("logging.properties")) {
-        	LogManager.getLogManager().readConfiguration(lpf);
+            LogManager.getLogManager().readConfiguration(lpf);
         }
     }
 
@@ -92,14 +94,27 @@ class AuthserviceLiquibaseTest {
     }
 
     @Test
-    void testFailWhenCreatingSchema() throws Exception {
+    void testGetLockExceptionWhenCreatingSchema() throws Exception {
         AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
         Connection connection = createMockConnection();
 
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
+            LockException.class,
+            () -> authserviceLiquibase.createInitialSchema(connection));
+        assertThat(ex.getMessage()).contains("Expected single row from SELECT COUNT(*) FROM DATABASECHANGELOGLOCK but got 0");
+    }
+
+    @Test
+    void testCreatingSchemaWithExceptionThrownOnConnectionClose() throws Exception {
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        Connection connection = spy(createConnection("authservice3"));
+        doNothing().when(connection).setAutoCommit(anyBoolean());
+        doThrow(RuntimeException.class).when(connection).close();
+
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> authserviceLiquibase.createInitialSchema(connection));
-        assertThat(ex.getMessage()).startsWith("Error applying liquibase changelist in authservice");
+        assertThat(ex.getMessage()).contains("Error applying liquibase changelist in authservice");
     }
 
     @Test
@@ -122,18 +137,56 @@ class AuthserviceLiquibaseTest {
     }
 
     @Test
-    void testApplyChangelistFailing() throws Exception {
+    void testGetLockExceptionInApplyChangelist() throws Exception {
         AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
         Connection connection = createMockConnection();
         var testClassLoader = getClass().getClassLoader();
 
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
+            LockException.class,
+            () -> authserviceLiquibase.applyChangelist(
+                connection,
+                testClassLoader,
+                "test-db-changelog/db-changelog.xml"));
+        assertThat(ex.getMessage()).contains("Expected single row from SELECT COUNT(*) FROM DATABASECHANGELOGLOCK but got 0");
+    }
+
+    @Test
+    void testApplyChangelistFailingWhenResourceIsMissing() throws Exception {
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var testClassLoader = getClass().getClassLoader();
+        try (var conn1 = createConnection("authservice4")) {
+            authserviceLiquibase.createInitialSchema(conn1);
+        }
+
+        var connection = createConnection("authservice4");
+        var ex = assertThrows(
+            ChangeLogParseException.class,
+            () -> authserviceLiquibase.applyChangelist(
+                connection,
+                testClassLoader,
+                "test-db-changelog/db-changelog-not-present.xml"));
+        assertThat(ex.getMessage()).contains("The file test-db-changelog/db-changelog-not-present.xml was not found in the configured search path");
+    }
+
+    @Test
+    void testApplyChangelistFailingWhenFailOnClose() throws Exception {
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var testClassLoader = getClass().getClassLoader();
+        try (var conn1 = createConnection("authservice5")) {
+            authserviceLiquibase.createInitialSchema(conn1);
+        }
+
+        var connection = spy(createConnection("authservice5"));
+        doNothing().when(connection).setAutoCommit(anyBoolean());
+        doThrow(RuntimeException.class).when(connection).close();
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> authserviceLiquibase.applyChangelist(
                 connection,
                 testClassLoader,
                 "test-db-changelog/db-changelog.xml"));
-        assertThat(ex.getMessage()).startsWith("Error applying liquibase changelist in authservice");
+        assertThat(ex.getMessage()).contains("Error applying liquibase changelist in authservice");
     }
 
     @Test
@@ -143,6 +196,15 @@ class AuthserviceLiquibaseTest {
         AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
         boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
         assertTrue(success);
+    }
+
+    @Test
+    void testForceReleaseLocksWith() throws Exception {
+        LogService logservice = new MockLogService();
+        Connection connection = mock(Connection.class);
+        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
+        assertFalse(success);
     }
 
     @Test
