@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.priv.bang.authservice</groupId>
         <artifactId>authservice</artifactId>
-        <version>1.14.7-SNAPSHOT</version>
+        <version>1.14.7</version>
     </parent>
 
     <artifactId>authservice.tests</artifactId>
@@ -88,4 +88,8 @@
             </plugin>
         </plugins>
     </build>
+
+  <scm>
+    <tag>authservice-1.14.7</tag>
+  </scm>
 </project>
