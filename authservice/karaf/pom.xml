@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.priv.bang.authservice</groupId>
         <artifactId>authservice</artifactId>
-        <version>1.14.7</version>
+        <version>1.14.8-SNAPSHOT</version>
     </parent>
     <artifactId>karaf</artifactId>
 
@@ -137,8 +137,4 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <tag>authservice-1.14.7</tag>
-  </scm>
 </project>
