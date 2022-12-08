@@ -3,7 +3,7 @@
     <parent>
         <artifactId>authservice</artifactId>
         <groupId>no.priv.bang.authservice</groupId>
-        <version>1.14.9-SNAPSHOT</version>
+        <version>1.15.0</version>
     </parent>
 
     <artifactId>authservice.db.liquibase.production</artifactId>
@@ -156,4 +156,8 @@
             </plugin>
         </plugins>
     </build>
+
+  <scm>
+    <tag>authservice-1.15.0</tag>
+  </scm>
 </project>
