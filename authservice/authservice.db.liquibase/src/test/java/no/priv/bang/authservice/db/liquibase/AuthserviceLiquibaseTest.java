@@ -27,7 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.LogManager;
 
@@ -39,6 +38,8 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.log.LogService;
 
+import com.mockrunner.mock.jdbc.MockConnection;
+import com.mockrunner.mock.jdbc.MockResultSet;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.exception.LockException;
 import no.priv.bang.authservice.definitions.AuthserviceException;
@@ -285,20 +286,14 @@ class AuthserviceLiquibaseTest {
     }
 
     Connection createMockConnection() throws Exception {
-        Connection connection = mock(Connection.class);
-        DatabaseMetaData metadata = mock(DatabaseMetaData.class);
+        var connection = new MockConnection();
+        var metadata = mock(DatabaseMetaData.class);
         when(metadata.getDatabaseProductName()).thenReturn("mockdb");
         when(metadata.getSQLKeywords()).thenReturn("insert, select, delete");
         when(metadata.getURL()).thenReturn("jdbc:mock:///authservice");
-        ResultSet tables = mock(ResultSet.class);
+        var tables = new MockResultSet("tables");
         when(metadata.getTables(anyString(), anyString(), anyString(), any(String[].class))).thenReturn(tables);
-        Statement stmnt = mock(Statement.class);
-        ResultSet results = mock(ResultSet.class);
-        when(results.next()).thenReturn(true).thenReturn(false);
-        when(stmnt.executeQuery(anyString())).thenReturn(results);
-        when(stmnt.getUpdateCount()).thenReturn(-1);
-        when(connection.createStatement()).thenReturn(stmnt);
-        when(connection.getMetaData()).thenReturn(metadata);
+        connection.setMetaData(metadata);
         return connection;
     }
 
