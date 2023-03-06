@@ -5,11 +5,11 @@
     <parent>
         <groupId>no.priv.bang.authservice</groupId>
         <artifactId>authservice-parent</artifactId>
-        <version>1.15.3</version>
+        <version>1.15.4-SNAPSHOT</version>
     </parent>
     <groupId>no.priv.bang.authservice</groupId>
     <artifactId>authservice</artifactId>
-    <version>1.15.3</version>
+    <version>1.15.4-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
