@@ -3,7 +3,7 @@
     <parent>
         <artifactId>authservice</artifactId>
         <groupId>no.priv.bang.authservice</groupId>
-        <version>1.15.4-SNAPSHOT</version>
+        <version>1.15.4</version>
     </parent>
 
     <artifactId>authservice.db.liquibase.test</artifactId>
@@ -164,7 +164,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -177,7 +177,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
