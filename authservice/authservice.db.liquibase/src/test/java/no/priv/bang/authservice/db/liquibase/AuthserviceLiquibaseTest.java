@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2023 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,14 +36,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
-import org.osgi.service.log.LogService;
-
 import com.mockrunner.mock.jdbc.MockConnection;
 import com.mockrunner.mock.jdbc.MockResultSet;
 import liquibase.exception.ChangeLogParseException;
-import liquibase.exception.LockException;
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceLiquibaseTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
@@ -95,17 +91,6 @@ class AuthserviceLiquibaseTest {
     }
 
     @Test
-    void testGetLockExceptionWhenCreatingSchema() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        Connection connection = createMockConnection();
-
-        var ex = assertThrows(
-            LockException.class,
-            () -> authserviceLiquibase.createInitialSchema(connection));
-        assertThat(ex.getMessage()).contains("Expected single row from SELECT COUNT(*) FROM DATABASECHANGELOGLOCK but got 0");
-    }
-
-    @Test
     void testCreatingSchemaWithExceptionThrownOnConnectionClose() throws Exception {
         AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
         Connection connection = spy(createConnection("authservice3"));
@@ -135,21 +120,6 @@ class AuthserviceLiquibaseTest {
             String rolename = "caseworker";
             assertUserRole(connection, rolename, username);
         }
-    }
-
-    @Test
-    void testGetLockExceptionInApplyChangelist() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        Connection connection = createMockConnection();
-        var testClassLoader = getClass().getClassLoader();
-
-        var ex = assertThrows(
-            LockException.class,
-            () -> authserviceLiquibase.applyChangelist(
-                connection,
-                testClassLoader,
-                "test-db-changelog/db-changelog.xml"));
-        assertThat(ex.getMessage()).contains("Expected single row from SELECT COUNT(*) FROM DATABASECHANGELOGLOCK but got 0");
     }
 
     @Test
@@ -188,33 +158,6 @@ class AuthserviceLiquibaseTest {
                 testClassLoader,
                 "test-db-changelog/db-changelog.xml"));
         assertThat(ex.getMessage()).contains("Error applying liquibase changelist in authservice");
-    }
-
-    @Test
-    void testForceReleaseLocks() throws Exception {
-        LogService logservice = new MockLogService();
-        Connection connection = createConnection("authservice");
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
-        assertTrue(success);
-    }
-
-    @Test
-    void testForceReleaseLocksWith() throws Exception {
-        LogService logservice = new MockLogService();
-        Connection connection = mock(Connection.class);
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
-        assertFalse(success);
-    }
-
-    @Test
-    void testForceReleaseLocksWithFailure() throws Exception {
-        LogService logservice = new MockLogService();
-        Connection connection = mock(Connection.class);
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        boolean success = authserviceLiquibase.forceReleaseLocks(connection, logservice);
-        assertFalse(success);
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {

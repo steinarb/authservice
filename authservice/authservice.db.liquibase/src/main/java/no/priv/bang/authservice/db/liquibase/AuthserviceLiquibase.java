@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2023 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,21 +48,6 @@ public class AuthserviceLiquibase {
 
     public void updateSchema(Connection connection) throws LiquibaseException {
         applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.1.0.xml");
-    }
-
-    public boolean forceReleaseLocks(Connection connection, LogService logservice) {
-        Logger logger = logservice.getLogger(getClass());
-        try(var classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader())) {
-            DatabaseConnection databaseConnection = new JdbcConnection(connection);
-            try(var liquibase = new Liquibase("authservice-db-changelog/db-changelog-1.0.0.xml", classLoaderResourceAccessor, databaseConnection)) {
-                liquibase.forceReleaseLocks();
-                logger.info("Liquibase lock successfully forced, continuing without modifying the schema");
-                return true;
-            }
-        } catch (Exception e) {
-            logger.warn("Authservice failed to force lock", e);
-            return false;
-        }
     }
 
     private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {

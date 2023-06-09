@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Steinar Bang
+ * Copyright 2019-2023 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,19 +33,14 @@ import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
-import liquibase.exception.LockException;
-import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class ProductionLiquibaseRunnerTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
 
     @Test
     void testCreateSchema() throws Exception {
-        MockLogService logservice = new MockLogService();
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
         runner.activate();
         DataSource database = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
         runner.prepare(database);
@@ -76,9 +71,7 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
-        MockLogService logservice = new MockLogService();
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
         DataSource datasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
@@ -93,9 +86,7 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testFailWhenInsertingData() throws Exception {
-        MockLogService logservice = new MockLogService();
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
         DataSource realdb = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
         DataSource datasource = spy(realdb);
         Connection connection = mock(Connection.class);
@@ -111,9 +102,7 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testFailWhenUpdatingSchema() throws Exception {
-        MockLogService logservice = new MockLogService();
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
         DataSource realdb = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
         DataSource datasource = spy(realdb);
         Connection connection = mock(Connection.class);
@@ -125,59 +114,6 @@ class ProductionLiquibaseRunnerTest {
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to update schma in authservice postgresql database");
-    }
-
-    @Test
-    void testCreateSchemaWhenLockExceptionIsThrown() throws Exception {
-        MockLogService logservice = new MockLogService();
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
-        DataSource datasource = mock(DataSource.class);
-        Connection connection = createMockConnection();
-        when(datasource.getConnection()).thenReturn(connection);
-        var liquibase = mock(AuthserviceLiquibase.class);
-        doThrow(LockException.class).doNothing().when(liquibase).createInitialSchema(any());
-
-        runner.applySchemaChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock(datasource, liquibase);
-        assertEquals(1, logservice.getLogmessages().size());
-    }
-
-    @Test
-    void testFailWhenForcingLock() throws Exception {
-        MockLogService logservice = new MockLogService();
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
-        DataSource datasource = mock(DataSource.class);
-        Connection connection = createMockConnection();
-        when(datasource.getConnection())
-            .thenReturn(connection)
-            .thenThrow(SQLException.class);
-        var liquibase = mock(AuthserviceLiquibase.class);
-        doThrow(LockException.class).doNothing().when(liquibase).createInitialSchema(any());
-
-        AuthserviceException ex = assertThrows(
-            AuthserviceException.class,
-            () -> runner.applySchemaChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock(datasource, liquibase));
-        assertThat(ex.getMessage()).startsWith("Error when closing JDBC connection after breaking authservice database liquibase lock");
-        assertEquals(1, logservice.getLogmessages().size());
-    }
-
-    @Test
-    void testFailWhenSettingUpSchemaAfterForcingLock() throws Exception {
-        MockLogService logservice = new MockLogService();
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        runner.setLogservice(logservice);
-        DataSource datasource = mock(DataSource.class);
-        Connection connection = createMockConnection();
-        when(datasource.getConnection()).thenReturn(connection);
-        var liquibase = mock(AuthserviceLiquibase.class);
-        doThrow(LockException.class).when(liquibase).createInitialSchema(any());
-
-        AuthserviceException ex = assertThrows(
-            AuthserviceException.class,
-            () -> runner.applySchemaChangelistsAndTryForcingLiquibaseLockIfFailingToUnlock(datasource, liquibase));
-        assertThat(ex.getMessage()).startsWith("Failed to create schema in authservice postgresql database after forced lock");
-        assertEquals(1, logservice.getLogmessages().size());
     }
 
     Connection createMockConnection() throws Exception {
