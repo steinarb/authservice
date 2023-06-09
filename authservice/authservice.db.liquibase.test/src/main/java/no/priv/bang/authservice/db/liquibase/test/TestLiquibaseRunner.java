@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2023 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import javax.sql.DataSource;
 import org.ops4j.pax.jdbc.hook.PreHook;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+
+import liquibase.Scope;
+import liquibase.ThreadLocalScopeManager;
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 
@@ -31,6 +34,7 @@ public class TestLiquibaseRunner implements PreHook {
     @Activate
     public void activate() {
         // Called after all injections have been satisfied and before the PreHook service is exposed
+        Scope.setScopeManager(new ThreadLocalScopeManager());
     }
 
     @Override

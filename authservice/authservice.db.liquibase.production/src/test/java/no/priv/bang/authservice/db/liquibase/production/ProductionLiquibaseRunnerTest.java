@@ -42,7 +42,7 @@ class ProductionLiquibaseRunnerTest {
     void testCreateSchema() throws Exception {
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
         runner.activate();
-        DataSource database = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
+        var database = createDataSource("authservice1");
         runner.prepare(database);
         try(Connection connection = database.getConnection()) {
             try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
@@ -72,8 +72,8 @@ class ProductionLiquibaseRunnerTest {
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        DataSource datasource = mock(DataSource.class);
         Connection connection = mock(Connection.class);
+        DataSource datasource = mock(DataSource.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenReturn(connection);
 
@@ -87,8 +87,7 @@ class ProductionLiquibaseRunnerTest {
     @Test
     void testFailWhenInsertingData() throws Exception {
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        DataSource realdb = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
-        DataSource datasource = spy(realdb);
+        var datasource = spy(createDataSource("authservice2"));
         Connection connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenCallRealMethod().thenReturn(connection);
@@ -97,14 +96,13 @@ class ProductionLiquibaseRunnerTest {
         AuthserviceException ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
-        assertThat(ex.getMessage()).startsWith("Failed to insert initial data in authservice postgresql database");
+        assertThat(ex.getMessage()).startsWith("Failed to create schema in authservice postgresql database");
     }
 
     @Test
     void testFailWhenUpdatingSchema() throws Exception {
         ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        DataSource realdb = derbyDataSourceFactory.createDataSource(createConfigThatWillWorkWithDerby());
-        DataSource datasource = spy(realdb);
+        var datasource = spy(createDataSource("authservice3"));
         Connection connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenCallRealMethod().thenCallRealMethod().thenReturn(connection);
@@ -134,10 +132,10 @@ class ProductionLiquibaseRunnerTest {
         return connection;
     }
 
-    private Properties createConfigThatWillWorkWithDerby() {
-        Properties config = new Properties();
-        config.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
-        return config;
+    private DataSource createDataSource(String dbname) throws SQLException {
+        Properties properties = new Properties();
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:" + dbname + ";create=true");
+        return derbyDataSourceFactory.createDataSource(properties);
     }
 
 }

@@ -21,6 +21,9 @@ import javax.sql.DataSource;
 import org.ops4j.pax.jdbc.hook.PreHook;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+
+import liquibase.Scope;
+import liquibase.ThreadLocalScopeManager;
 import no.priv.bang.authservice.db.liquibase.AuthserviceLiquibase;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 
@@ -30,6 +33,7 @@ public class ProductionLiquibaseRunner implements PreHook {
     @Activate
     public void activate() {
         // Called after all injections have been satisfied and before the PreHook service is exposed
+        Scope.setScopeManager(new ThreadLocalScopeManager());
     }
 
     @Override
@@ -38,7 +42,7 @@ public class ProductionLiquibaseRunner implements PreHook {
         try(var connection = datasource.getConnection()) {
             liquibase.createInitialSchema(connection);
         } catch (Exception e) {
-            throw new AuthserviceException("Failed to insert initial data in authservice postgresql database", e);
+            throw new AuthserviceException("Failed to create schema in authservice postgresql database", e);
         }
 
         try(var connection = datasource.getConnection()) {

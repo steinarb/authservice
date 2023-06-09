@@ -38,7 +38,8 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 import com.mockrunner.mock.jdbc.MockConnection;
 import com.mockrunner.mock.jdbc.MockResultSet;
-import liquibase.exception.ChangeLogParseException;
+
+import liquibase.exception.CommandExecutionException;
 import no.priv.bang.authservice.definitions.AuthserviceException;
 
 class AuthserviceLiquibaseTest {
@@ -132,7 +133,7 @@ class AuthserviceLiquibaseTest {
 
         var connection = createConnection("authservice4");
         var ex = assertThrows(
-            ChangeLogParseException.class,
+            CommandExecutionException.class,
             () -> authserviceLiquibase.applyChangelist(
                 connection,
                 testClassLoader,
