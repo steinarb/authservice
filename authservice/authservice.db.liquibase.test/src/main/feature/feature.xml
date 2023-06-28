@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
-    <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase/${project.version}/xml/features</repository>
     <feature name="${karaf-feature-name}">
-        <feature>authservice-db-liquibase</feature>
         <feature>scr</feature>
     </feature>
     <feature name="authservice-db-test" version="${project.version}">
