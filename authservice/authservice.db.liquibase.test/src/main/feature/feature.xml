@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="authservice.bundle">
     <feature name="${karaf-feature-name}">
+        <feature>pax-jdbc-config</feature>
         <feature>scr</feature>
     </feature>
     <feature name="authservice-db-test" version="${project.version}">
@@ -14,7 +15,6 @@
             osgi.service;objectClass=javax.sql.DataSource;effective:=active;osgi.jndi.service.name=jdbc/authservice
         </capability>
         <feature>authservice-db-liquibase-test</feature>
-        <feature>pax-jdbc-config</feature>
         <feature>pax-jdbc-derby</feature>
     </feature>
 </features>
