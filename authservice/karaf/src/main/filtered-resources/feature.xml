@@ -23,37 +23,37 @@
     <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.frontend/${project.version}/xml/features</repository>
-    <feature name="authservice-with-dbrealm-and-session">
-        <feature>authservice-web-security-dbrealm</feature>
-        <feature>authservice-web-security-memorysession</feature>
-        <feature>authservice-users</feature>
+    <feature version="${project.version}" name="authservice-with-dbrealm-and-session">
+        <feature version="${project.version}">authservice-web-security-dbrealm</feature>
+        <feature version="${project.version}">authservice-web-security-memorysession</feature>
+        <feature version="${project.version}">authservice-users</feature>
     </feature>
-    <feature name="authservice-with-webcontext-dbrealm-and-session">
-        <feature>authservice-with-dbrealm-and-session</feature>
-        <feature>authservice-web-security</feature>
+    <feature version="${project.version}" name="authservice-with-webcontext-dbrealm-and-session">
+        <feature version="${project.version}">authservice-with-dbrealm-and-session</feature>
+        <feature version="${project.version}">authservice-web-security</feature>
     </feature>
-    <feature name="authservice-user-admin">
-        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
-        <feature>authservice-user-management-frontend</feature>
+    <feature version="${project.version}" name="authservice-user-admin">
+        <feature version="${project.version}">authservice-with-webcontext-dbrealm-and-session</feature>
+        <feature version="${project.version}">authservice-user-management-frontend</feature>
     </feature>
-    <feature name="authservice-with-testdb-dbrealm-and-session-no-context">
-        <feature>authservice-db-test</feature>
-        <feature>authservice-with-dbrealm-and-session</feature>
+    <feature version="${project.version}" name="authservice-with-testdb-dbrealm-and-session-no-context">
+        <feature version="${project.version}">authservice-db-test</feature>
+        <feature version="${project.version}">authservice-with-dbrealm-and-session</feature>
     </feature>
-    <feature name="authservice-with-testdb-dbrealm-and-session">
-        <feature>authservice-db-test</feature>
-        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
+    <feature version="${project.version}" name="authservice-with-testdb-dbrealm-and-session">
+        <feature version="${project.version}">authservice-db-test</feature>
+        <feature version="${project.version}">authservice-with-webcontext-dbrealm-and-session</feature>
     </feature>
-    <feature name="user-admin-with-testdb">
-        <feature>authservice-db-test</feature>
-        <feature>authservice-user-admin</feature>
+    <feature version="${project.version}" name="user-admin-with-testdb">
+        <feature version="${project.version}">authservice-db-test</feature>
+        <feature version="${project.version}">authservice-user-admin</feature>
     </feature>
-    <feature name="authservice-with-productiondb-dbrealm-and-session">
-        <feature>authservice-db-production</feature>
-        <feature>authservice-with-webcontext-dbrealm-and-session</feature>
+    <feature version="${project.version}" name="authservice-with-productiondb-dbrealm-and-session">
+        <feature version="${project.version}">authservice-db-production</feature>
+        <feature version="${project.version}">authservice-with-webcontext-dbrealm-and-session</feature>
     </feature>
-    <feature name="user-admin-with-productiondb">
-        <feature>authservice-db-production</feature>
-        <feature>authservice-user-admin</feature>
+    <feature version="${project.version}" name="user-admin-with-productiondb">
+        <feature version="${project.version}">authservice-db-production</feature>
+        <feature version="${project.version}">authservice-user-admin</feature>
     </feature>
 </features>
