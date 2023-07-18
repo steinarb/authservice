@@ -409,7 +409,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         List<Role> roles = userroles.getRoles();
         Set<String> existingRoles = findExistingRolesForUser(user);
         try(Connection connection = datasource.getConnection()) {
-            List<Role> rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.getRolename())).collect(Collectors.toList());
+            List<Role> rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.getRolename())).toList();
             for (Role role : rolesNotAlreadyOnUser) {
                 try(PreparedStatement statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
                     statement.setString(1, role.getRolename());
@@ -484,7 +484,7 @@ public class UserManagementServiceProvider implements UserManagementService {
         List<Permission> permissions = rolepermissions.getPermissions();
         Set<String> existingPermissions = findExistingPermissionsForRole(role);
         try(Connection connection = datasource.getConnection()) {
-            List<Permission> permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.getPermissionname())).collect(Collectors.toList());
+            List<Permission> permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.getPermissionname())).toList();
             for (Permission permission : permissionsNotAlreadyOnrole) {
                 try(PreparedStatement statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
                     statement.setString(1, role.getRolename());
