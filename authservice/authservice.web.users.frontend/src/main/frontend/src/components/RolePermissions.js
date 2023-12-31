@@ -69,7 +69,6 @@ export default function RolePermissions() {
                             <select
                                 id="permissionsnotonrole"
                                 className="form-control"
-                                multiselect="true"
                                 size="10"
                                 onChange={e => dispatch(SELECT_PERMISSIONS_NOT_ON_ROLE(parseInt(e.target.value, 10)))}
                                 value={selectedInPermissionsNotOnRole}
@@ -95,7 +94,6 @@ export default function RolePermissions() {
                             <select
                                 id="permissionsonrole"
                                 className="form-control"
-                                multiselect="true"
                                 size="10"
                                 onChange={e => dispatch(SELECT_PERMISSIONS_ON_ROLE(parseInt(e.target.value, 10)))}
                                 value={selectedInPermissionsOnRole}>

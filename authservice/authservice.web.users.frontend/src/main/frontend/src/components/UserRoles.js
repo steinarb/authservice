@@ -67,7 +67,7 @@ export default function UserRoles() {
                             <label htmlFor="rolesnotonuser">Roles not on user</label>
                             <select
                                 id="rolesnotonuser"
-                                className="form-control" multiselect="true"
+                                className="form-control"
                                 size="10"
                                 onChange={e => dispatch(SELECT_ROLES_NOT_ON_USER(parseInt(e.target.value, 10)))}
                                 value={selectedInRolesNotOnUser}>
@@ -92,7 +92,6 @@ export default function UserRoles() {
                             <select
                                 id="rolesonuser"
                                 className="form-control"
-                                multiselect="true"
                                 size="10"
                                 onChange={e => dispatch(SELECT_ROLES_ON_USER(parseInt(e.target.value, 10)))}
                                 value={selectedInRolesOnUser}>
