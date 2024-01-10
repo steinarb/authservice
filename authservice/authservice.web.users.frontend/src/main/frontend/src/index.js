@@ -5,7 +5,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import createSagaMiddleware from 'redux-saga';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Tuple } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 
@@ -14,9 +14,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
     reducer: rootReducer,
-    middleware: [
-        sagaMiddleware,
-    ],
+    middleware: () => new Tuple(sagaMiddleware),
 });
 sagaMiddleware.run(rootSaga);
 
