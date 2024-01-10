@@ -9,12 +9,13 @@ import {
 
 const defaultValue = -1;
 
-const useridReducer = createReducer(defaultValue, {
-    [SELECT_USER]: (state, action) => action.payload.userid,
-    [USER_CLEAR]: () => defaultValue,
-    [SAVE_MODIFIED_USER_RECEIVE]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_USER_RECEIVE]: () => defaultValue,
+const useridReducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(SELECT_USER, (state, action) => action.payload.userid)
+        .addCase(USER_CLEAR, () => defaultValue)
+        .addCase(SAVE_MODIFIED_USER_RECEIVE, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_USER_RECEIVE, () => defaultValue);
 });
 
 export default useridReducer;

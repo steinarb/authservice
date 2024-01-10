@@ -10,13 +10,14 @@ import {
 
 const defaultValue = '';
 
-const lastnameReducer = createReducer(defaultValue, {
-    [SELECT_USER]: (state, action) => action.payload.lastname,
-    [LASTNAME_FIELD_MODIFIED]: (state, action) => action.payload,
-    [USER_CLEAR]: () => defaultValue,
-    [SAVE_MODIFIED_USER_RECEIVE]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_USER_RECEIVE]: () => defaultValue,
+const lastnameReducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(SELECT_USER, (state, action) => action.payload.lastname)
+        .addCase(LASTNAME_FIELD_MODIFIED, (state, action) => action.payload)
+        .addCase(USER_CLEAR, () => defaultValue)
+        .addCase(SAVE_MODIFIED_USER_RECEIVE, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_USER_RECEIVE, () => defaultValue);
 });
 
 export default lastnameReducer;

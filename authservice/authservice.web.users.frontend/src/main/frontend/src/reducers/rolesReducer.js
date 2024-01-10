@@ -5,10 +5,11 @@ import {
     SAVE_ADDED_ROLE_RECEIVE,
 } from '../actiontypes';
 
-const rolesReducer = createReducer([], {
-    [ROLES_RECEIVE]: (state, action) => action.payload,
-    [SAVE_MODIFIED_ROLE_RECEIVE]: (state, action) => action.payload,
-    [SAVE_ADDED_ROLE_RECEIVE]: (state, action) => action.payload,
+const rolesReducer = createReducer([], builder => {
+    builder
+        .addCase(ROLES_RECEIVE, (state, action) => action.payload)
+        .addCase(SAVE_MODIFIED_ROLE_RECEIVE, (state, action) => action.payload)
+        .addCase(SAVE_ADDED_ROLE_RECEIVE, (state, action) => action.payload);
 });
 
 export default rolesReducer;

@@ -4,8 +4,9 @@ import {
 } from '../actiontypes';
 import { emptyRole } from '../constants';
 
-const selectedInRolesNotOnUserReducer = createReducer(emptyRole.id, {
-    [SELECT_ROLES_NOT_ON_USER]: (state, action) => action.payload,
+const selectedInRolesNotOnUserReducer = createReducer(emptyRole.id, builder => {
+    builder
+        .addCase(SELECT_ROLES_NOT_ON_USER, (state, action) => action.payload);
 });
 
 export default selectedInRolesNotOnUserReducer;

@@ -7,11 +7,12 @@ import {
 } from '../actiontypes';
 const defaultValue = false;
 
-const passwordsNotIdenticalReducer = createReducer(defaultValue, {
-    [SET_PASSWORDS_NOT_IDENTICAL]: (state, action) => action.payload,
-    [PASSWORDS_CLEAR]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_USER_RECEIVE]: () => defaultValue,
+const passwordsNotIdenticalReducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(SET_PASSWORDS_NOT_IDENTICAL, (state, action) => action.payload)
+        .addCase(PASSWORDS_CLEAR, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_USER_RECEIVE, () => defaultValue);
 });
 
 export default passwordsNotIdenticalReducer;

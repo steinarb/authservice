@@ -7,11 +7,12 @@ import {
 } from '../actiontypes';
 const defaultValue = '';
 
-const password2Reducer = createReducer(defaultValue, {
-    [PASSWORD2_FIELD_MODIFIED]: (state, action) => action.payload,
-    [PASSWORDS_CLEAR]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_USER_RECEIVE]: () => defaultValue,
+const password2Reducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(PASSWORD2_FIELD_MODIFIED, (state, action) => action.payload)
+        .addCase(PASSWORDS_CLEAR, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_USER_RECEIVE, () => defaultValue);
 });
 
 export default password2Reducer;

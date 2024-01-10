@@ -4,9 +4,10 @@ import {
     SAVE_MODIFIED_PERMISSION_RECEIVE,
 } from '../actiontypes';
 
-const permissionsReducer = createReducer([], {
-    [ PERMISSIONS_RECEIVE]: (state, action) => action.payload,
-    [ SAVE_MODIFIED_PERMISSION_RECEIVE]: (state, action) => action.payload,
+const permissionsReducer = createReducer([], builder => {
+    builder
+        .addCase(PERMISSIONS_RECEIVE, (state, action) => action.payload)
+        .addCase(SAVE_MODIFIED_PERMISSION_RECEIVE, (state, action) => action.payload);
 });
 
 export default permissionsReducer;

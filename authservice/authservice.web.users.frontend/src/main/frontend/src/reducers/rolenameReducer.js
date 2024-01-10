@@ -10,13 +10,14 @@ import {
 
 const defaultValue = '';
 
-const rolenameReducer = createReducer(defaultValue, {
-    [SELECT_ROLE]: (state, action) => action.payload.rolename,
-    [ROLENAME_FIELD_MODIFIED]: (state, action) => action.payload,
-    [ROLE_CLEAR]: () => defaultValue,
-    [SAVE_MODIFIED_ROLE_RECEIVE]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_ROLE_RECEIVE]: () => defaultValue,
+const rolenameReducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(SELECT_ROLE, (state, action) => action.payload.rolename)
+        .addCase(ROLENAME_FIELD_MODIFIED, (state, action) => action.payload)
+        .addCase(ROLE_CLEAR, () => defaultValue)
+        .addCase(SAVE_MODIFIED_ROLE_RECEIVE, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_ROLE_RECEIVE, () => defaultValue);
 });
 
 export default rolenameReducer;

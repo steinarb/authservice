@@ -4,8 +4,9 @@ import {
 } from '../actiontypes';
 import { emptyPermission } from '../constants';
 
-const selectedInPermissionsOnRoleReducer = createReducer(emptyPermission.id, {
-    [SELECT_PERMISSIONS_ON_ROLE]: (state, action) => action.payload,
+const selectedInPermissionsOnRoleReducer = createReducer(emptyPermission.id, builder => {
+    builder
+        .addCase(SELECT_PERMISSIONS_ON_ROLE, (state, action) => action.payload);
 });
 
 export default selectedInPermissionsOnRoleReducer;

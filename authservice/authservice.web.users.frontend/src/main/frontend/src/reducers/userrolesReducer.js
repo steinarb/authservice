@@ -5,10 +5,11 @@ import {
     USER_REMOVE_ROLE_RECEIVE,
 } from '../actiontypes';
 
-const userrolesReducer = createReducer([], {
-    [USERROLES_RECEIVE]: (state, action) => action.payload,
-    [USER_ADD_ROLE_RECEIVE]: (state, action) => action.payload,
-    [USER_REMOVE_ROLE_RECEIVE]: (state, action) => action.payload,
+const userrolesReducer = createReducer([], builder => {
+    builder
+        .addCase(USERROLES_RECEIVE, (state, action) => action.payload)
+        .addCase(USER_ADD_ROLE_RECEIVE, (state, action) => action.payload)
+        .addCase(USER_REMOVE_ROLE_RECEIVE, (state, action) => action.payload);
 });
 
 export default userrolesReducer;

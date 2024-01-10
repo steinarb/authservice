@@ -10,13 +10,14 @@ import {
 
 const defaultValue = '';
 
-const permissionnameReducer = createReducer(defaultValue, {
-    [SELECT_PERMISSION]: (state, action) => action.payload.permissionname,
-    [PERMISSIONNAME_FIELD_MODIFIED]: (state, action) => action.payload,
-    [PERMISSION_CLEAR]: () => defaultValue,
-    [SAVE_MODIFIED_PERMISSION_RECEIVE]: () => defaultValue,
-    [SAVE_PASSWORDS_MODIFY_RECEIVE]: () => defaultValue,
-    [SAVE_ADDED_PERMISSION_RECEIVE]: () => defaultValue,
+const permissionnameReducer = createReducer(defaultValue, builder => {
+    builder
+        .addCase(SELECT_PERMISSION, (state, action) => action.payload.permissionname)
+        .addCase(PERMISSIONNAME_FIELD_MODIFIED, (state, action) => action.payload)
+        .addCase(PERMISSION_CLEAR, () => defaultValue)
+        .addCase(SAVE_MODIFIED_PERMISSION_RECEIVE, () => defaultValue)
+        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
+        .addCase(SAVE_ADDED_PERMISSION_RECEIVE, () => defaultValue);
 });
 
 export default permissionnameReducer;

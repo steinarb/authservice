@@ -6,9 +6,10 @@ import {
 import { isUnselected } from './common';
 const defaultValue = [];
 
-const rolesOnUserReducer = createReducer([], {
-    [SET_ROLES_ON_USER]: (state, action) => action.payload,
-    [SELECT_USER]: (state, action) => isUnselected(action.payload.userid) ? defaultValue : state,
+const rolesOnUserReducer = createReducer([], builder => {
+    builder
+        .addCase(SET_ROLES_ON_USER, (state, action) => action.payload)
+        .addCase(SELECT_USER, (state, action) => isUnselected(action.payload.userid) ? defaultValue : state);
 });
 
 export default rolesOnUserReducer;
