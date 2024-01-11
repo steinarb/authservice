@@ -4,7 +4,7 @@ import ChevronRight from './ChevronRight';
 
 export default function StyledLinkRight(props) {
     return (
-        <Link className="btn btn-block btn-primary mb-0 right-align-cell" to={props.to} >
+        <Link className="btn btn-block btn-primary mb-2 right-align-cell" to={props.to} >
             {props.children} &nbsp;<ChevronRight/>
         </Link>
     );
