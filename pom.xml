@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.priv.bang.pom</groupId>
         <artifactId>bang-app-pom</artifactId>
-        <version>1.1.44</version>
+        <version>1.1.45</version>
     </parent>
     <groupId>no.priv.bang.authservice</groupId>
     <artifactId>authservice-parent</artifactId>
@@ -23,7 +23,6 @@
     </modules>
 
     <properties>
-        <shiro.version>1.13.0</shiro.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <open-iconic.version>1.1.1</open-iconic.version>
         <sonar.cpd.exclusions>
