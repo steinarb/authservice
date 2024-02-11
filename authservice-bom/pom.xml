@@ -71,25 +71,6 @@
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-web</artifactId>
-                <version>${shiro.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>apache.shiro</groupId>
-                <artifactId>shiro-features</artifactId>
-                <version>${shiro.version}</version>
-                <type>xml</type>
-                <classifier>features</classifier>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
