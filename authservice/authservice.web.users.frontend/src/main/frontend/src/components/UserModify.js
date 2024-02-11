@@ -103,7 +103,7 @@ export default function UserModify() {
                             <button
                                 className="btn btn-primary form-control"
                                 onClick={() => dispatch(MODIFY_USER_BUTTON_CLICKED())}>
-                                Lagre endringer av bruker</button>
+                                Save changes to user</button>
                         </FormField>
                     </FormRow>
                 </Container>
