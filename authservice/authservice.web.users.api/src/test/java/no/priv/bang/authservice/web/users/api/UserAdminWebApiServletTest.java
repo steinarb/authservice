@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.ServerProperties;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.osgi.service.log.LogService;
 
@@ -54,9 +55,14 @@ import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
-class UserAdminWebApiServletTest {
+class UserAdminWebApiServletTest extends ShiroTestBase {
     public static final ObjectMapper mapper = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    @BeforeEach
+    void beforeEachTest() {
+        removeWebSubjectFromThread();
+    }
 
     @Test
     void testGetUsers() throws Exception {
@@ -69,6 +75,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
@@ -86,6 +94,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
     }
@@ -105,6 +115,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
@@ -128,6 +140,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
     }
@@ -149,6 +163,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
@@ -184,6 +200,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
@@ -201,6 +219,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
@@ -218,6 +238,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
@@ -235,6 +257,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
@@ -252,6 +276,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
@@ -272,6 +298,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
@@ -292,6 +320,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
@@ -309,6 +339,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
@@ -326,6 +358,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
@@ -343,6 +377,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
@@ -360,6 +396,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
@@ -380,6 +418,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
@@ -400,6 +440,8 @@ class UserAdminWebApiServletTest {
 
         UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});

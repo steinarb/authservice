@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,11 @@ package no.priv.bang.authservice.web.users.api;
 
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 
+import org.apache.shiro.web.jaxrs.ShiroFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.WebConfig;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -45,6 +49,14 @@ import no.priv.bang.servlet.jersey.JerseyServlet;
 @HttpWhiteboardServletPattern("/useradmin/api/*")
 public class UserAdminWebApiServlet extends JerseyServlet {
     private static final long serialVersionUID = 6064420153498760622L;
+
+    @Override
+    protected void init(WebConfig webConfig) throws ServletException {
+        super.init(webConfig);
+        var copyOfExistingConfig = new ResourceConfig(getConfiguration());
+        copyOfExistingConfig.register(ShiroFeature.class);
+        reload(copyOfExistingConfig);
+    }
 
     @Override
     @Reference
