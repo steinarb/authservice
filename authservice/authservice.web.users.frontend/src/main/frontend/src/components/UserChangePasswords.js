@@ -14,6 +14,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedUser } from './common';
 
 export default function UserChangePasswords() {
@@ -37,6 +38,7 @@ export default function UserChangePasswords() {
                 <h1>Change password for user</h1>
                 <div className="col-sm-2"></div>
             </nav>
+            <ModifyFailedErrorAlert/>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

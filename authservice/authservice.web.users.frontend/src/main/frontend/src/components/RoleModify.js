@@ -13,6 +13,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedRole } from './common';
 
 export default function RoleModify() {
@@ -34,6 +35,7 @@ export default function RoleModify() {
                 <h1>Modify role information</h1>
                 <div className="col-sm-2"></div>
             </nav>
+            <ModifyFailedErrorAlert/>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

@@ -21,6 +21,7 @@ import permissionSaga from './permissionSaga';
 import permissionsSaga from './permissionsSaga';
 import permissionModifySaga from './permissionModifySaga';
 import permissionAddSaga from './permissionAddSaga';
+import modifyFailedErrorSaga from './modifyFailedErrorSaga';
 
 export default function* rootSaga() {
     yield all([
@@ -46,5 +47,6 @@ export default function* rootSaga() {
         fork(permissionsSaga),
         fork(permissionModifySaga),
         fork(permissionAddSaga),
+        fork(modifyFailedErrorSaga),
     ]);
 }

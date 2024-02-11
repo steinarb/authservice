@@ -18,6 +18,7 @@ import ChevronRight from './bootstrap/ChevronRight';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { isUnselected } from '../reducers/common';
 import { findSelectedRole } from './common';
 
@@ -47,6 +48,7 @@ export default function RolePermissions() {
                 <h1>Modify role to permission mappings</h1>
                 <div className="col-sm-2"></div>
             </nav>
+            <ModifyFailedErrorAlert/>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>

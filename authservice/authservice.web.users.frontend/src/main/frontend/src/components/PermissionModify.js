@@ -13,6 +13,7 @@ import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
+import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedPermission } from './common';
 
 export default function PermissionModify() {
@@ -36,6 +37,7 @@ export default function PermissionModify() {
                 <h1>Modify permission information</h1>
                 <div className="col-sm-2"></div>
             </nav>
+            <ModifyFailedErrorAlert/>
             <form onSubmit={ e => { e.preventDefault(); }}>
                 <Container>
                     <FormRow>
