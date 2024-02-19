@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.osgi.service.log.LogService;
 
@@ -35,32 +33,32 @@ class LoggedInUserResourceTest extends ShiroTestBase {
     @Test
     void testFindLoggedInUser() {
         LogService logservice = null;
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
 
         loginUser(username, "1ad");
 
-        Optional<User> loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
+        var loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
         assertTrue(loggedInUser.isPresent());
     }
 
     @Test
     void testFindLoggedInUserWhenUserIsNotLoggedIn() {
         LogService logservice = null;
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var useradmin = mock(UserManagementService.class);
 
         createSubjectWithNullPrincipalAndBindItToThread();
 
-        Optional<User> loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
+        var loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
         assertFalse(loggedInUser.isPresent());
     }
 
     @Test
     void testFindLoggedInUserWhenShiroNotInitialized() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
         createNullWebSubjectAndBindItToThread();
 

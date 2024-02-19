@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,13 +39,13 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testCreateSchema() throws Exception {
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        var runner = new ProductionLiquibaseRunner();
         runner.activate();
         var database = createDataSource("authservice1");
         runner.prepare(database);
-        try(Connection connection = database.getConnection()) {
-            try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
-                ResultSet results = statment.executeQuery();
+        try(var connection = database.getConnection()) {
+            try(var statment = connection.prepareStatement("select * from users")) {
+                var results = statment.executeQuery();
                 int usercount = 0;
                 while(results.next()) {
                     ++usercount;
@@ -56,9 +55,9 @@ class ProductionLiquibaseRunnerTest {
             }
         }
 
-        try(Connection connection = database.getConnection()) {
-            try(PreparedStatement statment = connection.prepareStatement("select * from roles")) {
-                ResultSet results = statment.executeQuery();
+        try(var connection = database.getConnection()) {
+            try(var statment = connection.prepareStatement("select * from roles")) {
+                var results = statment.executeQuery();
                 int rolecount = 0;
                 while(results.next()) {
                     ++rolecount;
@@ -71,14 +70,14 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
-        Connection connection = mock(Connection.class);
-        DataSource datasource = mock(DataSource.class);
+        var runner = new ProductionLiquibaseRunner();
+        var connection = mock(Connection.class);
+        var datasource = mock(DataSource.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenReturn(connection);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to create schema in authservice postgresql database");
@@ -86,14 +85,14 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testFailWhenInsertingData() throws Exception {
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        var runner = new ProductionLiquibaseRunner();
         var datasource = spy(createDataSource("authservice2"));
-        Connection connection = mock(Connection.class);
+        var connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenCallRealMethod().thenReturn(connection);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to create schema in authservice postgresql database");
@@ -101,29 +100,29 @@ class ProductionLiquibaseRunnerTest {
 
     @Test
     void testFailWhenUpdatingSchema() throws Exception {
-        ProductionLiquibaseRunner runner = new ProductionLiquibaseRunner();
+        var runner = new ProductionLiquibaseRunner();
         var datasource = spy(createDataSource("authservice3"));
-        Connection connection = mock(Connection.class);
+        var connection = mock(Connection.class);
         when(connection.getMetaData()).thenThrow(SQLException.class);
         when(datasource.getConnection()).thenCallRealMethod().thenCallRealMethod().thenReturn(connection);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to update schma in authservice postgresql database");
     }
 
     Connection createMockConnection() throws Exception {
-        Connection connection = mock(Connection.class);
-        DatabaseMetaData metadata = mock(DatabaseMetaData.class);
+        var connection = mock(Connection.class);
+        var metadata = mock(DatabaseMetaData.class);
         when(metadata.getDatabaseProductName()).thenReturn("mockdb");
         when(metadata.getSQLKeywords()).thenReturn("insert, select, delete");
         when(metadata.getURL()).thenReturn("jdbc:mock:///authservice");
-        ResultSet tables = mock(ResultSet.class);
+        var tables = mock(ResultSet.class);
         when(metadata.getTables(anyString(), anyString(), anyString(), any(String[].class))).thenReturn(tables);
-        Statement stmnt = mock(Statement.class);
-        ResultSet results = mock(ResultSet.class);
+        var stmnt = mock(Statement.class);
+        var results = mock(ResultSet.class);
         when(results.next()).thenReturn(true).thenReturn(false);
         when(stmnt.executeQuery(anyString())).thenReturn(results);
         when(stmnt.getUpdateCount()).thenReturn(-1);
@@ -133,7 +132,7 @@ class ProductionLiquibaseRunnerTest {
     }
 
     private DataSource createDataSource(String dbname) throws SQLException {
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:" + dbname + ";create=true");
         return derbyDataSourceFactory.createDataSource(properties);
     }

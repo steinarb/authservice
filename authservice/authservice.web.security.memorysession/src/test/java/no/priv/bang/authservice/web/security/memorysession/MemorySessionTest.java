@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Steinar Bang
+ * Copyright 2016-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ package no.priv.bang.authservice.web.security.memorysession;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import java.io.Serializable;
-
-import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +24,10 @@ class MemorySessionTest {
 
     @Test
     void testCreateComponent() {
-        MemorySession component = new MemorySession();
+        var component = new MemorySession();
         component.activate();
-        Session session = new SimpleSession();
-        Serializable sessionid = component.create(session);
+        var session = new SimpleSession();
+        var sessionid = component.create(session);
         assertNotNull(sessionid);
     }
 

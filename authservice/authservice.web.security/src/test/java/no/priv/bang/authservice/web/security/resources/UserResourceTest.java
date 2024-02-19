@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,8 @@ import static org.mockito.Mockito.*;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import javax.ws.rs.core.Response;
-
 import org.jsoup.Connection.KeyVal;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
 import org.junit.jupiter.api.Test;
 
@@ -41,10 +38,10 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testGet() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with()
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with()
             .userid(1)
             .username(username)
             .email("jane@gmail.com")
@@ -55,7 +52,7 @@ class UserResourceTest extends ShiroTestBase {
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -64,14 +61,14 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.get();
+        var response = resource.get();
 
         // Verify the response
         assertEquals(200, response.getStatus());
-        String responsebody = (String) response.getEntity();
-        Document html = Jsoup.parse(responsebody);
-        FormElement form = (FormElement) html.getElementsByTag("form").get(0);
-        List<KeyVal> formdata = form.formData();
+        var responsebody = (String) response.getEntity();
+        var html = Jsoup.parse(responsebody);
+        var form = (FormElement) html.getElementsByTag("form").get(0);
+        var formdata = form.formData();
         assertThat(formdata).isNotEmpty();
         assertEquals(user.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(user.getFirstname(), findFormvalue(formdata, "firstname").value());
@@ -81,12 +78,12 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testGetNotLoggedIn() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -95,7 +92,7 @@ class UserResourceTest extends ShiroTestBase {
         createNullWebSubjectAndBindItToThread();
 
         // Run the method under test
-        Response response = resource.get();
+        var response = resource.get();
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -104,12 +101,12 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testGetLoggedInUserNotFoundInAdminService() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -118,7 +115,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser("jad", "1ad");
 
         // Run the method under test
-        Response response = resource.get();
+        var response = resource.get();
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -127,10 +124,10 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testGetHtmlFileNotFound() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with()
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with()
             .userid(1)
             .username(username)
             .email("jane@gmail.com")
@@ -141,7 +138,7 @@ class UserResourceTest extends ShiroTestBase {
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.htmlFile = "web/notafile.html";
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
@@ -151,7 +148,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.get();
+        var response = resource.get();
 
         // Verify the response
         assertEquals(500, response.getStatus());
@@ -159,14 +156,14 @@ class UserResourceTest extends ShiroTestBase {
 
     @Test
     void testFillFormValues() throws Exception {
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         try (InputStream body = getClass().getClassLoader().getResourceAsStream("web/user.html")) {
-            Document html = Jsoup.parse(body, "UTF-8", "");
-            String email = "jane@gmail.com";
-            String firstname = "Jane";
-            String lastname = "Doe";
-            FormElement form = resource.fillFormValues(html, email, firstname, lastname);
-            List<KeyVal> formdata = form.formData();
+            var html = Jsoup.parse(body, "UTF-8", "");
+            var email = "jane@gmail.com";
+            var firstname = "Jane";
+            var lastname = "Doe";
+            var form = resource.fillFormValues(html, email, firstname, lastname);
+            var formdata = form.formData();
             assertEquals(email, findFormvalue(formdata, "email").value());
             assertEquals(firstname, findFormvalue(formdata, "firstname").value());
             assertEquals(lastname, findFormvalue(formdata, "lastname").value());
@@ -183,14 +180,14 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testGetExceptionWhenFetchingUsers() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
         when(useradmin.getUsers()).thenThrow(AuthserviceException.class);
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -199,7 +196,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.get();
+        var response = resource.get();
 
         // Verify the response
         assertEquals(401, response.getStatus()); // Should this have been a 500 rather than a 401?
@@ -208,10 +205,10 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmit() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with()
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with()
             .userid(1)
             .username(username)
             .email("jane@gmail.com")
@@ -219,7 +216,7 @@ class UserResourceTest extends ShiroTestBase {
             .lastname("Doe")
             .build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = User.with()
+        var updatedUser = User.with()
             .userid(1)
             .username(username)
             .email("janey2017@gmail.com")
@@ -230,7 +227,7 @@ class UserResourceTest extends ShiroTestBase {
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -239,14 +236,14 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(200, response.getStatus());
-        String responsebody = (String) response.getEntity();
-        Document html = Jsoup.parse(responsebody);
-        FormElement form = (FormElement) html.getElementsByTag("form").get(0);
-        List<KeyVal> formdata = form.formData();
+        var responsebody = (String) response.getEntity();
+        var html = Jsoup.parse(responsebody);
+        var form = (FormElement) html.getElementsByTag("form").get(0);
+        var formdata = form.formData();
         assertThat(formdata).isNotEmpty();
         assertEquals(updatedUser.getEmail(), findFormvalue(formdata, "email").value());
         assertEquals(updatedUser.getFirstname(), findFormvalue(formdata, "firstname").value());
@@ -256,10 +253,10 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmitLoggedInUserNotPresent() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User updatedUser = User.with()
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var updatedUser = User.with()
             .userid(1)
             .username(username)
             .email("janey2017@gmail.com")
@@ -269,7 +266,7 @@ class UserResourceTest extends ShiroTestBase {
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -278,7 +275,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -287,10 +284,10 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmitUserNotLoggedIn() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User updatedUser = User.with()
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var updatedUser = User.with()
             .userid(1)
             .username(username)
             .email("janey2017@gmail.com")
@@ -300,7 +297,7 @@ class UserResourceTest extends ShiroTestBase {
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -309,7 +306,7 @@ class UserResourceTest extends ShiroTestBase {
         createNullWebSubjectAndBindItToThread();
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -318,17 +315,17 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmitWhenUpdatedUserIsntPresent() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
+        var updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(User.with().build()));
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -337,7 +334,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(500, response.getStatus());
@@ -346,17 +343,17 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmitHtmlFileNotFound() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
+        var updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(updatedUser));
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.htmlFile = "web/notafile.html";
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
@@ -366,7 +363,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(500, response.getStatus());
@@ -375,17 +372,17 @@ class UserResourceTest extends ShiroTestBase {
     @Test
     void testSubmitExceptionOnUserModify() throws Exception {
         // Mock the injected OSGi services
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
+        var updatedUser = User.with(user).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenThrow(AuthserviceException.class);
 
         // "Inject" the OSGi services into the resource
         // (done by HK2 in Jersey, google it if necessary)
-        UserResource resource = new UserResource();
+        var resource = new UserResource();
         resource.setLogservice(logservice);
         resource.useradmin = useradmin;
 
@@ -394,7 +391,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        Response response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
 
         // Verify the response
         assertEquals(401, response.getStatus()); // Should this have been a 500 rather than a 401?

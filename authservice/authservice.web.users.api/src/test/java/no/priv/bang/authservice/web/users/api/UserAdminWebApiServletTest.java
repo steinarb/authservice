@@ -66,33 +66,33 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetUsers() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenReturn(createUsers());
 
-        HttpServletRequest request = buildGetUrl("/users");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/users");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
         assertThat(users).isNotEmpty();
     }
 
     @Test
     void testGetUsersWhenExceptionIsThrown() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenThrow(AuthserviceException.class);
 
-        HttpServletRequest request = buildGetUrl("/users");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/users");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -102,43 +102,43 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testModifyUser() throws Exception {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyUser(any())).thenReturn(originalUsers);
 
-        MockHttpServletRequest request = buildPostUrl("/user/modify");
-        String postBody = mapper.writeValueAsString(user);
+        var request = buildPostUrl("/user/modify");
+        var postBody = mapper.writeValueAsString(user);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
         assertEquals(originalUsers.size(), users.size());
     }
 
     @Test
     void testModifyUserWithWrongTypeInPostData() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
 
         // Send a UserAndPasswords object where a User object is expected
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
 
-        MockHttpServletRequest request = buildPostUrl("/user/modify");
-        String postBody = mapper.writeValueAsString(passwords);
+        var request = buildPostUrl("/user/modify");
+        var postBody = mapper.writeValueAsString(passwords);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -148,315 +148,315 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testUpdatePassword() throws Exception {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenReturn(originalUsers);
 
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
+        var passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
 
-        MockHttpServletRequest request = buildPostUrl("/passwords/update");
-        String postBody = mapper.writeValueAsString(passwords);
+        var request = buildPostUrl("/passwords/update");
+        var postBody = mapper.writeValueAsString(passwords);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
         assertEquals(originalUsers.size(), users.size());
     }
 
     @Test
     void testAddUser() throws Exception {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = User.with()
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = User.with()
             .userid(-1)
             .username("newuser")
             .email("newuser@gmail.com")
             .firstname("New")
             .lastname("User")
             .build();
-        List<User> usersWithAddedUser = new ArrayList<>(originalUsers);
+        var usersWithAddedUser = new ArrayList<>(originalUsers);
         usersWithAddedUser.add(user);
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenReturn(usersWithAddedUser);
 
-        UserAndPasswords passwords = UserAndPasswords.with()
+        var passwords = UserAndPasswords.with()
             .user(user)
             .password1("secret")
             .password2("secret")
             .build();
 
-        MockHttpServletRequest request = buildPostUrl("/user/add");
-        String postBody = mapper.writeValueAsString(passwords);
+        var request = buildPostUrl("/user/add");
+        var postBody = mapper.writeValueAsString(passwords);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<User> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
         assertThat(users).hasSizeGreaterThan(originalUsers.size());
     }
 
     @Test
     void testGetUserRoles() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenReturn(createUserroles());
 
-        HttpServletRequest request = buildGetUrl("/users/roles");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/users/roles");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
+        var userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testAddUserRoles() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenReturn(createUserroles());
 
-        HttpServletRequest request = buildPostUrl("/user/addroles");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildPostUrl("/user/addroles");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
+        var userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testRemoveUserRoles() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenReturn(createUserroles());
 
-        HttpServletRequest request = buildPostUrl("/user/removeroles");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildPostUrl("/user/removeroles");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Role>> userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
+        var userroles = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Role>>>() {});
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testGetRoles() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRoles()).thenReturn(createRoles());
 
-        HttpServletRequest request = buildGetUrl("/roles");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/roles");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
         assertThat(users).isNotEmpty();
     }
 
     @Test
     void testModifyRole() throws Exception {
-        MockLogService logservice = new MockLogService();
-        Role role = Role.with().id(1).rolename("somerole").description("Some role").build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var role = Role.with().id(1).rolename("somerole").description("Some role").build();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyRole(any())).thenReturn(Arrays.asList(role));
 
-        MockHttpServletRequest request = buildPostUrl("/role/modify");
-        String postBody = mapper.writeValueAsString(role);
+        var request = buildPostUrl("/role/modify");
+        var postBody = mapper.writeValueAsString(role);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
         assertThat(users).isNotEmpty();
     }
 
     @Test
     void testAddRole() throws Exception {
-        MockLogService logservice = new MockLogService();
-        Role role = Role.with().id(1).rolename("somerole").description("Some role").build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var role = Role.with().id(1).rolename("somerole").description("Some role").build();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenReturn(Arrays.asList(role));
 
-        MockHttpServletRequest request = buildPostUrl("/role/add");
-        String postBody = mapper.writeValueAsString(role);
+        var request = buildPostUrl("/role/add");
+        var postBody = mapper.writeValueAsString(role);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Role> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Role>>() {});
         assertThat(users).isNotEmpty();
     }
 
     @Test
     void testGetRolePermissions() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRolesPermissions()).thenReturn(createRolesPermissions());
 
-        HttpServletRequest request = buildGetUrl("/roles/permissions");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/roles/permissions");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
+        var rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
         assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
     void testAddRolePermissions() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRolePermissions(any())).thenReturn(createRolesPermissions());
 
-        HttpServletRequest request = buildPostUrl("/role/addpermissions");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildPostUrl("/role/addpermissions");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
+        var rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
         assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
     void testRemoveRolePermissions() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeRolePermissions(any())).thenReturn(createRolesPermissions());
 
-        HttpServletRequest request = buildPostUrl("/role/removepermissions");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildPostUrl("/role/removepermissions");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        Map<String, List<Permission>> rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
+        var rolepermissions = mapper.readValue(getBinaryContent(response), new TypeReference<Map<String, List<Permission>>>() {});
         assertThat(rolepermissions).isNotEmpty();
     }
 
     @Test
     void testGetPermissions() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenReturn(createPermissions());
 
-        HttpServletRequest request = buildGetUrl("/permissions");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("/permissions");
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users).isNotEmpty();
+        var permissions = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
+        assertThat(permissions).isNotEmpty();
     }
 
     @Test
     void testModifyPermission() throws Exception {
-        MockLogService logservice = new MockLogService();
-        Permission permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenReturn(Arrays.asList(permission));
 
-        MockHttpServletRequest request = buildPostUrl("/permission/modify");
-        String postBody = mapper.writeValueAsString(permission);
+        var request = buildPostUrl("/permission/modify");
+        var postBody = mapper.writeValueAsString(permission);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users).isNotEmpty();
+        var permissions = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
+        assertThat(permissions).isNotEmpty();
     }
 
     @Test
     void testAddPermission() throws Exception {
-        MockLogService logservice = new MockLogService();
-        Permission permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenReturn(Arrays.asList(permission));
 
-        MockHttpServletRequest request = buildPostUrl("/permission/add");
-        String postBody = mapper.writeValueAsString(permission);
+        var request = buildPostUrl("/permission/add");
+        var postBody = mapper.writeValueAsString(permission);
         request.setBodyContent(postBody);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        UserAdminWebApiServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
         servlet.service(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        List<Permission> users = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
-        assertThat(users).isNotEmpty();
+        var permissions = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
+        assertThat(permissions).isNotEmpty();
     }
 
     private HttpServletRequest buildGetUrl(String resource) {
-        MockHttpServletRequest request = buildRequest(resource);
+        var request = buildRequest(resource);
         request.setMethod("GET");
         return request;
     }
 
     private MockHttpServletRequest buildPostUrl(String resource) {
-        String contenttype = MediaType.APPLICATION_JSON;
-        MockHttpServletRequest request = buildRequest(resource);
+        var contenttype = MediaType.APPLICATION_JSON;
+        var request = buildRequest(resource);
         request.setMethod("POST");
         request.setContentType(contenttype);
         request.addHeader("Content-Type", contenttype);
@@ -464,8 +464,8 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
     }
 
     private MockHttpServletRequest buildRequest(String resource) {
-        MockHttpSession session = new MockHttpSession();
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        var session = new MockHttpSession();
+        var request = new MockHttpServletRequest();
         request.setProtocol("HTTP/1.1");
         request.setRequestURL("http://localhost:8181/authservice/useradmin/api" + resource);
         request.setRequestURI("/authservice/useradmin/api" + resource);
@@ -476,20 +476,20 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
     }
 
     private UserAdminWebApiServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(UserManagementService usermanagement, LogService logservice) throws Exception {
-        UserAdminWebApiServlet servlet = new UserAdminWebApiServlet();
+        var servlet = new UserAdminWebApiServlet();
         servlet.setLogService(logservice);
         servlet.setUserManagementService(usermanagement);
         servlet.activate();
-        ServletConfig config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
+        var config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
         servlet.init(config);
         return servlet;
     }
 
     private ServletConfig createServletConfigWithApplicationAndPackagenameForJerseyResources() {
-        ServletConfig config = mock(ServletConfig.class);
+        var config = mock(ServletConfig.class);
         when(config.getInitParameterNames()).thenReturn(Collections.enumeration(Arrays.asList(ServerProperties.PROVIDER_PACKAGES)));
         when(config.getInitParameter(ServerProperties.PROVIDER_PACKAGES)).thenReturn("no.priv.bang.authservice.web.users.api.resources");
-        ServletContext servletContext = mock(ServletContext.class);
+        var servletContext = mock(ServletContext.class);
         when(servletContext.getContextPath()).thenReturn("/authservice");
         when(config.getServletContext()).thenReturn(servletContext);
         when(servletContext.getAttributeNames()).thenReturn(Collections.emptyEnumeration());
@@ -497,7 +497,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
     }
 
     private byte[] getBinaryContent(MockHttpServletResponse response) throws IOException {
-        MockServletOutputStream outputstream = (MockServletOutputStream) response.getOutputStream();
+        var outputstream = (MockServletOutputStream) response.getOutputStream();
         return outputstream.getBinaryContent();
     }
 

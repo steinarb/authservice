@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -28,11 +27,11 @@ class AuthserviceDbRealmTest {
 
     @BeforeAll
     static void setupForAll() throws Exception {
-        DerbyDataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
-        Properties properties = new Properties();
+        var derbyDataSourceFactory = new DerbyDataSourceFactory();
+        var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         datasource = derbyDataSourceFactory.createDataSource(properties);
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        var runner = new TestLiquibaseRunner();
         runner.activate();
         runner.prepare(datasource);
     }
@@ -43,11 +42,11 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfo() throws SQLException {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
-        AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
-        AuthenticationInfo authInfo = realm.getAuthenticationInfo(token);
+        var token = new UsernamePasswordToken("jad", "1ad".toCharArray());
+        var authInfo = realm.getAuthenticationInfo(token);
         assertEquals(1, authInfo.getPrincipals().asList().size());
     }
 
@@ -57,10 +56,10 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfoWrongPassword() throws SQLException {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
-        AuthenticationToken token = new UsernamePasswordToken("jad", "1add".toCharArray());
+        var token = new UsernamePasswordToken("jad", "1add".toCharArray());
 
         assertThrows(IncorrectCredentialsException.class, () -> {
                 realm.getAuthenticationInfo(token);
@@ -74,10 +73,10 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfoWrongUsername() throws SQLException {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
-        AuthenticationToken token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
+        var token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
         assertThrows(UnknownAccountException.class, () -> {
                 realm.getAuthenticationInfo(token);
@@ -89,10 +88,10 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetAuthenticationInfoWrongTokenType() {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
-        AuthenticationToken token = mock(AuthenticationToken.class);
-        String username = "jad";
-        String password = "1ad";
+        var realm = new AuthserviceDbRealm();
+        var token = mock(AuthenticationToken.class);
+        var username = "jad";
+        var password = "1ad";
         when(token.getPrincipal()).thenReturn(username);
         when(token.getCredentials()).thenReturn(password);
 
@@ -107,16 +106,16 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetRolesForUsers() throws SQLException {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
-        AuthenticationToken token = new UsernamePasswordToken("jad", "1ad".toCharArray());
-        AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);
+        var token = new UsernamePasswordToken("jad", "1ad".toCharArray());
+        var authenticationInfoForUser = realm.getAuthenticationInfo(token);
 
-        boolean jadHasRoleUser = realm.hasRole(authenticationInfoForUser.getPrincipals(), "caseworker");
+        var jadHasRoleUser = realm.hasRole(authenticationInfoForUser.getPrincipals(), "caseworker");
         assertTrue(jadHasRoleUser);
 
-        boolean jadHasRoleAdministrator = realm.hasRole(authenticationInfoForUser.getPrincipals(), "administrator");
+        var jadHasRoleAdministrator = realm.hasRole(authenticationInfoForUser.getPrincipals(), "administrator");
         assertFalse(jadHasRoleAdministrator);
     }
 
@@ -126,16 +125,16 @@ class AuthserviceDbRealmTest {
      */
     @Test
     void testGetRolesForAdministrators() throws SQLException {
-        AuthserviceDbRealm realm = new AuthserviceDbRealm();
+        var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
-        AuthenticationToken token = new UsernamePasswordToken("on", "ola12".toCharArray());
-        AuthenticationInfo authenticationInfoForUser = realm.getAuthenticationInfo(token);
+        var token = new UsernamePasswordToken("on", "ola12".toCharArray());
+        var authenticationInfoForUser = realm.getAuthenticationInfo(token);
 
-        boolean onHasRoleUser = realm.hasRole(authenticationInfoForUser.getPrincipals(), "caseworker");
+        var onHasRoleUser = realm.hasRole(authenticationInfoForUser.getPrincipals(), "caseworker");
         assertTrue(onHasRoleUser);
 
-        boolean onHasRoleAdministrator = realm.hasRole(authenticationInfoForUser.getPrincipals(), "admin");
+        var onHasRoleAdministrator = realm.hasRole(authenticationInfoForUser.getPrincipals(), "admin");
         assertTrue(onHasRoleAdministrator);
     }
 

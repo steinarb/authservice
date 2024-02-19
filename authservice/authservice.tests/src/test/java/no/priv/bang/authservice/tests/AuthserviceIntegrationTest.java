@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
-import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
@@ -21,13 +20,13 @@ public class AuthserviceIntegrationTest extends KarafTestSupport {
 
     @Configuration
     public Option[] config() {
-        final MavenArtifactUrlReference authserviceFeatureRepo = maven()
+        final var authserviceFeatureRepo = maven()
             .groupId("no.priv.bang.authservice")
             .artifactId("karaf")
             .version("LATEST")
             .type("xml")
             .classifier("features");
-        Option[] options = new Option[] {
+        var options = new Option[] {
             features(authserviceFeatureRepo)
         };
         return Stream.of(super.config(), options).flatMap(Stream::of).toArray(Option[]::new);

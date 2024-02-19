@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
@@ -44,21 +41,21 @@ class UsersResourceTest {
 
     @Test
     void testGetUsers() {
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenReturn(createUsers());
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.usermanagement = usermanagement;
 
-        List<User> users = resource.getUsers();
+        var users = resource.getUsers();
         assertThat(users).isNotEmpty();
     }
 
     @Test
     void testGetUsersWhenExceptionIsThrown() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
@@ -69,27 +66,27 @@ class UsersResourceTest {
 
     @Test
     void testModifyUser() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyUser(any())).thenReturn(originalUsers);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        List<User> users = resource.modifyUser(user);
+        var users = resource.modifyUser(user);
         assertEquals(originalUsers.size(), users.size());
     }
 
     @Test
     void testModifyUserWhenExceptionIsThrown() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyUser(any())).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
@@ -100,36 +97,36 @@ class UsersResourceTest {
 
     @Test
     void testUpdatePassword() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenReturn(originalUsers);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with()
+        var passwords = UserAndPasswords.with()
             .user(user)
             .password1("secret")
             .password2("secret")
             .build();
-        List<User> users = resource.updatePassword(passwords);
+        var users = resource.updatePassword(passwords);
         assertEquals(originalUsers.size(), users.size());
     }
 
     @Test
     void testUpdatePasswordWhenPasswordsArentIdentical() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with()
+        var passwords = UserAndPasswords.with()
             .user(user)
             .password1("secret")
             .password2("zecret")
@@ -141,16 +138,16 @@ class UsersResourceTest {
 
     @Test
     void testUpdatePasswordWhenPasswordsIsEmpty() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
+        var passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
         assertThrows(BadRequestException.class, () -> {
                 resource.updatePassword(passwords);
             });
@@ -158,16 +155,16 @@ class UsersResourceTest {
 
     @Test
     void testUpdatePasswordWhenSQLExceptionOccurs() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = originalUsers.stream().reduce((first, second) -> second).get();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.updatePassword(any())).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
+        var passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.updatePassword(passwords);
             });
@@ -175,45 +172,45 @@ class UsersResourceTest {
 
     @Test
     void testAddUser() {
-        MockLogService logservice = new MockLogService();
-        List<User> originalUsers = createUsers();
-        User user = User.with()
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = User.with()
             .userid(-1)
             .username("newuser")
             .email("newuser@gmail.com")
             .firstname("New")
             .lastname("User")
             .build();
-        List<User> usersWithAddedUser = new ArrayList<>(originalUsers);
+        var usersWithAddedUser = new ArrayList<>(originalUsers);
         usersWithAddedUser.add(user);
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenReturn(usersWithAddedUser);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
-        List<User> users = resource.addUser(passwords);
+        var passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
+        var users = resource.addUser(passwords);
         assertThat(users).hasSizeGreaterThan(originalUsers.size());
     }
 
     @Test
     void testAddUserWhenPasswordsAreNotIdentical() {
-        MockLogService logservice = new MockLogService();
-        User user = User.with()
+        var logservice = new MockLogService();
+        var user = User.with()
             .userid(-1)
             .username("newuser")
             .email("newuser@gmail.com")
             .firstname("New")
             .lastname("User")
             .build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
+        var passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
         assertThrows(BadRequestException.class, () -> {
                 resource.addUser(passwords);
             });
@@ -221,21 +218,21 @@ class UsersResourceTest {
 
     @Test
     void testAddUserWhenPasswordIsEmpty() {
-        MockLogService logservice = new MockLogService();
-        User user = User.with()
+        var logservice = new MockLogService();
+        var user = User.with()
             .userid(-1)
             .username("newuser")
             .email("newuser@gmail.com")
             .firstname("New")
             .lastname("User")
             .build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with()
+        var passwords = UserAndPasswords.with()
             .user(user)
             .password1("secret")
             .password2("secret")
@@ -247,21 +244,21 @@ class UsersResourceTest {
 
     @Test
     void testAddUserWhenSQLExceptionIsThrow() {
-        MockLogService logservice = new MockLogService();
-        User user = User.with()
+        var logservice = new MockLogService();
+        var user = User.with()
             .userid(-1)
             .username("newuser")
             .email("newuser@gmail.com")
             .firstname("New")
             .lastname("User")
             .build();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUser(any())).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserAndPasswords passwords = UserAndPasswords.with()
+        var passwords = UserAndPasswords.with()
             .user(user)
             .password1("secret")
             .password2("secret")
@@ -273,23 +270,23 @@ class UsersResourceTest {
 
     @Test
     void testGetUserRoles() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenReturn(Testdata.createUserroles());
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Role>> userroles = resource.getUserRoles();
+        var userroles = resource.getUserRoles();
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testGetUserRolesWhenExceptionIsThrown() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
@@ -300,27 +297,27 @@ class UsersResourceTest {
 
     @Test
     void testAddUserRoles() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenReturn(Testdata.createUserroles());
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Role>> userroles = resource.addUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
+        var userroles = resource.addUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testAddUserRolesWhenExceptionIsThrown() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
+        var userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.addUserRole(userroles);
             });
@@ -328,27 +325,27 @@ class UsersResourceTest {
 
     @Test
     void testRemoveUserRoles() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenReturn(Testdata.createUserroles());
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        Map<String, List<Role>> userroles = resource.removeUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
+        var userroles = resource.removeUserRole(UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build());
         assertThat(userroles).isNotEmpty();
     }
 
     @Test
     void testRemoveUserRolesWhenExceptionIsThrown() {
-        MockLogService logservice = new MockLogService();
-        UserManagementService usermanagement = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenThrow(AuthserviceException.class);
-        UsersResource resource = new UsersResource();
+        var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        UserRoles userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
+        var userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
         assertThrows(InternalServerErrorException.class, () -> {
                 resource.removeUserRole(userroles);
             });

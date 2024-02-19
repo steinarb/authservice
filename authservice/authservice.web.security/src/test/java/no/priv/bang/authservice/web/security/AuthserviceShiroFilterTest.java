@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,8 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-
-import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
-import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -49,11 +45,11 @@ class AuthserviceShiroFilterTest {
 
     @BeforeAll
     static void setup() throws SQLException, LiquibaseException {
-        DerbyDataSourceFactory dataSourceFactory = new DerbyDataSourceFactory();
-        Properties properties = new Properties();
+        var dataSourceFactory = new DerbyDataSourceFactory();
+        var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
-        DataSource datasource = dataSourceFactory.createDataSource(properties);
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        var datasource = dataSourceFactory.createDataSource(properties);
+        var runner = new TestLiquibaseRunner();
         runner.activate();
         runner.prepare(datasource);
         realm = new AuthserviceDbRealm();
@@ -65,24 +61,24 @@ class AuthserviceShiroFilterTest {
 
     @Test
     void testAuthenticationSucceed() throws Exception {
-        AuthserviceShiroFilter filter = new AuthserviceShiroFilter();
+        var filter = new AuthserviceShiroFilter();
         filter.setServletContext(context);
         filter.setRealm(realm);
         filter.setSession(session);
         filter.activate();
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        var request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
-        HttpServletResponse response = mock(HttpServletResponse.class, Mockito.CALLS_REAL_METHODS);
-        StringWriter bodyWriter = new StringWriter();
-        PrintWriter responseWriter = new PrintWriter(bodyWriter);
+        var response = mock(HttpServletResponse.class, Mockito.CALLS_REAL_METHODS);
+        var bodyWriter = new StringWriter();
+        var responseWriter = new PrintWriter(bodyWriter);
         when(response.getWriter()).thenReturn(responseWriter);
 
         // Get the security manager from the filter and log in
         // to verify that the filter setup is working
-        WebSecurityManager securitymanager = filter.getSecurityManager();
-        UsernamePasswordToken token = new UsernamePasswordToken("admin", "admin".toCharArray(), true);
-        AuthenticationInfo info = securitymanager.authenticate(token);
+        var securitymanager = filter.getSecurityManager();
+        var token = new UsernamePasswordToken("admin", "admin".toCharArray(), true);
+        var info = securitymanager.authenticate(token);
         assertEquals(1, info.getPrincipals().asList().size());
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -38,15 +35,15 @@ class TestLiquibaseRunnerTest {
 
     @Test
     void testCreateSchema() throws Exception {
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
+        var runner = new TestLiquibaseRunner();
         runner.activate();
-        DataSource datasource = createDatasource();
+        var datasource = createDatasource();
         runner.prepare(datasource);
 
-        try(Connection connection = datasource.getConnection()) {
-            try(PreparedStatement statment = connection.prepareStatement("select * from users")) {
-                ResultSet results = statment.executeQuery();
-                int usercount = 0;
+        try(var connection = datasource.getConnection()) {
+            try(var statment = connection.prepareStatement("select * from users")) {
+                var results = statment.executeQuery();
+                var usercount = 0;
                 while(results.next()) {
                     ++usercount;
                 }
@@ -55,10 +52,10 @@ class TestLiquibaseRunnerTest {
             }
         }
 
-        try(Connection connection = datasource.getConnection()) {
-            try(PreparedStatement statment = connection.prepareStatement("select * from roles")) {
-                ResultSet results = statment.executeQuery();
-                int rolecount = 0;
+        try(var connection = datasource.getConnection()) {
+            try(var statment = connection.prepareStatement("select * from roles")) {
+                var results = statment.executeQuery();
+                var rolecount = 0;
                 while(results.next()) {
                     ++rolecount;
                 }
@@ -70,12 +67,12 @@ class TestLiquibaseRunnerTest {
 
     @Test
     void testCreateSchemaWhenSQLExceptionIsThrown() throws Exception {
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        DataSource datasource = mock(DataSource.class);
+        var runner = new TestLiquibaseRunner();
+        var datasource = mock(DataSource.class);
         when(datasource.getConnection()).thenThrow(SQLException.class);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to create schema for authservice Derby test database component");
@@ -83,15 +80,15 @@ class TestLiquibaseRunnerTest {
 
     @Test
     void testFailWhenInsertingMockData() throws Exception {
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        DataSource realdb = createDatasource();
-        DataSource datasource = spy(realdb);
+        var runner = new TestLiquibaseRunner();
+        var realdb = createDatasource();
+        var datasource = spy(realdb);
         when(datasource.getConnection())
             .thenCallRealMethod()
             .thenThrow(SQLException.class);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to insert mock data in authservice Derby test database component");
@@ -99,23 +96,23 @@ class TestLiquibaseRunnerTest {
 
     @Test
     void testFailWhenUpdatingSchema() throws Exception {
-        TestLiquibaseRunner runner = new TestLiquibaseRunner();
-        DataSource realdb = createDatasource();
-        DataSource datasource = spy(realdb);
+        var runner = new TestLiquibaseRunner();
+        var realdb = createDatasource();
+        var datasource = spy(realdb);
         when(datasource.getConnection())
             .thenCallRealMethod()
             .thenCallRealMethod()
             .thenThrow(SQLException.class);
 
         runner.activate();
-        AuthserviceException ex = assertThrows(
+        var ex = assertThrows(
             AuthserviceException.class,
             () -> runner.prepare(datasource));
         assertThat(ex.getMessage()).startsWith("Failed to update schema of authservice Derby test database component");
     }
 
     private DataSource createDatasource() throws SQLException {
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         return derbyDataSourceFactory.createDataSource(properties);
     }

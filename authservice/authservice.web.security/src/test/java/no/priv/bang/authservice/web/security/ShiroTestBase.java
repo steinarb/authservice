@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ package no.priv.bang.authservice.web.security;
 
 import static org.mockito.Mockito.mock;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,7 +25,6 @@ import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.mgt.RealmSecurityManager;
-import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.SimpleAccountRealm;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.config.WebIniSecurityManagerFactory;
@@ -49,16 +45,16 @@ public class ShiroTestBase {
     }
 
     protected void loginUser(String username, String password) {
-        HttpSession session = mock(HttpSession.class);
-        MockHttpServletRequest dummyrequest = new MockHttpServletRequest();
+        var session = mock(HttpSession.class);
+        var dummyrequest = new MockHttpServletRequest();
         dummyrequest.setSession(session);
-        MockHttpServletResponse dummyresponse = new MockHttpServletResponse();
+        var dummyresponse = new MockHttpServletResponse();
         loginUser(dummyrequest, dummyresponse, username, password);
     }
 
     protected void loginUser(HttpServletRequest request, HttpServletResponse response, String username, String password) {
-        WebSubject subject = createSubjectAndBindItToThread(request, response);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
+        var subject = createSubjectAndBindItToThread(request, response);
+        var token = new UsernamePasswordToken(username, password.toCharArray(), true);
         subject.login(token);
     }
 
@@ -67,28 +63,28 @@ public class ShiroTestBase {
     }
 
     protected WebSubject createSubjectWithNullPrincipalAndBindItToThread() {
-        WebSubject subject = mock(WebSubject.class);
+        var subject = mock(WebSubject.class);
         ThreadContext.bind(subject);
         return subject;
     }
 
     protected WebSubject createSubjectAndBindItToThread() {
-        HttpSession session = mock(HttpSession.class);
-        MockHttpServletRequest dummyrequest = new MockHttpServletRequest();
+        var session = mock(HttpSession.class);
+        var dummyrequest = new MockHttpServletRequest();
         dummyrequest.setSession(session);
-        MockHttpServletResponse dummyresponse = new MockHttpServletResponse();
+        var dummyresponse = new MockHttpServletResponse();
         return createSubjectAndBindItToThread(dummyrequest, dummyresponse);
     }
 
     protected WebSubject createSubjectAndBindItToThread(HttpServletRequest request, HttpServletResponse response) {
-        WebSubject subject = new WebSubject.Builder(getSecurityManager(), request, response).buildWebSubject();
+        var subject = new WebSubject.Builder(getSecurityManager(), request, response).buildWebSubject();
         ThreadContext.bind(subject);
         return subject;
     }
 
     public static WebSecurityManager getSecurityManager() {
         if (securitymanager == null) {
-            WebIniSecurityManagerFactory securityManagerFactory = new WebIniSecurityManagerFactory(Ini.fromResourcePath("classpath:test.shiro.ini"));
+            var securityManagerFactory = new WebIniSecurityManagerFactory(Ini.fromResourcePath("classpath:test.shiro.ini"));
             securitymanager = (WebSecurityManager) securityManagerFactory.getInstance();
             realm = findRealmFromSecurityManager(securitymanager);
         }
@@ -97,8 +93,8 @@ public class ShiroTestBase {
     }
 
     private static SimpleAccountRealm findRealmFromSecurityManager(WebSecurityManager securitymanager) {
-        RealmSecurityManager realmSecurityManager = (RealmSecurityManager) securitymanager;
-        Collection<Realm> realms = realmSecurityManager.getRealms();
+        var realmSecurityManager = (RealmSecurityManager) securitymanager;
+        var realms = realmSecurityManager.getRealms();
         return (SimpleAccountRealm) realms.iterator().next();
     }
 
@@ -112,7 +108,7 @@ public class ShiroTestBase {
 
     private static SimpleAccount findUserFromRealm(SimpleAccountRealm realm, String username) {
         try {
-            Method getUserMethod = SimpleAccountRealm.class.getDeclaredMethod("getUser", String.class);
+            var getUserMethod = SimpleAccountRealm.class.getDeclaredMethod("getUser", String.class);
             getUserMethod.setAccessible(true);
             return (SimpleAccount) getUserMethod.invoke(realm, username);
         } catch (Exception e) {

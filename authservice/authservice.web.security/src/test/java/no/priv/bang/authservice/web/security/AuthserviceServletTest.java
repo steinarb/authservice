@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,13 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testGetRootIndexHtml() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        HttpServletRequest request = buildGetRootUrl();
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetRootUrl();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -63,13 +63,13 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testGetOpenIconicCss() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        HttpServletRequest request = buildGetUrl("open-iconic/font/css/open-iconic-bootstrap.min.css");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("open-iconic/font/css/open-iconic-bootstrap.min.css");
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -80,13 +80,13 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testGetOpenIconicWoff() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        HttpServletRequest request = buildGetUrl("open-iconic/font/fonts/open-iconic.woff");
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUrl("open-iconic/font/fonts/open-iconic.woff");
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -97,19 +97,19 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testAuthenticate() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        String originalRequestUrl = "https://myserver.com/someresource";
-        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
-        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+        var originalRequestUrl = "https://myserver.com/someresource";
+        var request = buildPostToLoginUrl(originalRequestUrl);
+        var body = UriBuilder.fromUri("http://localhost:8181/authservice")
             .queryParam("username", "admin")
             .queryParam("password", "admin")
             .build().getQuery();
         request.setBodyContent(body);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -120,20 +120,20 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testAuthenticateUnknownAccount() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        String originalRequestUrl = "https://myserver.com/someresource";
-        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
-        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+        var originalRequestUrl = "https://myserver.com/someresource";
+        var request = buildPostToLoginUrl(originalRequestUrl);
+        var body = UriBuilder.fromUri("http://localhost:8181/authservice")
             .queryParam("username", "jjd")
             .queryParam("password", "admin")
             .build().getQuery();
         request.setBodyContent(body);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
         // Emulate DS component setup
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -144,19 +144,19 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testAuthenticateWrongPassword() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        String originalRequestUrl = "https://myserver.com/someresource";
-        MockHttpServletRequest request = buildPostToLoginUrl(originalRequestUrl);
-        String body = UriBuilder.fromUri("http://localhost:8181/authservice")
+        var originalRequestUrl = "https://myserver.com/someresource";
+        var request = buildPostToLoginUrl(originalRequestUrl);
+        var body = UriBuilder.fromUri("http://localhost:8181/authservice")
             .queryParam("username", "admin")
             .queryParam("password", "wrongpass")
             .build().getQuery();
         request.setBodyContent(body);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -167,13 +167,13 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testGetPasswordIndexHtml() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
 
-        HttpServletRequest request = buildGetPasswordUrl();
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetPasswordUrl();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         createSubjectAndBindItToThread(request, response);
 
@@ -184,16 +184,16 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testGetUser() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
 
-        HttpServletRequest request = buildGetUserUrl();
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var request = buildGetUserUrl();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         // Ensure that the expected user is logged into shiro
         // (see the test.shiro.ini file in the test resources for available logins)
@@ -206,22 +206,22 @@ class AuthserviceServletTest extends ShiroTestBase {
 
     @Test
     void testSubmitUser() throws Exception {
-        MockLogService logservice = new MockLogService();
-        UserManagementService useradmin = mock(UserManagementService.class);
-        String username = "jad";
-        User user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
+        var logservice = new MockLogService();
+        var useradmin = mock(UserManagementService.class);
+        var username = "jad";
+        var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        User updatedUser = User.with().userid(1).username(username).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
+        var updatedUser = User.with().userid(1).username(username).email("janey2017@gmail.com").firstname("Janey").lastname("Dow").build();
         when(useradmin.modifyUser(any())).thenReturn(Arrays.asList(updatedUser));
 
-        MockHttpServletRequest request = buildGetUserUrl();
+        var request = buildGetUserUrl();
         request.setMethod("POST");
-        String postContentType = "application/x-www-form-urlencoded";
+        var postContentType = "application/x-www-form-urlencoded";
         request.setContentType(postContentType);
         request.setHeader("Content-Type", postContentType);
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        var response = new MockHttpServletResponse();
 
-        AuthserviceServlet servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(logservice, useradmin);
 
         // Ensure that the expected user is logged into shiro
         // (see the test.shiro.ini file in the test resources for available logins)
@@ -233,29 +233,29 @@ class AuthserviceServletTest extends ShiroTestBase {
     }
 
     private HttpServletRequest buildGetPasswordUrl() {
-        MockHttpServletRequest request = buildGetRootUrl();
+        var request = buildGetRootUrl();
         request.setRequestURL("http://localhost:8181/authservice/password");
         request.setRequestURI("/authservice/password/");
         return request;
     }
 
     private MockHttpServletRequest buildGetUserUrl() {
-        MockHttpServletRequest request = buildGetRootUrl();
+        var request = buildGetRootUrl();
         request.setRequestURL("http://localhost:8181/authservice/user");
         request.setRequestURI("/authservice/user/");
         return request;
     }
 
     private HttpServletRequest buildGetUrl(String localpath) {
-        MockHttpServletRequest request = buildGetRootUrl();
+        var request = buildGetRootUrl();
         request.setRequestURL("http://localhost:8181/authservice/" + localpath);
         request.setRequestURI("/authservice/" + localpath);
         return request;
     }
 
     private MockHttpServletRequest buildGetRootUrl() {
-        MockHttpSession session = new MockHttpSession();
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        var session = new MockHttpSession();
+        var request = new MockHttpServletRequest();
         request.setProtocol("HTTP/1.1");
         request.setMethod("GET");
         request.setRequestURL("http://localhost:8181/authservice/");
@@ -267,9 +267,9 @@ class AuthserviceServletTest extends ShiroTestBase {
     }
 
     private MockHttpServletRequest buildPostToLoginUrl(String originalUrl) {
-        String contenttype = MediaType.APPLICATION_FORM_URLENCODED;
-        MockHttpSession session = new MockHttpSession();
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        var contenttype = MediaType.APPLICATION_FORM_URLENCODED;
+        var session = new MockHttpSession();
+        var request = new MockHttpServletRequest();
         request.setProtocol("HTTP/1.1");
         request.setMethod("POST");
         request.setRequestURL("http://localhost:8181/authservice/login");
@@ -285,20 +285,20 @@ class AuthserviceServletTest extends ShiroTestBase {
     }
 
     private AuthserviceServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(LogService logservice, UserManagementService useradmin) throws Exception {
-        AuthserviceServlet servlet = new AuthserviceServlet();
+        var servlet = new AuthserviceServlet();
         servlet.setLogService(logservice);
         servlet.setUserManagementService(useradmin);
         servlet.activate();
-        ServletConfig config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
+        var config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
         servlet.init(config);
         return servlet;
     }
 
     private ServletConfig createServletConfigWithApplicationAndPackagenameForJerseyResources() {
-        ServletConfig config = mock(ServletConfig.class);
+        var config = mock(ServletConfig.class);
         when(config.getInitParameterNames()).thenReturn(Collections.enumeration(Arrays.asList(ServerProperties.PROVIDER_PACKAGES)));
         when(config.getInitParameter(ServerProperties.PROVIDER_PACKAGES)).thenReturn("no.priv.bang.authservice.web.security.resources");
-        ServletContext servletContext = mock(ServletContext.class);
+        var servletContext = mock(ServletContext.class);
         when(config.getServletContext()).thenReturn(servletContext);
         when(servletContext.getAttributeNames()).thenReturn(Collections.emptyEnumeration());
         return config;

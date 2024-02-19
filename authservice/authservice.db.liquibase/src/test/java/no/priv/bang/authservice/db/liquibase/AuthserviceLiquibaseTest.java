@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,10 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Properties;
 import java.util.logging.LogManager;
-
-import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,20 +50,20 @@ class AuthserviceLiquibaseTest {
 
     @Test
     void testCreateSchema() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var authserviceLiquibase = new AuthserviceLiquibase();
 
         authserviceLiquibase.createInitialSchema(createConnection("authservice"));
 
         try(var connection = createConnection("authservice")) {
-            String username = "jad";
-            String password = "1ad";
-            String salt = "pepper";
-            String email = "jad@gmail.com";
-            String firstname = "Jane";
-            String lastname = "Doe";
+            var username = "jad";
+            var password = "1ad";
+            var salt = "pepper";
+            var email = "jad@gmail.com";
+            var firstname = "Jane";
+            var lastname = "Doe";
             addUser(connection, username, password, salt, email, firstname, lastname);
             assertUser(connection, username);
-            String rolename = "admin";
+            var rolename = "admin";
             addRole(connection, rolename, "Test role");
             addUserRole(connection, rolename, username);
             assertUserRole(connection, rolename, username);
@@ -77,7 +73,7 @@ class AuthserviceLiquibaseTest {
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
                     addUserRole(connection, rolename, "notauser");
                 });
-            String permission = "user_admin_api_write";
+            var permission = "user_admin_api_write";
             addPermission(connection, permission, "User admin REST API write access");
             addRolePermission(connection, rolename, permission);
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
@@ -93,8 +89,8 @@ class AuthserviceLiquibaseTest {
 
     @Test
     void testCreatingSchemaWithExceptionThrownOnConnectionClose() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
-        Connection connection = spy(createConnection("authservice3"));
+        var authserviceLiquibase = new AuthserviceLiquibase();
+        var connection = spy(createConnection("authservice3"));
         doNothing().when(connection).setAutoCommit(anyBoolean());
         doThrow(RuntimeException.class).when(connection).close();
 
@@ -106,7 +102,7 @@ class AuthserviceLiquibaseTest {
 
     @Test
     void testApplyChangelist() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var authserviceLiquibase = new AuthserviceLiquibase();
 
         authserviceLiquibase.createInitialSchema(createConnection("authservice2"));
         authserviceLiquibase.applyChangelist(
@@ -116,16 +112,16 @@ class AuthserviceLiquibaseTest {
 
 
         try(var connection = createConnection("authservice2")) {
-            String username = "jad";
+            var username = "jad";
             assertUser(connection, username);
-            String rolename = "caseworker";
+            var rolename = "caseworker";
             assertUserRole(connection, rolename, username);
         }
     }
 
     @Test
     void testApplyChangelistFailingWhenResourceIsMissing() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var authserviceLiquibase = new AuthserviceLiquibase();
         var testClassLoader = getClass().getClassLoader();
         try (var conn1 = createConnection("authservice4")) {
             authserviceLiquibase.createInitialSchema(conn1);
@@ -143,7 +139,7 @@ class AuthserviceLiquibaseTest {
 
     @Test
     void testApplyChangelistFailingWhenFailOnClose() throws Exception {
-        AuthserviceLiquibase authserviceLiquibase = new AuthserviceLiquibase();
+        var authserviceLiquibase = new AuthserviceLiquibase();
         var testClassLoader = getClass().getClassLoader();
         try (var conn1 = createConnection("authservice5")) {
             authserviceLiquibase.createInitialSchema(conn1);
@@ -162,7 +158,7 @@ class AuthserviceLiquibaseTest {
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("insert into users (username, password, password_salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
+        try (var statement = connection.prepareStatement("insert into users (username, password, password_salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
             statement.setString(1, username);
             statement.setString(2, password);
             statement.setString(3, salt);
@@ -174,7 +170,7 @@ class AuthserviceLiquibaseTest {
     }
 
     private void addRole(Connection connection, String rolename, String description) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
+        try (var statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
             statement.setString(1, rolename);
             statement.setString(2, description);
             statement.executeUpdate();
@@ -182,7 +178,7 @@ class AuthserviceLiquibaseTest {
     }
 
     private void addUserRole(Connection connection, String rolename, String username) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
+        try (var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
             statement.setString(1, rolename);
             statement.setString(2, username);
             statement.executeUpdate();
@@ -190,24 +186,24 @@ class AuthserviceLiquibaseTest {
     }
 
     private void assertUser(Connection connection, String username) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("select * from users where username=?")) {
+        try (var statement = connection.prepareStatement("select * from users where username=?")) {
             statement.setString(1, username);
-            ResultSet results = statement.executeQuery();
+            var results = statement.executeQuery();
             assertTrue(results.next(), "Expected at least one match");
         }
     }
 
     private void assertUserRole(Connection connection, String rolename, String username) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement("select * from user_roles where role_name=? and username=?")) {
+        try (var statement = connection.prepareStatement("select * from user_roles where role_name=? and username=?")) {
             statement.setString(1, rolename);
             statement.setString(2, username);
-            ResultSet results = statement.executeQuery();
+            var results = statement.executeQuery();
             assertTrue(results.next(), "Expected at least one match");
         }
     }
 
     private void addPermission(Connection connection, String permission, String description) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
+        try (var statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
             statement.setString(1, permission);
             statement.setString(2, description);
             statement.executeUpdate();
@@ -215,7 +211,7 @@ class AuthserviceLiquibaseTest {
     }
 
     private void addRolePermission(Connection connection, String rolename, String permission) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
+        try (var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
             statement.setString(1, rolename);
             statement.setString(2, permission);
             statement.executeUpdate();
@@ -223,9 +219,9 @@ class AuthserviceLiquibaseTest {
     }
 
     private Connection createConnection(String dbname) throws Exception {
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:" + dbname + ";create=true");
-        DataSource dataSource = derbyDataSourceFactory.createDataSource(properties);
+        var dataSource = derbyDataSourceFactory.createDataSource(properties);
         return dataSource.getConnection();
     }
 
