@@ -9,7 +9,7 @@
     </parent>
     <groupId>no.priv.bang.authservice</groupId>
     <artifactId>authservice-parent</artifactId>
-    <version>1.15.19</version>
+    <version>1.15.20-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -151,7 +151,7 @@
     <scm>
         <url>https://github.com/steinarb/authservice</url>
         <connection>scm:git:https://github.com/steinarb/authservice.git</connection>
-        <tag>authservice-1.15.19</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
