@@ -3,7 +3,7 @@
     <parent>
         <artifactId>authservice</artifactId>
         <groupId>no.priv.bang.authservice</groupId>
-        <version>1.15.20-SNAPSHOT</version>
+        <version>1.15.20</version>
     </parent>
 
     <artifactId>authservice.db.liquibase.production</artifactId>
