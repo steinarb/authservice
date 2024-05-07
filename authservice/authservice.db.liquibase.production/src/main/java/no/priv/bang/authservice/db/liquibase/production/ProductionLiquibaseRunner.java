@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class ProductionLiquibaseRunner implements PreHook {
 
     @Override
     public void prepare(DataSource datasource) throws SQLException {
-        AuthserviceLiquibase liquibase = new AuthserviceLiquibase();
+        var liquibase = new AuthserviceLiquibase();
         try(var connection = datasource.getConnection()) {
             liquibase.createInitialSchema(connection);
         } catch (Exception e) {

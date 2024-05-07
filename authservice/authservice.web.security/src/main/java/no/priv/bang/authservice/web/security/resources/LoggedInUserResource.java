@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package no.priv.bang.authservice.web.security.resources;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
-
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
@@ -31,13 +27,13 @@ public class LoggedInUserResource extends HtmlTemplateResource {
 
     protected static Optional<User> findLoggedInUser(LogService logservice, UserManagementService useradmin) {
         try {
-            Subject subject = SecurityUtils.getSubject();
-            String username = (String) subject.getPrincipal();
-            List<User> users = useradmin.getUsers();
+            var subject = SecurityUtils.getSubject();
+            var username = (String) subject.getPrincipal();
+            var users = useradmin.getUsers();
             return users.stream().filter(u -> username.equals(u.getUsername())).findFirst();
         } catch (Exception e) {
-            Logger logger = logservice.getLogger(LoggedInUserResource.class);
-            String message = "Failed to find the logged in user when changing the password";
+            var logger = logservice.getLogger(LoggedInUserResource.class);
+            var message = "Failed to find the logged in user when changing the password";
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }

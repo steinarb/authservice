@@ -21,7 +21,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
     @Activate
     public void activate() {
         setSaltStyle(SaltStyle.COLUMN);
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        var credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("SHA-256");
         credentialsMatcher.setStoredCredentialsHexEncoded(false); // base64 encoding, not hex
         credentialsMatcher.setHashIterations(1024);

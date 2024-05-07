@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Steinar Bang
+ * Copyright 2018-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
-import org.jsoup.select.Elements;
 import org.osgi.service.log.LogService;
 import org.osgi.service.log.Logger;
 
@@ -86,7 +84,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
     public Response getLogin(@QueryParam("originalUri") String originalUri) {
-        Document html = loadHtmlFile(LOGIN_HTML, logservice);
+        var html = loadHtmlFile(LOGIN_HTML, logservice);
         fillFormValues(html, originalUri);
 
         return Response.status(Response.Status.OK).entity(html.html()).build();
@@ -97,35 +95,35 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces("text/html")
     public Response postLogin(@FormParam("username") String username, @FormParam("password") String password, @FormParam("originalUri") String originalUri) {
-        Subject subject = SecurityUtils.getSubject();
+        var subject = SecurityUtils.getSubject();
 
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(), true);
+        var token = new UsernamePasswordToken(username, password.toCharArray(), true);
         try {
             subject.login(token);
 
             return Response.status(Response.Status.FOUND).location(URI.create(notNullUrl(originalUri))).entity("Login successful!").build();
         } catch(UnknownAccountException e) {
-            String message = "unknown user";
+            var message = "unknown user";
             logger.warn(LOGIN_ERROR + message, e);
-            Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (IncorrectCredentialsException  e) {
-            String message = "wrong password";
+            var message = "wrong password";
             logger.warn(LOGIN_ERROR + message, e);
-            Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
-            String message = "locked account";
+            var message = "locked account";
             logger.warn(LOGIN_ERROR + message, e);
-            Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (AuthenticationException e) {
-            String message = "general authentication error";
+            var message = "general authentication error";
             logger.warn(LOGIN_ERROR + message, e);
-            Document html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (Exception e) {
@@ -140,10 +138,10 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @Path("/logout")
     @Produces("text/html")
     public Response logout() {
-        Subject subject = SecurityUtils.getSubject();
+        var subject = SecurityUtils.getSubject();
 
         subject.logout();
-        String redirectUrl = httpHeaders.getHeaderString("Referer");
+        var redirectUrl = httpHeaders.getHeaderString("Referer");
         return Response.status(Response.Status.FOUND).location(URI.create(redirectUrl)).entity("Login successful!").build();
     }
 
@@ -157,7 +155,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
 
     URI findRedirectLocation() {
         if (httpHeaders != null) {
-            String originLocation = httpHeaders.getHeaderString("Origin");
+            var originLocation = httpHeaders.getHeaderString("Origin");
             if (originLocation != null) {
                 return URI.create(originLocation);
             }
@@ -170,7 +168,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @Path("/check")
     @Produces(MediaType.TEXT_PLAIN)
     public Response checkLogin() {
-        Subject subject = SecurityUtils.getSubject();
+        var subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             return Response.status(Response.Status.OK).entity("Successfully authenticated!\n").build();
         }
@@ -179,18 +177,18 @@ public class AuthserviceResource extends HtmlTemplateResource {
     }
 
     private FormElement fillFormValues(Document html, String originalUri) {
-        FormElement form = findForm(html);
+        var form = findForm(html);
         updateOriginalUri(form, originalUri);
 
         return form;
     }
 
     private FormElement fillFormValues(Document html, String originalUri, String username, String password) {
-        FormElement form = findForm(html);
+        var form = findForm(html);
         updateOriginalUri(form, originalUri);
-        Elements usernameInput = form.select("input[id=username]");
+        var usernameInput = form.select("input[id=username]");
         usernameInput.val(username);
-        Elements passwordInput = form.select("input[id=password]");
+        var passwordInput = form.select("input[id=password]");
         passwordInput.val(password);
 
         return form;
@@ -201,7 +199,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
     }
 
     void updateOriginalUri(FormElement form, String originalUri) {
-        Elements originalUriHidden = form.select("input[id=originalUri]");
+        var originalUriHidden = form.select("input[id=originalUri]");
         originalUriHidden.val(originalUri);
     }
 

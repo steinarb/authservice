@@ -57,7 +57,7 @@ public class PermissionsResource extends ResourceBase {
         try {
             return usermanagement.getPermissions();
         } catch (AuthserviceException e) {
-            String message = "User management service failed to get the list of permissions";
+            var message = "User management service failed to get the list of permissions";
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -70,7 +70,7 @@ public class PermissionsResource extends ResourceBase {
         try {
             return usermanagement.modifyPermission(permission);
         } catch (AuthserviceException e) {
-            String message = String.format("User management service failed to modify permission %s", permission.getPermissionname());
+            var message = String.format("User management service failed to modify permission %s", permission.getPermissionname());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -83,7 +83,7 @@ public class PermissionsResource extends ResourceBase {
         try {
             return usermanagement.addPermission(permission);
         } catch (AuthserviceException e) {
-            String message = String.format("User management service failed to add permission %s", permission.getPermissionname());
+            var message = String.format("User management service failed to add permission %s", permission.getPermissionname());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }

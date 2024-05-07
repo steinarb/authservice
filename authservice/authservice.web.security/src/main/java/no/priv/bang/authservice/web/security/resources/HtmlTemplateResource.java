@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@ import javax.ws.rs.InternalServerErrorException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
 
 public class HtmlTemplateResource {
 
@@ -36,8 +34,8 @@ public class HtmlTemplateResource {
         try (InputStream body = getClasspathResource(htmlFile)) {
             return Jsoup.parse(body, "UTF-8", "");
         } catch (IOException e) {
-            Logger logger = logservice.getLogger(getClass());
-            String message = "Got exception loading the index.html file";
+            var logger = logservice.getLogger(getClass());
+            var message = "Got exception loading the index.html file";
             logger.error(message, e);
             throw new InternalServerErrorException(message, e);
         }
@@ -48,13 +46,13 @@ public class HtmlTemplateResource {
     }
 
     protected Document loadHtmlFileAndSetMessage(String htmlFile, String message, LogService logservice) {
-        Document html = loadHtmlFile(htmlFile, logservice);
+        var html = loadHtmlFile(htmlFile, logservice);
         setError(html, message);
         return html;
     }
 
     static void setMessage(Document html, String message) {
-        Element banner = html.select("p[id=messagebanner]").get(0);
+        var banner = html.select("p[id=messagebanner]").get(0);
         banner.text(message);
     }
 

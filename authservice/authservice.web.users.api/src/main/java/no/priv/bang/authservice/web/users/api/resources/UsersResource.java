@@ -76,7 +76,7 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.modifyUser(user);
         } catch (AuthserviceException e) {
-            String message = String.format("User management service failed to modify user %s", user.getUsername());
+            var message = String.format("User management service failed to modify user %s", user.getUsername());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -89,15 +89,15 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.updatePassword(passwords);
         } catch (AuthservicePasswordsNotIdenticalException e) {
-            String message = String.format("Password update failure for user %s: Passwords not identical", passwords.getUser().getUsername());
+            var message = String.format("Password update failure for user %s: Passwords not identical", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthservicePasswordEmptyException e) {
-            String message = String.format("Password update failure for user %s: Passwords is empty", passwords.getUser().getUsername());
+            var message = String.format("Password update failure for user %s: Passwords is empty", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthserviceException e) {
-            String message = String.format("Password update failure for user %s: internal server error", passwords.getUser().getUsername());
+            var message = String.format("Password update failure for user %s: internal server error", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new InternalServerErrorException(message + ". See log file for details!");
         }
@@ -110,15 +110,15 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.addUser(passwords);
         } catch (AuthservicePasswordsNotIdenticalException e) {
-            String message = String.format("Failed to add new user %s: Passwords not identical", passwords.getUser().getUsername());
+            var message = String.format("Failed to add new user %s: Passwords not identical", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthservicePasswordEmptyException e) {
-            String message = String.format("Failed to add new user %s: Passwords is empty", passwords.getUser().getUsername());
+            var message = String.format("Failed to add new user %s: Passwords is empty", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new BadRequestException(message);
         } catch (AuthserviceException e) {
-            String message = String.format("Failed to add new user %s: internal server error", passwords.getUser().getUsername());
+            var message = String.format("Failed to add new user %s: internal server error", passwords.getUser().getUsername());
             logger.error(message, e);
             throw new InternalServerErrorException(message + ". See log file for details!");
         }
@@ -130,7 +130,7 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.getUserRoles();
         } catch (AuthserviceException e) {
-            String message = "User management service failed to retrieve the user to roles mappings";
+            var message = "User management service failed to retrieve the user to roles mappings";
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -143,7 +143,7 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.addUserRoles(userroles);
         } catch (AuthserviceException e) {
-            String message = String.format("User management service failed add roles to user %s", userroles.getUser().getUsername());
+            var message = String.format("User management service failed add roles to user %s", userroles.getUser().getUsername());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -156,7 +156,7 @@ public class UsersResource extends ResourceBase {
         try {
             return usermanagement.removeUserRoles(userroles);
         } catch (AuthserviceException e) {
-            String message = String.format("User management service failed remove roles to user %s", userroles.getUser().getUsername());
+            var message = String.format("User management service failed remove roles to user %s", userroles.getUser().getUsername());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
