@@ -82,8 +82,8 @@ public class UserResource extends LoggedInUserResource {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
 
-            var userid = loggedInUser.get().getUserid();
-            var username = loggedInUser.get().getUsername();
+            var userid = loggedInUser.get().userid();
+            var username = loggedInUser.get().username();
             var userWithValuesFromForm = User.with()
                 .userid(userid)
                 .username(username)
@@ -92,7 +92,7 @@ public class UserResource extends LoggedInUserResource {
                 .lastname(lastname)
                 .build();
             var updatedUsers = useradmin.modifyUser(userWithValuesFromForm);
-            var updatedUser = updatedUsers.stream().filter(u -> userid == u.getUserid()).findFirst();
+            var updatedUser = updatedUsers.stream().filter(u -> userid == u.userid()).findFirst();
             if (!updatedUser.isPresent()) {
                 var message = String.format("Updated user not found, userid: %d  username: %s", userid, username);
                 logger.error(message);
@@ -126,7 +126,7 @@ public class UserResource extends LoggedInUserResource {
     private Document loadHtmlFileAndFillForm(User user) throws IOException {
         try (var body = getClass().getClassLoader().getResourceAsStream(htmlFile)) {
             var html = Jsoup.parse(body, "UTF-8", "");
-            fillFormValues(html, user.getEmail(), user.getFirstname(), user.getLastname());
+            fillFormValues(html, user.email(), user.firstname(), user.lastname());
             return html;
         }
     }

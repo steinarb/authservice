@@ -30,7 +30,7 @@ public class LoggedInUserResource extends HtmlTemplateResource {
             var subject = SecurityUtils.getSubject();
             var username = (String) subject.getPrincipal();
             var users = useradmin.getUsers();
-            return users.stream().filter(u -> username.equals(u.getUsername())).findFirst();
+            return users.stream().filter(u -> username.equals(u.username())).findFirst();
         } catch (Exception e) {
             var logger = logservice.getLogger(LoggedInUserResource.class);
             var message = "Failed to find the logged in user when changing the password";

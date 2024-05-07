@@ -73,7 +73,7 @@ public class RolesResource extends ResourceBase {
         try {
             return usermanagement.modifyRole(role);
         } catch (AuthserviceException e) {
-            var message = String.format("Failed to modify role %s", role.getRolename());
+            var message = String.format("Failed to modify role %s", role.rolename());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -86,7 +86,7 @@ public class RolesResource extends ResourceBase {
         try {
             return usermanagement.addRole(role);
         } catch (AuthserviceException e) {
-            var message = String.format("Failed to add role %s", role.getRolename());
+            var message = String.format("Failed to add role %s", role.rolename());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -111,7 +111,7 @@ public class RolesResource extends ResourceBase {
         try {
             return usermanagement.addRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {
-            var message = String.format("Failed to add permissions to role %s", rolepermissions.getRole().getRolename());
+            var message = String.format("Failed to add permissions to role %s", rolepermissions.role().rolename());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -124,7 +124,7 @@ public class RolesResource extends ResourceBase {
         try {
             return usermanagement.removeRolePermissions(rolepermissions);
         } catch (AuthserviceException e) {
-            var message = String.format("Failed to remove permissions from role %s", rolepermissions.getRole().getRolename());
+            var message = String.format("Failed to remove permissions from role %s", rolepermissions.role().rolename());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }

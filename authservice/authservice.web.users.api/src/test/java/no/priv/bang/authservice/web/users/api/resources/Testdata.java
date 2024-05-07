@@ -76,11 +76,11 @@ public class Testdata {
         var adminrole = roles.get(0);
         var caseworker = roles.get(1);
         var userroles = new HashMap<String, List<Role>>();
-        userroles.put(admin.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(on.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(kn.getUsername(), Arrays.asList(adminrole, caseworker));
-        userroles.put(jad.getUsername(), Arrays.asList(caseworker));
-        userroles.put(jod.getUsername(), Arrays.asList(caseworker));
+        userroles.put(admin.username(), Arrays.asList(adminrole, caseworker));
+        userroles.put(on.username(), Arrays.asList(adminrole, caseworker));
+        userroles.put(kn.username(), Arrays.asList(adminrole, caseworker));
+        userroles.put(jad.username(), Arrays.asList(caseworker));
+        userroles.put(jod.username(), Arrays.asList(caseworker));
         return userroles;
     }
 
@@ -114,8 +114,8 @@ public class Testdata {
         var caseworker_write = permissions.get(3);
         var user_read = permissions.get(4);
         var rolespermissions = new HashMap<String, List<Permission>>();
-        rolespermissions.put(admin.getRolename(), Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read));
-        rolespermissions.put(caseworker.getRolename(), Arrays.asList(caseworker_read, caseworker_write, user_read));
+        rolespermissions.put(admin.rolename(), Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read));
+        rolespermissions.put(caseworker.rolename(), Arrays.asList(caseworker_read, caseworker_write, user_read));
         return rolespermissions;
     }
 

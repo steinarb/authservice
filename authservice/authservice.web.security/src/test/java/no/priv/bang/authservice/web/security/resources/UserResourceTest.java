@@ -70,9 +70,9 @@ class UserResourceTest extends ShiroTestBase {
         var form = (FormElement) html.getElementsByTag("form").get(0);
         var formdata = form.formData();
         assertThat(formdata).isNotEmpty();
-        assertEquals(user.getEmail(), findFormvalue(formdata, "email").value());
-        assertEquals(user.getFirstname(), findFormvalue(formdata, "firstname").value());
-        assertEquals(user.getLastname(), findFormvalue(formdata, "lastname").value());
+        assertEquals(user.email(), findFormvalue(formdata, "email").value());
+        assertEquals(user.firstname(), findFormvalue(formdata, "firstname").value());
+        assertEquals(user.lastname(), findFormvalue(formdata, "lastname").value());
     }
 
     @Test
@@ -236,7 +236,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(200, response.getStatus());
@@ -245,9 +245,9 @@ class UserResourceTest extends ShiroTestBase {
         var form = (FormElement) html.getElementsByTag("form").get(0);
         var formdata = form.formData();
         assertThat(formdata).isNotEmpty();
-        assertEquals(updatedUser.getEmail(), findFormvalue(formdata, "email").value());
-        assertEquals(updatedUser.getFirstname(), findFormvalue(formdata, "firstname").value());
-        assertEquals(updatedUser.getLastname(), findFormvalue(formdata, "lastname").value());
+        assertEquals(updatedUser.email(), findFormvalue(formdata, "email").value());
+        assertEquals(updatedUser.firstname(), findFormvalue(formdata, "firstname").value());
+        assertEquals(updatedUser.lastname(), findFormvalue(formdata, "lastname").value());
     }
 
     @Test
@@ -275,7 +275,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -306,7 +306,7 @@ class UserResourceTest extends ShiroTestBase {
         createNullWebSubjectAndBindItToThread();
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(401, response.getStatus());
@@ -334,7 +334,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(500, response.getStatus());
@@ -363,7 +363,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(500, response.getStatus());
@@ -391,7 +391,7 @@ class UserResourceTest extends ShiroTestBase {
         loginUser(username, "1ad");
 
         // Run the method under test
-        var response = resource.submit(updatedUser.getEmail(), updatedUser.getFirstname(), updatedUser.getLastname());
+        var response = resource.submit(updatedUser.email(), updatedUser.firstname(), updatedUser.lastname());
 
         // Verify the response
         assertEquals(401, response.getStatus()); // Should this have been a 500 rather than a 401?

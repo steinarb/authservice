@@ -161,15 +161,15 @@ public class UserManagementServiceProvider implements UserManagementService {
     public List<User> modifyUser(User user) {
         try(Connection connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("update users set username=?, email=?, firstname=?, lastname=? where user_id=?")) {
-                statement.setString(1, user.getUsername());
-                statement.setString(2, user.getEmail());
-                statement.setString(3, user.getFirstname());
-                statement.setString(4, user.getLastname());
-                statement.setInt(5, user.getUserid());
+                statement.setString(1, user.username());
+                statement.setString(2, user.email());
+                statement.setString(3, user.firstname());
+                statement.setString(4, user.lastname());
+                statement.setInt(5, user.userid());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            var message = String.format("UserManagmentService failed to update user with id %d", user.getUserid());
+            var message = String.format("UserManagmentService failed to update user with id %d", user.userid());
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
@@ -179,26 +179,26 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<User> updatePassword(UserAndPasswords userAndPasswords) {
-        if (userAndPasswords.getPassword1() == null || userAndPasswords.getPassword1().isEmpty()) {
+        if (userAndPasswords.password1() == null || userAndPasswords.password1().isEmpty()) {
             var message = "Failed to set password: Password can't be empty";
             logger.warn(message);
             throw new AuthservicePasswordEmptyException(message);
         }
 
-        if (userAndPasswords.getUser() == null) {
+        if (userAndPasswords.user() == null) {
             var message = "Failed to set password: User can't be empty";
             logger.warn(message);
             throw new AuthservicePasswordEmptyException(message);
         }
 
-        if (!userAndPasswords.getPassword1().equals(userAndPasswords.getPassword2())) {
+        if (!userAndPasswords.password1().equals(userAndPasswords.password2())) {
             var message = "Failed to set password: Passwords not identical";
             logger.warn(message);
             throw new AuthservicePasswordsNotIdenticalException(message);
         }
 
-        int userId = userAndPasswords.getUser().getUserid();
-        var password = userAndPasswords.getPassword1();
+        var userId = userAndPasswords.user().userid();
+        var password = userAndPasswords.password1();
         var salt = getNewSalt();
         var hashedPassword = hashPassword(password, salt);
         try(var connection = datasource.getConnection()) {
@@ -206,7 +206,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.setString(1, hashedPassword);
                 statement.setString(2, salt);
                 statement.setInt(3, userId);
-                int rowcount = statement.executeUpdate();
+                var rowcount = statement.executeUpdate();
                 if (rowcount < 1) {
                     var message = String.format("Failed to set password: userId %d didn't match any user in the database", userId);
                     logger.warn(message);
@@ -226,17 +226,17 @@ public class UserManagementServiceProvider implements UserManagementService {
     public List<User> addUser(UserAndPasswords newUserWithPasswords) {
         User addedUser = null;
         try(var connection = datasource.getConnection()) {
-            var newUser = newUserWithPasswords.getUser();
+            var newUser = newUserWithPasswords.user();
             try(var statement = connection.prepareStatement("insert into users (username,email,password, password_salt,firstname,lastname) values (?, ?, 'dummy', 'dummy', ?, ?)")) {
-                statement.setString(1, newUser.getUsername());
-                statement.setString(2, newUser.getEmail());
-                statement.setString(3, newUser.getFirstname());
-                statement.setString(4, newUser.getLastname());
+                statement.setString(1, newUser.username());
+                statement.setString(2, newUser.email());
+                statement.setString(3, newUser.firstname());
+                statement.setString(4, newUser.lastname());
                 statement.executeUpdate();
             }
 
             try(var statement = connection.prepareStatement("select * from users where username=? order by user_id")) {
-                statement.setString(1, newUser.getUsername());
+                statement.setString(1, newUser.username());
                 try (var results = statement.executeQuery()) {
                     if (results.next()) {
                         addedUser = unpackUser(results);
@@ -246,15 +246,15 @@ public class UserManagementServiceProvider implements UserManagementService {
                 }
             }
         } catch (SQLException e) {
-            var message = String.format("UserManagmentService failed to add user with username %s", newUserWithPasswords.getUser().getUsername());
+            var message = String.format("UserManagmentService failed to add user with username %s", newUserWithPasswords.user().username());
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
 
         var passwords = UserAndPasswords.with()
             .user(addedUser)
-            .password1(newUserWithPasswords.getPassword1())
-            .password2(newUserWithPasswords.getPassword2())
+            .password1(newUserWithPasswords.password1())
+            .password2(newUserWithPasswords.password2())
             .build();
         return updatePassword(passwords);
     }
@@ -274,11 +274,11 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Role> modifyRole(Role role) {
-        var roleid = role.getId();
+        var roleid = role.id();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("update roles set role_name=?, description=? where role_id=?")) {
-                statement.setString(1, role.getRolename());
-                statement.setString(2, role.getDescription());
+                statement.setString(1, role.rolename());
+                statement.setString(2, role.description());
                 statement.setInt(3, roleid);
                 var updated = statement.executeUpdate();
                 if (updated < 1) {
@@ -296,11 +296,11 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Role> addRole(Role newRole) {
-        var rolename = newRole.getRolename();
+        var rolename = newRole.rolename();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
                 statement.setString(1, rolename);
-                statement.setString(2, newRole.getDescription());
+                statement.setString(2, newRole.description());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -339,13 +339,13 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Permission> modifyPermission(Permission permission) {
-        var permissionid = permission.getId();
+        var permissionid = permission.id();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("update permissions set permission_name=?, description=? where permission_id=?")) {
-                statement.setString(1, permission.getPermissionname());
-                statement.setString(2, permission.getDescription());
+                statement.setString(1, permission.permissionname());
+                statement.setString(2, permission.description());
                 statement.setInt(3, permissionid);
-                int updated = statement.executeUpdate();
+                var updated = statement.executeUpdate();
                 if (updated < 1) {
                     logger.warn(String.format("No rows were changed when updating permission with id %d", permissionid));
                 }
@@ -361,11 +361,11 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public List<Permission> addPermission(Permission newPermission) {
-        var permissionname = newPermission.getPermissionname();
+        var permissionname = newPermission.permissionname();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
                 statement.setString(1, permissionname);
-                statement.setString(2, newPermission.getDescription());
+                statement.setString(2, newPermission.description());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -405,20 +405,20 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Role>> addUserRoles(UserRoles userroles) {
-        var user = userroles.getUser();
-        var roles = userroles.getRoles();
+        var user = userroles.user();
+        var roles = userroles.roles();
         var existingRoles = findExistingRolesForUser(user);
         try(var connection = datasource.getConnection()) {
-            var rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.getRolename())).toList();
+            var rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.rolename())).toList();
             for (var role : rolesNotAlreadyOnUser) {
                 try(var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
-                    statement.setString(1, role.getRolename());
-                    statement.setString(2, user.getUsername());
+                    statement.setString(1, role.rolename());
+                    statement.setString(2, user.username());
                     statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
-            var message = String.format("UserManagmentService failed to add roles to user %s", user.getUsername());
+            var message = String.format("UserManagmentService failed to add roles to user %s", user.username());
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
@@ -428,18 +428,18 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Role>> removeUserRoles(UserRoles userroles) {
-        var user = userroles.getUser();
-        var roles = userroles.getRoles();
+        var user = userroles.user();
+        var roles = userroles.roles();
         if (!roles.isEmpty()) {
-            var roleSet = roles.stream().map(r -> "\'" + r.getRolename() + "\'").collect(Collectors.joining(","));
+            var roleSet = roles.stream().map(r -> "\'" + r.rolename() + "\'").collect(Collectors.joining(","));
             var sql = String.format("delete from user_roles where username=? and role_name in (%s)", roleSet);
             try(var connection = datasource.getConnection()) {
                 try(var statement = connection.prepareStatement(sql)) {
-                    statement.setString(1, user.getUsername());
+                    statement.setString(1, user.username());
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
-                var message = String.format("UserManagmentService failed to delete roles from user %s", user.getUsername());
+                var message = String.format("UserManagmentService failed to delete roles from user %s", user.username());
                 logger.error(message, e);
                 throw new AuthserviceException(message, e);
             }
@@ -480,20 +480,20 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Permission>> addRolePermissions(RolePermissions rolepermissions) {
-        var role = rolepermissions.getRole();
-        var permissions = rolepermissions.getPermissions();
+        var role = rolepermissions.role();
+        var permissions = rolepermissions.permissions();
         var existingPermissions = findExistingPermissionsForRole(role);
         try(var connection = datasource.getConnection()) {
-            var permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.getPermissionname())).toList();
+            var permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.permissionname())).toList();
             for (var permission : permissionsNotAlreadyOnrole) {
                 try(var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
-                    statement.setString(1, role.getRolename());
-                    statement.setString(2, permission.getPermissionname());
+                    statement.setString(1, role.rolename());
+                    statement.setString(2, permission.permissionname());
                     statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
-            var message = String.format("UserManagmentService failed to add roles to user %s", role.getRolename());
+            var message = String.format("UserManagmentService failed to add roles to user %s", role.rolename());
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
@@ -503,18 +503,18 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public Map<String, List<Permission>> removeRolePermissions(RolePermissions rolepermissions) {
-        var role = rolepermissions.getRole();
-        var permissions = rolepermissions.getPermissions();
+        var role = rolepermissions.role();
+        var permissions = rolepermissions.permissions();
         if (!permissions.isEmpty()) {
-            var roleSet = permissions.stream().map(p -> "\'" + p.getPermissionname() + "\'").collect(Collectors.joining(","));
+            var roleSet = permissions.stream().map(p -> "\'" + p.permissionname() + "\'").collect(Collectors.joining(","));
             var sql = String.format("delete from roles_permissions where role_name=? and permission_name in (%s)", roleSet);
             try(var connection = datasource.getConnection()) {
                 try(var statement = connection.prepareStatement(sql)) {
-                    statement.setString(1, role.getRolename());
+                    statement.setString(1, role.rolename());
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
-                var message = String.format("UserManagmentService failed to delete permissions from role %s", role.getRolename());
+                var message = String.format("UserManagmentService failed to delete permissions from role %s", role.rolename());
                 logger.error(message, e);
                 throw new AuthserviceException(message, e);
             }
@@ -524,18 +524,18 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     void addRoleToMap(Map<String, List<Role>> userroles, User user, Role role) {
-        userroles.computeIfAbsent(user.getUsername(), s -> new ArrayList<>());
-        userroles.get(user.getUsername()).add(role);
+        userroles.computeIfAbsent(user.username(), s -> new ArrayList<>());
+        userroles.get(user.username()).add(role);
     }
 
     void addPermissionToMap(Map<String, List<Permission>> rolespermissions, Role role, Permission permission) {
-        var rolename = role.getRolename();
+        var rolename = role.rolename();
         rolespermissions.computeIfAbsent(rolename, k -> new ArrayList<Permission>());
-        rolespermissions.get(role.getRolename()).add(permission);
+        rolespermissions.get(role.rolename()).add(permission);
     }
 
     Set<String> findExistingRolesForUser(User user) {
-        var username = user.getUsername();
+        var username = user.username();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("select role_name from user_roles where username=?")) {
                 statement.setString(1, username);
@@ -556,7 +556,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     Set<String> findExistingPermissionsForRole(Role role) {
-        var rolename = role.getRolename();
+        var rolename = role.rolename();
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("select permission_name from roles_permissions where role_name=?")) {
                 statement.setString(1, rolename);

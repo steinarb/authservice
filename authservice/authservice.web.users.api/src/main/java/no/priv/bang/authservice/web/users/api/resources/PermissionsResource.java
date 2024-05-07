@@ -70,7 +70,7 @@ public class PermissionsResource extends ResourceBase {
         try {
             return usermanagement.modifyPermission(permission);
         } catch (AuthserviceException e) {
-            var message = String.format("User management service failed to modify permission %s", permission.getPermissionname());
+            var message = String.format("User management service failed to modify permission %s", permission.permissionname());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
@@ -83,7 +83,7 @@ public class PermissionsResource extends ResourceBase {
         try {
             return usermanagement.addPermission(permission);
         } catch (AuthserviceException e) {
-            var message = String.format("User management service failed to add permission %s", permission.getPermissionname());
+            var message = String.format("User management service failed to add permission %s", permission.permissionname());
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }

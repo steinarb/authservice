@@ -75,7 +75,7 @@ class UserManagementServiceProviderTest {
 
         var username = "jod";
         var user = provider.getUser(username);
-        assertEquals(username, user.getUsername());
+        assertEquals(username, user.username());
     }
 
     @Test
@@ -224,8 +224,8 @@ class UserManagementServiceProviderTest {
         var modifiedUser = User.with(firstUser).firstname("John").lastname("Smith").build();
         var updatedUsers = provider.modifyUser(modifiedUser);
         var updatedUser = updatedUsers.get(0);
-        assertEquals(modifiedUser.getFirstname(), updatedUser.getFirstname());
-        assertEquals(modifiedUser.getLastname(), updatedUser.getLastname());
+        assertEquals(modifiedUser.firstname(), updatedUser.firstname());
+        assertEquals(modifiedUser.lastname(), updatedUser.lastname());
     }
 
     @Test
@@ -253,7 +253,7 @@ class UserManagementServiceProviderTest {
         realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();
-        var token = new UsernamePasswordToken(user.getUsername(), newPassword.toCharArray());
+        var token = new UsernamePasswordToken(user.username(), newPassword.toCharArray());
         var authenticationInfoForUser = realm.getAuthenticationInfo(token);
         assertEquals(1, authenticationInfoForUser.getPrincipals().asList().size());
     }
@@ -412,12 +412,12 @@ class UserManagementServiceProviderTest {
         assertThat(users).hasSizeGreaterThan(usersBeforeAddingOne.size());
 
         // Check that the password of the new user is as expected
-        var user = users.stream().filter(u -> "jsmith".equals(u.getUsername())).findFirst().get();
+        var user = users.stream().filter(u -> "jsmith".equals(u.username())).findFirst().get();
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.setCredentialsMatcher(createSha256HashMatcher(1024));
         realm.activate();
-        var token = new UsernamePasswordToken(user.getUsername(), newUserPassword.toCharArray());
+        var token = new UsernamePasswordToken(user.username(), newUserPassword.toCharArray());
         var authenticationInfoForUser = realm.getAuthenticationInfo(token);
         assertEquals(1, authenticationInfoForUser.getPrincipals().asList().size());
     }
@@ -503,15 +503,15 @@ class UserManagementServiceProviderTest {
             });
 
         // Modify a role
-        var roleToModify = rolesAfterAdd.stream().filter((r) -> "dummy".equals(r.getRolename())).findFirst().get();
+        var roleToModify = rolesAfterAdd.stream().filter((r) -> "dummy".equals(r.rolename())).findFirst().get();
         var modifiedRoleToUpdate = Role.with(roleToModify)
             .rolename("dumy")
             .description("A new description")
             .build();
         var modifiedRoles = provider.modifyRole(modifiedRoleToUpdate);
-        var modifiedRole = modifiedRoles.stream().filter((r) -> roleToModify.getId() == r.getId()).findFirst().get();
-        assertEquals(modifiedRoleToUpdate.getRolename(), modifiedRole.getRolename());
-        assertEquals(modifiedRoleToUpdate.getDescription(), modifiedRole.getDescription());
+        var modifiedRole = modifiedRoles.stream().filter((r) -> roleToModify.id() == r.id()).findFirst().get();
+        assertEquals(modifiedRoleToUpdate.rolename(), modifiedRole.rolename());
+        assertEquals(modifiedRoleToUpdate.description(), modifiedRole.description());
 
         // Verify that changing the role name to a name already in the database fails
         var failingToUpdate = Role.with(modifiedRole)
@@ -573,15 +573,15 @@ class UserManagementServiceProviderTest {
             });
 
         // Modify a permission
-        var permissionToModify = permissionsAfterAdd.stream().filter((r) -> "dummy".equals(r.getPermissionname())).findFirst().get();
+        var permissionToModify = permissionsAfterAdd.stream().filter((r) -> "dummy".equals(r.permissionname())).findFirst().get();
         var modifiedPermissionToUpdate = Permission.with(permissionToModify)
             .permissionname("dumy")
             .description("A new description")
             .build();
         var modifiedPermissions = provider.modifyPermission(modifiedPermissionToUpdate);
-        var modifiedPermission = modifiedPermissions.stream().filter((r) -> permissionToModify.getId() == r.getId()).findFirst().get();
-        assertEquals(modifiedPermissionToUpdate.getPermissionname(), modifiedPermission.getPermissionname());
-        assertEquals(modifiedPermissionToUpdate.getDescription(), modifiedPermission.getDescription());
+        var modifiedPermission = modifiedPermissions.stream().filter((r) -> permissionToModify.id() == r.id()).findFirst().get();
+        assertEquals(modifiedPermissionToUpdate.permissionname(), modifiedPermission.permissionname());
+        assertEquals(modifiedPermissionToUpdate.description(), modifiedPermission.description());
 
         // Verify that changing the permission name to a name already in the database fails
         var failingToUpdate = Permission.with(modifiedPermission)
@@ -634,15 +634,15 @@ class UserManagementServiceProviderTest {
 
         // Add a new user role
         var user = provider.getUsers().get(0);
-        var newRole = provider.getRoles().stream().filter((r) -> "visitor".equals(r.getRolename())).findFirst().get();
-        var originalRolesForUser = originalUserRoles.get(user.getUsername());
+        var newRole = provider.getRoles().stream().filter((r) -> "visitor".equals(r.rolename())).findFirst().get();
+        var originalRolesForUser = originalUserRoles.get(user.username());
         var userroles = UserRoles.with().user(user).roles(Arrays.asList(newRole)).build();
         var userRolesAfterAddingRole = provider.addUserRoles(userroles );
-        assertThat(userRolesAfterAddingRole.get(user.getUsername())).hasSizeGreaterThan(originalRolesForUser.size());
+        assertThat(userRolesAfterAddingRole.get(user.username())).hasSizeGreaterThan(originalRolesForUser.size());
 
         // Add the same role again and verify that the role count doesn't increase
         var userRolesAfterAddingRole2 = provider.addUserRoles(userroles);
-        assertEquals(userRolesAfterAddingRole.get(user.getUsername()).size(), userRolesAfterAddingRole2.get(user.getUsername()).size());
+        assertEquals(userRolesAfterAddingRole.get(user.username()).size(), userRolesAfterAddingRole2.get(user.username()).size());
 
         // Try adding a non-existing role
         var nonExistingRole = Role.with().id(42).rolename("notfound").description("dummy").build();
@@ -653,19 +653,19 @@ class UserManagementServiceProviderTest {
 
         // Remove the role
         var userRolesAfterRemovingRole = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(newRole)).build());
-        assertThat(userRolesAfterRemovingRole.get(user.getUsername())).hasSizeLessThan(userRolesAfterAddingRole.get(user.getUsername()).size());
+        assertThat(userRolesAfterRemovingRole.get(user.username())).hasSizeLessThan(userRolesAfterAddingRole.get(user.username()).size());
 
         // Try removing the role again and observe that the count is the same
         var userRolesAfterRemovingRole2 = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(newRole)).build());
-        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole2.get(user.getUsername()).size());
+        assertEquals(userRolesAfterRemovingRole.get(user.username()).size(), userRolesAfterRemovingRole2.get(user.username()).size());
 
         // Try removing an empty role list and observe that the count is the same
         var userRolesAfterRemovingRole3 = provider.removeUserRoles(UserRoles.with().user(user).roles(Collections.emptyList()).build());
-        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole3.get(user.getUsername()).size());
+        assertEquals(userRolesAfterRemovingRole.get(user.username()).size(), userRolesAfterRemovingRole3.get(user.username()).size());
 
         // Try removing a non-existing role and observe that the count is the same
         var userRolesAfterRemovingRole4 = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(nonExistingRole)).build());
-        assertEquals(userRolesAfterRemovingRole.get(user.getUsername()).size(), userRolesAfterRemovingRole4.get(user.getUsername()).size());
+        assertEquals(userRolesAfterRemovingRole.get(user.username()).size(), userRolesAfterRemovingRole4.get(user.username()).size());
     }
 
     @Test
@@ -708,14 +708,14 @@ class UserManagementServiceProviderTest {
 
         // Add a new role permission
         var role = provider.getRoles().get(1);
-        var newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.getPermissionname())).findFirst().get();
-        var originalRolesForUser = originalRolesPermissions.get(role.getRolename());
+        var newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.permissionname())).findFirst().get();
+        var originalRolesForUser = originalRolesPermissions.get(role.rolename());
         var rolesPermissionsAfterAddingRole = provider.addRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertThat(rolesPermissionsAfterAddingRole.get(role.getRolename())).hasSizeGreaterThan(originalRolesForUser.size());
+        assertThat(rolesPermissionsAfterAddingRole.get(role.rolename())).hasSizeGreaterThan(originalRolesForUser.size());
 
         // Add the same permission again and verify that the role count doesn't increase
         var rolesPermissionsAfterAddingRole2 = provider.addRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertEquals(rolesPermissionsAfterAddingRole.get(role.getRolename()).size(), rolesPermissionsAfterAddingRole2.get(role.getRolename()).size());
+        assertEquals(rolesPermissionsAfterAddingRole.get(role.rolename()).size(), rolesPermissionsAfterAddingRole2.get(role.rolename()).size());
 
         // Try adding a non-existing role
         var nonExistingPermission = Permission.with().id(42).permissionname("notfound").description("dummy").build();
@@ -726,19 +726,19 @@ class UserManagementServiceProviderTest {
 
         // Remove the role
         var rolesPermissionsAfterRemovingRole = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertThat(rolesPermissionsAfterRemovingRole.get(role.getRolename())).hasSizeLessThan(rolesPermissionsAfterAddingRole.get(role.getRolename()).size());
+        assertThat(rolesPermissionsAfterRemovingRole.get(role.rolename())).hasSizeLessThan(rolesPermissionsAfterAddingRole.get(role.rolename()).size());
 
         // Try removing the role again and observe that the count is the same
         var rolesPermissionsAfterRemovingRole2 = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole2.get(role.getRolename()).size());
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.rolename()).size(), rolesPermissionsAfterRemovingRole2.get(role.rolename()).size());
 
         // Try removing an empty role list and observe that the count is the same
         var rolesPermissionsAfterRemovingRole3 = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Collections.emptyList()).build());
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole3.get(role.getRolename()).size());
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.rolename()).size(), rolesPermissionsAfterRemovingRole3.get(role.rolename()).size());
 
         // Try removing a non-existing role and observe that the count is the same
         var rolesPermissionsAfterRemovingRole4 = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(nonExistingPermission)).build());
-        assertEquals(rolesPermissionsAfterRemovingRole.get(role.getRolename()).size(), rolesPermissionsAfterRemovingRole4.get(role.getRolename()).size());
+        assertEquals(rolesPermissionsAfterRemovingRole.get(role.rolename()).size(), rolesPermissionsAfterRemovingRole4.get(role.rolename()).size());
     }
 
     @Test
