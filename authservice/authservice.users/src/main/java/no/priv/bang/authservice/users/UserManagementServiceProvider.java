@@ -147,6 +147,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                         users.add(user);
                     }
                 }
+
                 return users;
             }
         } catch (SQLException e) {
