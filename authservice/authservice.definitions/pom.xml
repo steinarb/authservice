@@ -41,17 +41,6 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.priv.bang.beans</groupId>
-            <artifactId>beans.immutable</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.priv.bang.beans</groupId>
-            <artifactId>beans.immutable</artifactId>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
     </dependencies>
 
     <build>
