@@ -142,7 +142,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testPostLoginWithLockedAccount() throws Exception {
+    void testPostLoginWithLockedAccount() {
         try {
             lockAccount("jad");
             // Set up the request

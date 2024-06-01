@@ -36,7 +36,7 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 class UserResourceTest extends ShiroTestBase {
 
     @Test
-    void testGet() throws Exception {
+    void testGet() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -76,7 +76,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testGetNotLoggedIn() throws Exception {
+    void testGetNotLoggedIn() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -99,7 +99,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testGetLoggedInUserNotFoundInAdminService() throws Exception {
+    void testGetLoggedInUserNotFoundInAdminService() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -122,7 +122,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testGetHtmlFileNotFound() throws Exception {
+    void testGetHtmlFileNotFound() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -178,7 +178,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testGetExceptionWhenFetchingUsers() throws Exception {
+    void testGetExceptionWhenFetchingUsers() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -203,7 +203,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmit() throws Exception {
+    void testSubmit() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -251,7 +251,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmitLoggedInUserNotPresent() throws Exception {
+    void testSubmitLoggedInUserNotPresent() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -282,7 +282,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmitUserNotLoggedIn() throws Exception {
+    void testSubmitUserNotLoggedIn() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -313,7 +313,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmitWhenUpdatedUserIsntPresent() throws Exception {
+    void testSubmitWhenUpdatedUserIsntPresent() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -341,7 +341,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmitHtmlFileNotFound() throws Exception {
+    void testSubmitHtmlFileNotFound() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
@@ -370,7 +370,7 @@ class UserResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testSubmitExceptionOnUserModify() throws Exception {
+    void testSubmitExceptionOnUserModify() {
         // Mock the injected OSGi services
         var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);

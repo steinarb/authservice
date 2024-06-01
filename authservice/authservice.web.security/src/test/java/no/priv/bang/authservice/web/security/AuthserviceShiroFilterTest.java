@@ -33,7 +33,6 @@ import org.mockito.Mockito;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
-import liquibase.exception.LiquibaseException;
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 
@@ -44,7 +43,7 @@ class AuthserviceShiroFilterTest {
     private static ServletContext context;
 
     @BeforeAll
-    static void setup() throws SQLException, LiquibaseException {
+    static void setup() throws SQLException {
         var dataSourceFactory = new DerbyDataSourceFactory();
         var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");

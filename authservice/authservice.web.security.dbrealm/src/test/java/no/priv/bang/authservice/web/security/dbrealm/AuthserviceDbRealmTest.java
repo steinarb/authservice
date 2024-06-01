@@ -41,7 +41,7 @@ class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    void testGetAuthenticationInfo() throws SQLException {
+    void testGetAuthenticationInfo() {
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
@@ -55,7 +55,7 @@ class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    void testGetAuthenticationInfoWrongPassword() throws SQLException {
+    void testGetAuthenticationInfoWrongPassword() {
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
@@ -72,7 +72,7 @@ class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    void testGetAuthenticationInfoWrongUsername() throws SQLException {
+    void testGetAuthenticationInfoWrongUsername() {
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
@@ -105,7 +105,7 @@ class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    void testGetRolesForUsers() throws SQLException {
+    void testGetRolesForUsers() {
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
@@ -124,7 +124,7 @@ class AuthserviceDbRealmTest {
      * @throws SQLException
      */
     @Test
-    void testGetRolesForAdministrators() throws SQLException {
+    void testGetRolesForAdministrators() {
         var realm = new AuthserviceDbRealm();
         realm.setDataSource(datasource);
         realm.activate();
