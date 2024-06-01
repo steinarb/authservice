@@ -503,13 +503,13 @@ class UserManagementServiceProviderTest {
             });
 
         // Modify a role
-        var roleToModify = rolesAfterAdd.stream().filter((r) -> "dummy".equals(r.rolename())).findFirst().get();
+        var roleToModify = rolesAfterAdd.stream().filter(r -> "dummy".equals(r.rolename())).findFirst().get();
         var modifiedRoleToUpdate = Role.with(roleToModify)
             .rolename("dumy")
             .description("A new description")
             .build();
         var modifiedRoles = provider.modifyRole(modifiedRoleToUpdate);
-        var modifiedRole = modifiedRoles.stream().filter((r) -> roleToModify.id() == r.id()).findFirst().get();
+        var modifiedRole = modifiedRoles.stream().filter(r -> roleToModify.id() == r.id()).findFirst().get();
         assertEquals(modifiedRoleToUpdate.rolename(), modifiedRole.rolename());
         assertEquals(modifiedRoleToUpdate.description(), modifiedRole.description());
 
@@ -573,13 +573,13 @@ class UserManagementServiceProviderTest {
             });
 
         // Modify a permission
-        var permissionToModify = permissionsAfterAdd.stream().filter((r) -> "dummy".equals(r.permissionname())).findFirst().get();
+        var permissionToModify = permissionsAfterAdd.stream().filter(r -> "dummy".equals(r.permissionname())).findFirst().get();
         var modifiedPermissionToUpdate = Permission.with(permissionToModify)
             .permissionname("dumy")
             .description("A new description")
             .build();
         var modifiedPermissions = provider.modifyPermission(modifiedPermissionToUpdate);
-        var modifiedPermission = modifiedPermissions.stream().filter((r) -> permissionToModify.id() == r.id()).findFirst().get();
+        var modifiedPermission = modifiedPermissions.stream().filter(r -> permissionToModify.id() == r.id()).findFirst().get();
         assertEquals(modifiedPermissionToUpdate.permissionname(), modifiedPermission.permissionname());
         assertEquals(modifiedPermissionToUpdate.description(), modifiedPermission.description());
 
@@ -634,7 +634,7 @@ class UserManagementServiceProviderTest {
 
         // Add a new user role
         var user = provider.getUsers().get(0);
-        var newRole = provider.getRoles().stream().filter((r) -> "visitor".equals(r.rolename())).findFirst().get();
+        var newRole = provider.getRoles().stream().filter(r -> "visitor".equals(r.rolename())).findFirst().get();
         var originalRolesForUser = originalUserRoles.get(user.username());
         var userroles = UserRoles.with().user(user).roles(Arrays.asList(newRole)).build();
         var userRolesAfterAddingRole = provider.addUserRoles(userroles );
@@ -712,7 +712,7 @@ class UserManagementServiceProviderTest {
 
         // Add a new role permission
         var role = provider.getRoles().get(1);
-        var newPermission = provider.getPermissions().stream().filter((r) -> "user_read".equals(r.permissionname())).findFirst().get();
+        var newPermission = provider.getPermissions().stream().filter(r -> "user_read".equals(r.permissionname())).findFirst().get();
         var originalRolesForUser = originalRolesPermissions.get(role.rolename());
         var rolesPermissionsAfterAddingRole = provider.addRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
         assertThat(rolesPermissionsAfterAddingRole.get(role.rolename())).hasSizeGreaterThan(originalRolesForUser.size());
