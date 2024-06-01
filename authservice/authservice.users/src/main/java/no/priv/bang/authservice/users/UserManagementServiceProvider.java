@@ -82,7 +82,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public User getUser(String username) {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from users where username=?")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users where username=?")) {
                 statement.setString(1, username);
                 try(var results = statement.executeQuery()) {
                     while(results.next()) {
@@ -144,7 +144,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<User> getUsers() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from users order by user_id")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users order by user_id")) {
                 var users = new ArrayList<User>();
                 try(var results = statement.executeQuery()) {
                     while(results.next()) {
@@ -240,7 +240,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.executeUpdate();
             }
 
-            try(var statement = connection.prepareStatement("select * from users where username=? order by user_id")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users where username=? order by user_id")) {
                 statement.setString(1, newUser.username());
                 try (var results = statement.executeQuery()) {
                     if (results.next()) {
@@ -267,7 +267,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Role> getRoles() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from roles order by role_id")) {
+            try(var statement = connection.prepareStatement("select role_id, role_name, description from roles order by role_id")) {
                 return getRolesFromQuery(statement);
             }
         } catch (SQLException e) {
@@ -320,7 +320,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<Permission> getPermissions() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from permissions order by permission_id")) {
+            try(var statement = connection.prepareStatement("select permission_id, permission_name, description from permissions order by permission_id")) {
                 try(var results = statement.executeQuery()) {
                     var permissions = new ArrayList<Permission>();
                     while(results.next()) {
@@ -385,7 +385,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public Map<String, List<Role>> getUserRoles() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from users join user_roles on user_roles.username=users.username join roles on roles.role_name=user_roles.role_name")) {
+            try(var statement = connection.prepareStatement("select u.user_id, u.username, u.email, u.firstname, u.lastname, r.role_id, r.role_name, r.description from users u join user_roles on user_roles.username=u.username join roles r on r.role_name=user_roles.role_name")) {
                 try(var results = statement.executeQuery()) {
                     var userroles = new HashMap<String, List<Role>>();
                     while(results.next()) {
