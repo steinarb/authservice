@@ -56,6 +56,11 @@ import no.priv.bang.osgiservice.users.UserRoles;
  */
 @Component(service=UserManagementService.class, immediate=true)
 public class UserManagementServiceProvider implements UserManagementService {
+    private static final String ROLE_NAME = "role_name";
+    private static final String ROLE_ID = "role_id";
+    private static final String DESCRIPTION = "description";
+    private static final String PERMISSION_NAME = "permission_name";
+    private static final String PERMISSION_ID = "permission_id";
     private Logger logger;
     private DataSource datasource;
 
@@ -119,9 +124,9 @@ public class UserManagementServiceProvider implements UserManagementService {
                     var permissions = new ArrayList<Permission>();
                     while(results.next()) {
                         var permission = Permission.with()
-                            .id(results.getInt(1))
-                            .permissionname(results.getString(2))
-                            .description(results.getString(3))
+                            .id(results.getInt(PERMISSION_ID))
+                            .permissionname(results.getString(PERMISSION_NAME))
+                            .description(results.getString(DESCRIPTION))
                             .build();
                         permissions.add(permission);
                     }
@@ -320,9 +325,9 @@ public class UserManagementServiceProvider implements UserManagementService {
                     var permissions = new ArrayList<Permission>();
                     while(results.next()) {
                         var role = Permission.with()
-                            .id(results.getInt(1))
-                            .permissionname(results.getString(2))
-                            .description(results.getString(3))
+                            .id(results.getInt(PERMISSION_ID))
+                            .permissionname(results.getString(PERMISSION_NAME))
+                            .description(results.getString(DESCRIPTION))
                             .build();
                         permissions.add(role);
                     }
@@ -386,9 +391,9 @@ public class UserManagementServiceProvider implements UserManagementService {
                     while(results.next()) {
                         var user = unpackUser(results);
                         Role role = Role.with()
-                            .id(results.getInt(11))
-                            .rolename(results.getString(12))
-                            .description(results.getString(13))
+                            .id(results.getInt(ROLE_ID))
+                            .rolename(results.getString(ROLE_NAME))
+                            .description(results.getString(DESCRIPTION))
                             .build();
                         addRoleToMap(userroles, user, role);
                     }
@@ -451,19 +456,19 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public Map<String, List<Permission>> getRolesPermissions() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select * from roles join roles_permissions on roles_permissions.role_name=roles.role_name join permissions on permissions.permission_name=roles_permissions.permission_name")) {
+            try(var statement = connection.prepareStatement("select r.role_id, r.role_name, r.description as role_description, p.permission_id, p.permission_name, p.description as permission_description from roles r join roles_permissions on roles_permissions.role_name=r.role_name join permissions p on p.permission_name=roles_permissions.permission_name")) {
                 try(var results = statement.executeQuery()) {
                     var rolespermissions = new HashMap<String, List<Permission>>();
                     while(results.next()) {
                         var role = Role.with()
-                            .id(results.getInt(1))
-                            .rolename(results.getString(2))
-                            .description(results.getString(3))
+                            .id(results.getInt(ROLE_ID))
+                            .rolename(results.getString(ROLE_NAME))
+                            .description(results.getString("role_description"))
                             .build();
                         var permission = Permission.with()
-                            .id(results.getInt(7))
-                            .permissionname(results.getString(8))
-                            .description(results.getString(9))
+                            .id(results.getInt(PERMISSION_ID))
+                            .permissionname(results.getString(PERMISSION_NAME))
+                            .description(results.getString("permission_description"))
                             .build();
                         addPermissionToMap(rolespermissions, role, permission);
                     }
@@ -542,7 +547,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 try(var results = statement.executeQuery()) {
                     var existingroles = new HashSet<String>();
                     while(results.next()) {
-                        existingroles.add(results.getString(1));
+                        existingroles.add(results.getString(ROLE_NAME));
                     }
 
                     return existingroles;
@@ -563,7 +568,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 try(var results = statement.executeQuery()) {
                     var existingpermissions = new HashSet<String>();
                     while(results.next()) {
-                        existingpermissions.add(results.getString(1));
+                        existingpermissions.add(results.getString(PERMISSION_NAME));
                     }
 
                     return existingpermissions;
@@ -588,11 +593,11 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     User unpackUser(ResultSet results) throws SQLException {
         return User.with()
-            .userid(results.getInt(1))
-            .username(results.getString(2))
-            .email(results.getString(5))
-            .firstname(results.getString(6))
-            .lastname(results.getString(7))
+            .userid(results.getInt("user_id"))
+            .username(results.getString("username"))
+            .email(results.getString("email"))
+            .firstname(results.getString("firstname"))
+            .lastname(results.getString("lastname"))
             .build();
     }
 
@@ -601,9 +606,9 @@ public class UserManagementServiceProvider implements UserManagementService {
             var roles = new ArrayList<Role>();
             while(results.next()) {
                 var role = Role.with()
-                    .id(results.getInt(1))
-                    .rolename(results.getString(2))
-                    .description(results.getString(3))
+                    .id(results.getInt(ROLE_ID))
+                    .rolename(results.getString(ROLE_NAME))
+                    .description(results.getString(DESCRIPTION))
                     .build();
                 roles.add(role);
             }

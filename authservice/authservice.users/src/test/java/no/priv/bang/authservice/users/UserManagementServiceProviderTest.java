@@ -705,6 +705,10 @@ class UserManagementServiceProviderTest {
 
         var originalRolesPermissions = provider.getRolesPermissions();
         assertThat(originalRolesPermissions).isNotEmpty();
+        var firstRoleName = originalRolesPermissions.entrySet().stream().findFirst().get().getKey();
+        var firstRole = provider.getRoles().stream().filter(r -> r.rolename().equals(firstRoleName)).findFirst().get();
+        var firstPermission = originalRolesPermissions.get(firstRoleName).stream().findFirst().get();
+        assertNotEquals(firstRole.description(), firstPermission.description());
 
         // Add a new role permission
         var role = provider.getRoles().get(1);
