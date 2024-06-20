@@ -36,7 +36,6 @@ import com.mockrunner.mock.jdbc.MockConnection;
 import com.mockrunner.mock.jdbc.MockResultSet;
 
 import liquibase.exception.CommandExecutionException;
-import no.priv.bang.authservice.definitions.AuthserviceException;
 
 class AuthserviceLiquibaseTest {
     DataSourceFactory derbyDataSourceFactory = new DerbyDataSourceFactory();
@@ -68,36 +67,23 @@ class AuthserviceLiquibaseTest {
             addUserRole(connection, rolename, username);
             assertUserRole(connection, rolename, username);
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                    addUserRole(connection, "notarole", username);
-                });
+                addUserRole(connection, "notarole", username);
+            });
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                    addUserRole(connection, rolename, "notauser");
-                });
+                addUserRole(connection, rolename, "notauser");
+            });
             var permission = "user_admin_api_write";
             addPermission(connection, permission, "User admin REST API write access");
             addRolePermission(connection, rolename, permission);
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                    addRolePermission(connection, "notarole", permission);
-                });
+                addRolePermission(connection, "notarole", permission);
+            });
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                    addRolePermission(connection, rolename, "notapermission");
-                });
+                addRolePermission(connection, rolename, "notapermission");
+            });
         }
 
         authserviceLiquibase.updateSchema(createConnection("authservice"));
-    }
-
-    @Test
-    void testCreatingSchemaWithExceptionThrownOnConnectionClose() throws Exception {
-        var authserviceLiquibase = new AuthserviceLiquibase();
-        var connection = spy(createConnection("authservice3"));
-        doNothing().when(connection).setAutoCommit(anyBoolean());
-        doThrow(RuntimeException.class).when(connection).close();
-
-        var ex = assertThrows(
-            AuthserviceException.class,
-            () -> authserviceLiquibase.createInitialSchema(connection));
-        assertThat(ex.getMessage()).contains("Error applying liquibase changelist in authservice");
     }
 
     @Test
@@ -105,10 +91,10 @@ class AuthserviceLiquibaseTest {
         var authserviceLiquibase = new AuthserviceLiquibase();
 
         authserviceLiquibase.createInitialSchema(createConnection("authservice2"));
-        authserviceLiquibase.applyChangelist(
+        authserviceLiquibase.applyLiquibaseChangelist(
             createConnection("authservice2"),
-            getClass().getClassLoader(),
-            "test-db-changelog/db-changelog.xml");
+            "test-db-changelog/db-changelog.xml",
+            getClass().getClassLoader());
 
 
         try(var connection = createConnection("authservice2")) {
@@ -130,31 +116,11 @@ class AuthserviceLiquibaseTest {
         var connection = createConnection("authservice4");
         var ex = assertThrows(
             CommandExecutionException.class,
-            () -> authserviceLiquibase.applyChangelist(
+            () -> authserviceLiquibase.applyLiquibaseChangelist(
                 connection,
-                testClassLoader,
-                "test-db-changelog/db-changelog-not-present.xml"));
+                "test-db-changelog/db-changelog-not-present.xml",
+                testClassLoader));
         assertThat(ex.getMessage()).contains("The file test-db-changelog/db-changelog-not-present.xml was not found in the configured search path");
-    }
-
-    @Test
-    void testApplyChangelistFailingWhenFailOnClose() throws Exception {
-        var authserviceLiquibase = new AuthserviceLiquibase();
-        var testClassLoader = getClass().getClassLoader();
-        try (var conn1 = createConnection("authservice5")) {
-            authserviceLiquibase.createInitialSchema(conn1);
-        }
-
-        var connection = spy(createConnection("authservice5"));
-        doNothing().when(connection).setAutoCommit(anyBoolean());
-        doThrow(RuntimeException.class).when(connection).close();
-        var ex = assertThrows(
-            AuthserviceException.class,
-            () -> authserviceLiquibase.applyChangelist(
-                connection,
-                testClassLoader,
-                "test-db-changelog/db-changelog.xml"));
-        assertThat(ex.getMessage()).contains("Error applying liquibase changelist in authservice");
     }
 
     private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {

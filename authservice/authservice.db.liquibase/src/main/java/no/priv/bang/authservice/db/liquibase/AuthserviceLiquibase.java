@@ -15,48 +15,14 @@
  */
 package no.priv.bang.authservice.db.liquibase;
 
-import static liquibase.Scope.Attr.resourceAccessor;
-import static liquibase.command.core.UpdateCommandStep.CHANGELOG_FILE_ARG;
-import static liquibase.command.core.helpers.DbUrlConnectionArgumentsCommandStep.DATABASE_ARG;
-
 import java.sql.Connection;
-import java.util.Map;
-
-import liquibase.Scope;
-import liquibase.command.CommandScope;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import no.priv.bang.authservice.definitions.AuthserviceException;
+import no.priv.bang.karaf.liquibase.runner.LiquibaseClassPathChangeLogRunner;
 
-public class AuthserviceLiquibase {
+public class AuthserviceLiquibase extends LiquibaseClassPathChangeLogRunner {
 
     public void createInitialSchema(Connection connection) throws LiquibaseException {
         applyLiquibaseChangelist(connection, "authservice-db-changelog/db-changelog-1.0.0.xml");
-    }
-
-    public void applyChangelist(Connection connection, ClassLoader classLoader, String changelistClasspathResource) throws LiquibaseException {
-        try (var database = findCorrectDatabaseImplementation(connection)) {
-            Scope.child(scopeObjectWithClassPathResourceAccessor(classLoader), () -> new CommandScope("update")
-                .addArgumentValue(DATABASE_ARG, database)
-                .addArgumentValue(CHANGELOG_FILE_ARG, changelistClasspathResource)
-                .execute());
-        } catch (LiquibaseException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AuthserviceException("Error applying liquibase changelist in authservice", e);
-        }
-    }
-
-    private Database findCorrectDatabaseImplementation(Connection connection) throws DatabaseException {
-        return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-    }
-
-    private Map<String, Object> scopeObjectWithClassPathResourceAccessor(ClassLoader classLoader) {
-        return Map.of(resourceAccessor.name(), new ClassLoaderResourceAccessor(classLoader));
     }
 
     public void updateSchema(Connection connection) throws LiquibaseException {
@@ -64,7 +30,7 @@ public class AuthserviceLiquibase {
     }
 
     private void applyLiquibaseChangelist(Connection connection, String changelistClasspathResource) throws LiquibaseException {
-        applyChangelist(connection, getClass().getClassLoader(), changelistClasspathResource);
+        applyLiquibaseChangelist(connection, changelistClasspathResource, getClass().getClassLoader());
     }
 
 }

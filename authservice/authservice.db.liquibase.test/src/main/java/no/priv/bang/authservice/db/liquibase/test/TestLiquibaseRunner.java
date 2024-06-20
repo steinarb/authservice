@@ -48,7 +48,7 @@ public class TestLiquibaseRunner implements PreHook {
         }
 
         try (Connection connection = datasource.getConnection()) {
-            liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
+            liquibase.applyLiquibaseChangelist(connection, "db-changelog/db-changelog.xml", getClass().getClassLoader());
         } catch (Exception e) {
             throw new AuthserviceException("Failed to insert mock data in authservice Derby test database component", e);
         }

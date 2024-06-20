@@ -46,7 +46,7 @@ public class ProductionLiquibaseRunner implements PreHook {
         }
 
         try(var connection = datasource.getConnection()) {
-            liquibase.applyChangelist(connection, getClass().getClassLoader(), "db-changelog/db-changelog.xml");
+            liquibase.applyLiquibaseChangelist(connection, "db-changelog/db-changelog.xml", getClass().getClassLoader());
         } catch (Exception e) {
             throw new AuthserviceException("Failed to create schema in authservice postgresql database", e);
         }
