@@ -16,5 +16,13 @@
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ]
+    ],
+    "devDependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "@nabla/vite-plugin-eslint": "^2.0.4",
+        "@vitejs/plugin-react": "^4.3.1",
+        "eslint-config-react-app": "^7.0.1",
+        "vite": "^5.4.8",
+        "vite-plugin-simple-html": "^0.1.2"
+    }
 }
