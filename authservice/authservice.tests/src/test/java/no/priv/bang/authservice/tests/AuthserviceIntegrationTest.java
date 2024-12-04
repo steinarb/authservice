@@ -19,6 +19,7 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 public class AuthserviceIntegrationTest extends KarafTestSupport {
 
     @Configuration
+    @Override
     public Option[] config() {
         final var authserviceFeatureRepo = maven()
             .groupId("no.priv.bang.authservice")
