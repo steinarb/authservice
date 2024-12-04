@@ -88,9 +88,7 @@ class UsersResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.modifyUser(user);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.modifyUser(user));
     }
 
     @Test
@@ -129,9 +127,7 @@ class UsersResourceTest {
             .password1("secret")
             .password2("zecret")
             .build();
-        assertThrows(BadRequestException.class, () -> {
-                resource.updatePassword(passwords);
-            });
+        assertThrows(BadRequestException.class, () -> resource.updatePassword(passwords));
     }
 
     @Test
@@ -146,9 +142,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         var passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
-        assertThrows(BadRequestException.class, () -> {
-                resource.updatePassword(passwords);
-            });
+        assertThrows(BadRequestException.class, () -> resource.updatePassword(passwords));
     }
 
     @Test
@@ -163,9 +157,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         var passwords = UserAndPasswords.with().user(user).password1("").password2("").build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.updatePassword(passwords);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.updatePassword(passwords));
     }
 
     @Test
@@ -209,9 +201,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         var passwords = UserAndPasswords.with().user(user).password1("secret").password2("secret").build();
-        assertThrows(BadRequestException.class, () -> {
-                resource.addUser(passwords);
-            });
+        assertThrows(BadRequestException.class, () -> resource.addUser(passwords));
     }
 
     @Test
@@ -235,9 +225,7 @@ class UsersResourceTest {
             .password1("secret")
             .password2("secret")
             .build();
-        assertThrows(BadRequestException.class, () -> {
-                resource.addUser(passwords);
-            });
+        assertThrows(BadRequestException.class, () -> resource.addUser(passwords));
     }
 
     @Test
@@ -261,9 +249,7 @@ class UsersResourceTest {
             .password1("secret")
             .password2("secret")
             .build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.addUser(passwords);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.addUser(passwords));
     }
 
     @Test
@@ -314,9 +300,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         var userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.addUserRole(userroles);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.addUserRole(userroles));
     }
 
     @Test
@@ -342,9 +326,7 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         var userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.removeUserRole(userroles);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.removeUserRole(userroles));
     }
 
 }

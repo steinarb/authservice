@@ -82,9 +82,7 @@ class PermissionsResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.modifyPermission(permission);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.modifyPermission(permission));
     }
 
     @Test
@@ -114,9 +112,7 @@ class PermissionsResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.addPermission(permission);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.addPermission(permission));
     }
 
 }

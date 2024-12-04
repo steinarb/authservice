@@ -85,9 +85,7 @@ class RolesResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.modifyRole(role);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.modifyRole(role));
     }
 
     @Test
@@ -117,9 +115,7 @@ class RolesResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.addRole(role);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.addRole(role));
     }
 
     @Test
@@ -170,9 +166,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         var rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.addRolePermissions(rolepermissions);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.addRolePermissions(rolepermissions));
     }
 
     @Test
@@ -198,9 +192,7 @@ class RolesResourceTest {
         resource.usermanagement = usermanagement;
 
         var rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.removeRolePermissions(rolepermissions);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.removeRolePermissions(rolepermissions));
     }
 
 }

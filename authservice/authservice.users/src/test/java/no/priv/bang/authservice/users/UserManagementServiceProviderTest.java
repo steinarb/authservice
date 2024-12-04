@@ -94,9 +94,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var username = "jod";
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getUser(username);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.getUser(username));
     }
 
     @Test
@@ -112,9 +110,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var username = "jod";
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getUser(username);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.getUser(username));
     }
 
     @Test
@@ -141,9 +137,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var username = "jod";
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getRolesForUser(username);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.getRolesForUser(username));
     }
 
     @Test
@@ -170,9 +164,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var username = "jod";
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getPermissionsForUser(username);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.getPermissionsForUser(username));
     }
 
     @Test
@@ -203,9 +195,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var dummy = User.with().build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.modifyUser(dummy);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.modifyUser(dummy));
     }
 
     @Test
@@ -272,9 +262,7 @@ class UserManagementServiceProviderTest {
             .password2("matching")
             .passwordsNotIdentical(false)
             .build();
-        assertThrows(AuthservicePasswordsNotIdenticalException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthservicePasswordsNotIdenticalException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -288,9 +276,7 @@ class UserManagementServiceProviderTest {
         var users = provider.getUsers();
         var user = users.get(0);
         var passwords = UserAndPasswords.with().user(user).build();
-        assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthservicePasswordEmptyException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -308,9 +294,7 @@ class UserManagementServiceProviderTest {
             .password1("")
             .password2(null)
             .build();
-        assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthservicePasswordEmptyException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -325,9 +309,7 @@ class UserManagementServiceProviderTest {
             .password1("secret")
             .password2("secret")
             .build();
-        assertThrows(AuthservicePasswordEmptyException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthservicePasswordEmptyException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -354,9 +336,7 @@ class UserManagementServiceProviderTest {
             .password1("secret")
             .password2("secret")
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -379,9 +359,7 @@ class UserManagementServiceProviderTest {
             .password1("secret")
             .password2("secret")
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.updatePassword(passwords);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.updatePassword(passwords));
     }
 
     @Test
@@ -441,9 +419,7 @@ class UserManagementServiceProviderTest {
             .password1(newUserPassword)
             .password2(newUserPassword)
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addUser(newUserWithPasswords);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addUser(newUserWithPasswords));
     }
 
     @Test
@@ -474,9 +450,7 @@ class UserManagementServiceProviderTest {
             .password1(newUserPassword)
             .password2(newUserPassword)
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addUser(newUserWithPasswords);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addUser(newUserWithPasswords));
     }
 
     @Test
@@ -496,9 +470,7 @@ class UserManagementServiceProviderTest {
 
         // Verify that trying to insert a new role with the same rolename fails
         var dummy2 = Role.with().id(-1).rolename("dummy").description("dummy").build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addRole(dummy2);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addRole(dummy2));
 
         // Modify a role
         var roleToModify = rolesAfterAdd.stream().filter(r -> "dummy".equals(r.rolename())).findFirst().get();
@@ -515,9 +487,7 @@ class UserManagementServiceProviderTest {
         var failingToUpdate = Role.with(modifiedRole)
             .rolename("admin")
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.modifyRole(failingToUpdate);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.modifyRole(failingToUpdate));
 
         // Verify that trying to modify a role not present logs a warning
         // (use an id not found in the database)
@@ -564,9 +534,7 @@ class UserManagementServiceProviderTest {
 
         // Verify that trying to insert a new role with the same permissionname fails
         var dummy2 = Permission.with().id(-1).permissionname("dummy").description("dummy").build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addPermission(dummy2);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addPermission(dummy2));
 
         // Modify a permission
         var permissionToModify = permissionsAfterAdd.stream().filter(r -> "dummy".equals(r.permissionname())).findFirst().get();
@@ -583,9 +551,7 @@ class UserManagementServiceProviderTest {
         var failingToUpdate = Permission.with(modifiedPermission)
             .permissionname("user_admin_api_read")
             .build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.modifyPermission(failingToUpdate);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.modifyPermission(failingToUpdate));
 
         // Verify that trying to modify a permission not present logs a warning
         // (use an id not found in the database)
@@ -641,9 +607,7 @@ class UserManagementServiceProviderTest {
         // Try adding a non-existing role
         var nonExistingRole = Role.with().id(42).rolename("notfound").description("dummy").build();
         var userroles2 = UserRoles.with().user(user).roles(Arrays.asList(nonExistingRole)).build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addUserRoles(userroles2);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addUserRoles(userroles2));
 
         // Remove the role
         var userRolesAfterRemovingRole = provider.removeUserRoles(UserRoles.with().user(user).roles(Arrays.asList(newRole)).build());
@@ -677,14 +641,10 @@ class UserManagementServiceProviderTest {
         assertThrows(AuthserviceException.class, provider::getUserRoles);
 
         var user = User.with().build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.findExistingRolesForUser(user);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.findExistingRolesForUser(user));
 
         var userroles = UserRoles.with().user(User.with().build()).roles(Arrays.asList(Role.with().build())).build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.removeUserRoles(userroles);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.removeUserRoles(userroles));
     }
 
     @Test
@@ -716,9 +676,7 @@ class UserManagementServiceProviderTest {
         // Try adding a non-existing role
         var nonExistingPermission = Permission.with().id(42).permissionname("notfound").description("dummy").build();
         var rolepermissions = RolePermissions.with().role(role).permissions(Arrays.asList(nonExistingPermission)).build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.addRolePermissions(rolepermissions);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.addRolePermissions(rolepermissions));
 
         // Remove the role
         var rolesPermissionsAfterRemovingRole = provider.removeRolePermissions(RolePermissions.with().role(role).permissions(Arrays.asList(newPermission)).build());
@@ -752,14 +710,10 @@ class UserManagementServiceProviderTest {
         assertThrows(AuthserviceException.class, provider::getRolesPermissions);
 
         var role = Role.with().build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.findExistingPermissionsForRole(role);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.findExistingPermissionsForRole(role));
 
         var rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
-        assertThrows(AuthserviceException.class, () -> {
-                provider.removeRolePermissions(rolepermissions);
-            });
+        assertThrows(AuthserviceException.class, () -> provider.removeRolePermissions(rolepermissions));
     }
 
     private CredentialsMatcher createSha256HashMatcher(int iterations) {
