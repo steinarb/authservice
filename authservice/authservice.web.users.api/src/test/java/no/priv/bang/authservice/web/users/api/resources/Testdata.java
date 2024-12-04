@@ -108,44 +108,44 @@ public class Testdata {
         var admin = roles.get(0);
         var caseworker = roles.get(1);
         var permissions = Testdata.createPermissions();
-        var user_admin_api_read = permissions.get(0);
-        var user_admin_api_write = permissions.get(1);
-        var caseworker_read = permissions.get(2);
-        var caseworker_write = permissions.get(3);
-        var user_read = permissions.get(4);
+        var userAdminApiRead = permissions.get(0);
+        var userAdminApiWrite = permissions.get(1);
+        var caseworkerRead = permissions.get(2);
+        var caseworkerWrite = permissions.get(3);
+        var userRead = permissions.get(4);
         var rolespermissions = new HashMap<String, List<Permission>>();
-        rolespermissions.put(admin.rolename(), Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read));
-        rolespermissions.put(caseworker.rolename(), Arrays.asList(caseworker_read, caseworker_write, user_read));
+        rolespermissions.put(admin.rolename(), Arrays.asList(userAdminApiRead, userAdminApiWrite, caseworkerRead, caseworkerWrite, userRead));
+        rolespermissions.put(caseworker.rolename(), Arrays.asList(caseworkerRead, caseworkerWrite, userRead));
         return rolespermissions;
     }
 
     public static List<Permission> createPermissions() {
-        var user_admin_api_read = Permission.with()
+        var userAdminApiRead = Permission.with()
             .id(1)
             .permissionname("user_admin_api_read")
             .description("User admin read access")
             .build();
-        var user_admin_api_write = Permission.with()
+        var userAdminApiWrite = Permission.with()
             .id(2)
             .permissionname("user_admin_api_write")
             .description("User admin write access")
             .build();
-        var caseworker_read = Permission.with()
+        var caseworkerRead = Permission.with()
             .id(3)
             .permissionname("caseworker_read")
             .description("Caseworker read access")
             .build();
-        var caseworker_write = Permission.with()
+        var caseworkerWrite = Permission.with()
             .id(4)
             .permissionname("caseworker_write")
             .description("Caseworker write access")
             .build();
-        var user_read = Permission.with()
+        var userRead = Permission.with()
             .id(5)
             .permissionname("user_read")
             .description("User read access")
             .build();
-        return Arrays.asList(user_admin_api_read, user_admin_api_write, caseworker_read, caseworker_write, user_read);
+        return Arrays.asList(userAdminApiRead, userAdminApiWrite, caseworkerRead, caseworkerWrite, userRead);
     }
 
     private Testdata() {
