@@ -56,9 +56,7 @@ class RolesResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.getRoles();
-            });
+        assertThrows(InternalServerErrorException.class, resource::getRoles);
     }
 
     @Test
@@ -146,9 +144,7 @@ class RolesResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.getRolesPermissions();
-            });
+        assertThrows(InternalServerErrorException.class, resource::getRolesPermissions);
     }
 
     @Test

@@ -187,9 +187,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getUsers();
-            });
+        assertThrows(AuthserviceException.class, provider::getUsers);
     }
 
     @Test
@@ -546,9 +544,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getRoles();
-            });
+        assertThrows(AuthserviceException.class, provider::getRoles);
     }
 
     @Test
@@ -616,9 +612,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getPermissions();
-            });
+        assertThrows(AuthserviceException.class, provider::getPermissions);
     }
 
     @Test
@@ -680,9 +674,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getUserRoles();
-            });
+        assertThrows(AuthserviceException.class, provider::getUserRoles);
 
         var user = User.with().build();
         assertThrows(AuthserviceException.class, () -> {
@@ -757,9 +749,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockdatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> {
-                provider.getRolesPermissions();
-            });
+        assertThrows(AuthserviceException.class, provider::getRolesPermissions);
 
         var role = Role.with().build();
         assertThrows(AuthserviceException.class, () -> {

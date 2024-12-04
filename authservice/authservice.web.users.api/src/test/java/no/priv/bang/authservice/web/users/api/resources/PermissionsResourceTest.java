@@ -53,9 +53,7 @@ class PermissionsResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.getPermissions();
-            });
+        assertThrows(InternalServerErrorException.class, resource::getPermissions);
     }
 
     @Test
