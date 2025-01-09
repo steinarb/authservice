@@ -25,7 +25,7 @@ export default function PermissionAdd() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/permissions">
+                <StyledLinkLeft to="/permissions">
                     Up to permission adminstration
                 </StyledLinkLeft><br/>
                 <h1>Add permission</h1>

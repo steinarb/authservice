@@ -15,23 +15,25 @@ import Permissions from './components/Permissions';
 import PermissionModify from './components/PermissionModify';
 import PermissionAdd from './components/PermissionAdd';
 
-export default function App {
+export default function App(props) {
+    const { basename } = props;
+
     return (
-        <Router>
+        <Router basename={basename}>
             <Routes>
-                <Route exact path="/authservice/useradmin/" element={<Home/>} />
-                <Route path="/authservice/useradmin/users/modify" element={<UserModify/>} />
-                <Route path="/authservice/useradmin/users/roles" element={<UserRoles/>} />
-                <Route path="/authservice/useradmin/users/add" element={<UserAdd/>} />
-                <Route path="/authservice/useradmin/users/passwords" element={<UserChangePasswords/>} />
-                <Route path="/authservice/useradmin/users" element={<Users/>} />
-                <Route path="/authservice/useradmin/roles/modify" element={<RoleModify/>} />
-                <Route path="/authservice/useradmin/roles/permissions" element={<RolePermissions/>} />
-                <Route path="/authservice/useradmin/roles/add" element={<RoleAdd/>} />
-                <Route path="/authservice/useradmin/roles" element={<Roles/>} />
-                <Route path="/authservice/useradmin/permissions/modify" element={<PermissionModify/>} />
-                <Route path="/authservice/useradmin/permissions/add" element={<PermissionAdd/>} />
-                <Route path="/authservice/useradmin/permissions" element={<Permissions/>} />
+                <Route exact path="/" element={<Home/>} />
+                <Route path="/users/modify" element={<UserModify/>} />
+                <Route path="/users/roles" element={<UserRoles/>} />
+                <Route path="/users/add" element={<UserAdd/>} />
+                <Route path="/users/passwords" element={<UserChangePasswords/>} />
+                <Route path="/users" element={<Users/>} />
+                <Route path="/roles/modify" element={<RoleModify/>} />
+                <Route path="/roles/permissions" element={<RolePermissions/>} />
+                <Route path="/roles/add" element={<RoleAdd/>} />
+                <Route path="/roles" element={<Roles/>} />
+                <Route path="/permissions/modify" element={<PermissionModify/>} />
+                <Route path="/permissions/add" element={<PermissionAdd/>} />
+                <Route path="/permissions" element={<Permissions/>} />
             </Routes>
         </Router>
     );

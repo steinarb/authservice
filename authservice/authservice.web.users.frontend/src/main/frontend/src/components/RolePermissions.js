@@ -44,7 +44,7 @@ export default function RolePermissions() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft><br/>
+                <StyledLinkLeft to="/roles">Up to role adminstration</StyledLinkLeft><br/>
                 <h1>Modify role to permission mappings</h1>
                 <div className="col-sm-2"></div>
             </nav>

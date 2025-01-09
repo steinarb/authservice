@@ -35,7 +35,7 @@ export default function UserModify() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+                <StyledLinkLeft to="/users">Up to user adminstration</StyledLinkLeft>
                 <h1>Modify user information</h1>
                 <div className="col-sm-2"></div>
             </nav>

@@ -36,7 +36,7 @@ export default function UserAdd() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft>
+                <StyledLinkLeft to="/users">Up to user adminstration</StyledLinkLeft>
                 <h1>Add user</h1>
                 <div className="col-sm-2"></div>
             </nav>

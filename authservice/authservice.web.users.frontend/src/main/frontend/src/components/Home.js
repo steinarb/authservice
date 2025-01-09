@@ -14,9 +14,9 @@ function Home() {
                 <div className="col-sm-2"></div>
             </nav>
             <Container>
-                <StyledLinkRight to="/authservice/useradmin/users">Adminstrate users</StyledLinkRight>
-                <StyledLinkRight to="/authservice/useradmin/roles">Administrate roles</StyledLinkRight>
-                <StyledLinkRight to="/authservice/useradmin/permissions">Administrate permissions</StyledLinkRight>
+                <StyledLinkRight to="/users">Adminstrate users</StyledLinkRight>
+                <StyledLinkRight to="/roles">Administrate roles</StyledLinkRight>
+                <StyledLinkRight to="/permissions">Administrate permissions</StyledLinkRight>
             </Container>
         </div>
     );

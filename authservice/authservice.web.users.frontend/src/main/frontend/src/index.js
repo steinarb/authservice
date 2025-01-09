@@ -12,8 +12,12 @@ import rootReducer from './reducers';
 import rootSaga from './sagas';
 const sagaMiddleware = createSagaMiddleware();
 
+// Calculate the basename based on the URL of the vite assets directory
+const baseUrl = Array.from(document.scripts).map(s => s.src).filter(src => src.includes('assets/'))[0].replace(/\/assets\/.*/, '');
+const basename = new URL(baseUrl).pathname;
+
 const store = configureStore({
-    reducer: rootReducer,
+    reducer: rootReducer(basename),
     middleware: () => new Tuple(sagaMiddleware),
 });
 sagaMiddleware.run(rootSaga);
@@ -23,7 +27,7 @@ const root = createRoot(container);
 
 root.render(
     <Provider store={store}>
-        <App/>
+        <App basename={basename} />
     </Provider>,
 );
 

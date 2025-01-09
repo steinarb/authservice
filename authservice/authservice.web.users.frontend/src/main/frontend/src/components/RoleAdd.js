@@ -25,7 +25,7 @@ export default function RoleAdd() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/roles">Up to role adminstration</StyledLinkLeft>
+                <StyledLinkLeft to="/roles">Up to role adminstration</StyledLinkLeft>
                 <h1>Add role</h1>
                 <div className="col-sm-2"></div>
             </nav>

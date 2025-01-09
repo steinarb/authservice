@@ -45,7 +45,7 @@ export default function UserRoles() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/users">Up to user adminstration</StyledLinkLeft><br/>
+                <StyledLinkLeft to="/users">Up to user adminstration</StyledLinkLeft><br/>
                 <h1>Modify user to role mappings</h1>
                 <div className="col-sm-2"></div>
             </nav>

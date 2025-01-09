@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { createReducer } from '@reduxjs/toolkit';
 import users from './usersReducer';
 import userid from './useridReducer';
 import username from './usernameReducer';
@@ -29,7 +30,7 @@ import permissionDescription from './permissionDescriptionReducer';
 import modifyFailedError from './modifyFailedErrorReducer';
 import errors from './errorsReducer';
 
-const rootsReducer = combineReducers({
+export default (basename) => combineReducers({
     users,
     userid,
     username,
@@ -59,6 +60,5 @@ const rootsReducer = combineReducers({
     permissionDescription,
     modifyFailedError,
     errors,
+    basename: createReducer(basename, (builder) => builder),
 });
-
-export default rootsReducer;

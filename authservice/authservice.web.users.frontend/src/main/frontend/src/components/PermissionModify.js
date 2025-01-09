@@ -31,7 +31,7 @@ export default function PermissionModify() {
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
-                <StyledLinkLeft to="/authservice/useradmin/permissions">
+                <StyledLinkLeft to="/permissions">
                     Up to permission adminstration
                 </StyledLinkLeft><br/>
                 <h1>Modify permission information</h1>
