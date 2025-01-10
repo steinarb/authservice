@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { usePostRoleAddMutation } from '../api';
 import {
     ROLE_CLEAR,
     ROLENAME_FIELD_MODIFIED,
     ROLE_DESCRIPTION_FIELD_MODIFIED,
-    ADD_ROLE_BUTTON_CLICKED,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -17,6 +17,8 @@ export default function RoleAdd() {
     const rolename = useSelector(state => state.rolename);
     const description = useSelector(state => state.roleDescription);
     const dispatch = useDispatch();
+    const [ postRoleAdd ] = usePostRoleAddMutation();
+    const onAddRoleClicked = async () => await postRoleAdd({ rolename, description });
 
     useEffect(() => {
         dispatch(ROLE_CLEAR());
@@ -57,7 +59,7 @@ export default function RoleAdd() {
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={() => dispatch(ADD_ROLE_BUTTON_CLICKED())}>
+                            onClick={onAddRoleClicked}>
                             Add new role</button>
                     </FormRow>
                 </Container>

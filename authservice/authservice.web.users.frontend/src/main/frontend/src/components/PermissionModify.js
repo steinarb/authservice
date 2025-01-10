@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useGetPermissionsQuery, usePostPermissionModifyMutation } from '../api';
 import {
     SELECT_PERMISSION,
-    PERMISSIONS_REQUEST,
     PERMISSION_CLEAR,
     PERMISSION_DESCRIPTION_FIELD_MODIFIED,
     PERMISSIONNAME_FIELD_MODIFIED,
-    MODIFY_PERMISSION_BUTTON_CLICKED,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -17,14 +16,15 @@ import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedPermission } from './common';
 
 export default function PermissionModify() {
-    const permissions = useSelector(state => state.permissions);
+    const { data: permissions = [] } = useGetPermissionsQuery();
     const permissionid = useSelector(state => state.permissionid);
     const permissionname = useSelector(state => state.permissionname);
     const description = useSelector(state => state.permissionDescription);
     const dispatch = useDispatch();
+    const [ postPermissionModify ] = usePostPermissionModifyMutation();
+    const onModifyPermissionClicked = async () => await postPermissionModify({ id: permissionid, permissionname, description });
 
     useEffect(() => {
-        dispatch(PERMISSIONS_REQUEST());
         dispatch(PERMISSION_CLEAR());
     },[]);
 
@@ -79,7 +79,7 @@ export default function PermissionModify() {
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={() => dispatch(MODIFY_PERMISSION_BUTTON_CLICKED())}>
+                            onClick={onModifyPermissionClicked}>
                             Save changes to permission</button>
                     </FormRow>
                 </Container>

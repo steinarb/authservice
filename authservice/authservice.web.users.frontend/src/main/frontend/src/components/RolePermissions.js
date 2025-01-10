@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    ROLES_REQUEST,
+    useGetRolesQuery,
+    useGetRolePermissionsQuery,
+    useGetPermissionsQuery,
+    usePostRoleAddpermissionsMutation,
+    usePostRoleRemovepermissionsMutation,
+} from '../api';
+import {
     SELECT_ROLE,
     ROLE_CLEAR,
-    PERMISSIONS_REQUEST,
-    ROLEPERMISSIONS_REQUEST,
     SELECT_PERMISSIONS_NOT_ON_ROLE,
-    ADD_PERMISSION_TO_ROLE_BUTTON_CLICKED,
     SELECT_PERMISSIONS_ON_ROLE,
-    REMOVE_PERMISSION_FROM_ROLE_BUTTON_CLICKED,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -23,19 +25,24 @@ import { isUnselected } from '../reducers/common';
 import { findSelectedRole } from './common';
 
 export default function RolePermissions() {
-    const roles = useSelector(state => state.roles);
+    const { data: roles = [] } = useGetRolesQuery();
     const roleid = useSelector(state => state.roleid);
-    const permissionsNotOnRole = useSelector(state => state.permissionsNotOnRole);
+    const rolename = useSelector(state => state.rolename);
+    const role = { id: roleid, rolename };
+    const { data: rolePermissions = {} } = useGetRolePermissionsQuery();
+    const { data: permissions = [] } = useGetPermissionsQuery();
+    const permissionsOnRole = rolePermissions[rolename] || [];
+    const permissionsNotOnRole = permissions.filter(p => !permissionsOnRole.find(r => r.id === p.id));
     const selectedInPermissionsNotOnRole = useSelector(state => state.selectedInPermissionsNotOnRole);
-    const permissionsOnRole = useSelector(state => state.permissionsOnRole);
     const selectedInPermissionsOnRole = useSelector(state => state.selectedInPermissionsOnRole);
     const dispatch = useDispatch();
+    const [ postRoleAddpermissions ] = usePostRoleAddpermissionsMutation();
+    const onAddPermissionClicked = async () => await postRoleAddpermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissionsNotOnRole) });
+    const [ postRoleRemovepermissions ] = usePostRoleRemovepermissionsMutation();
+    const onRemovePermissionClicked = async () => await postRoleRemovepermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissionsOnRole) });
 
     useEffect(() => {
-        dispatch(ROLES_REQUEST());
         dispatch(ROLE_CLEAR());
-        dispatch(PERMISSIONS_REQUEST());
-        dispatch(ROLEPERMISSIONS_REQUEST());
     },[]);
 
     const addPermissionDisabled = isUnselected(selectedInPermissionsNotOnRole);
@@ -83,12 +90,12 @@ export default function RolePermissions() {
                             <button
                                 disabled={addPermissionDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(ADD_PERMISSION_TO_ROLE_BUTTON_CLICKED())}>
+                                onClick={onAddPermissionClicked}>
                                 Add permission &nbsp;<ChevronRight/></button>
                             <button
                                 disabled={removePermissionDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(REMOVE_PERMISSION_FROM_ROLE_BUTTON_CLICKED())}>
+                                onClick={onRemovePermissionClicked}>
                                 <ChevronLeft/>&nbsp; Remove permission</button>
                         </div>
                         <div className="no-gutters col-sm-4">

@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    USERS_REQUEST,
+    useGetUsersQuery,
+    useGetUserRolesQuery,
+    useGetRolesQuery,
+    usePostUserAddrolesMutation,
+    usePostUserRemoverolesMutation,
+} from '../api';
+import {
     USER_CLEAR,
     SELECT_USER,
-    ROLES_REQUEST,
-    USERROLES_REQUEST,
     SELECT_ROLES_NOT_ON_USER,
     SELECT_ROLES_ON_USER,
-    ADD_USER_ROLE_BUTTON_CLICKED,
-    REMOVE_USER_ROLE_BUTTON_CLICKED,
-
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -24,19 +25,24 @@ import { findSelectedUser } from './common';
 import { isUnselected } from '../reducers/common';
 
 export default function UserRoles() {
-    const users = useSelector(state => state.users);
+    const { data: users = [] } = useGetUsersQuery();
     const userid = useSelector(state => state.userid);
-    const rolesNotOnUser = useSelector(state => state.rolesNotOnUser);
+    const username = useSelector(state => state.username);
+    const user = { userid, username };
+    const { data: userRoles = {} } = useGetUserRolesQuery();
+    const { data: roles = [] } = useGetRolesQuery();
+    const rolesOnUser = userRoles[username] || [];
+    const rolesNotOnUser = roles.filter(r => !rolesOnUser.find(u => u.id === r.id));
     const selectedInRolesNotOnUser = useSelector(state => state.selectedInRolesNotOnUser);
-    const rolesOnUser = useSelector(state => state.rolesOnUser);
     const selectedInRolesOnUser = useSelector(state => state.selectedInRolesOnUser);
     const dispatch = useDispatch();
+    const [ postUserAddroles ] = usePostUserAddrolesMutation();
+    const onAddRoleClicked = async () => await postUserAddroles({ user, roles: roles.filter(r => r.id===selectedInRolesNotOnUser) });
+    const [ postUserRemoveroles ] = usePostUserRemoverolesMutation();
+    const onRemoveRoleClicked = async () => await postUserRemoveroles({ user, roles: roles.filter(r => r.id===selectedInRolesOnUser) });
 
     useEffect(() => {
-        dispatch(USERS_REQUEST());
         dispatch(USER_CLEAR());
-        dispatch(ROLES_REQUEST());
-        dispatch(USERROLES_REQUEST());
     }, []);
 
     const addRoleDisabled = isUnselected(selectedInRolesNotOnUser);
@@ -81,12 +87,12 @@ export default function UserRoles() {
                             <button
                                 disabled={addRoleDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(ADD_USER_ROLE_BUTTON_CLICKED())}>
+                                onClick={onAddRoleClicked}>
                                 Add role &nbsp;<ChevronRight/></button>
                             <button
                                 disabled={removeRoleDisabled}
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(REMOVE_USER_ROLE_BUTTON_CLICKED())}>
+                                onClick={onRemoveRoleClicked}>
                                 <ChevronLeft/>&nbsp; Remove role</button>
                         </div>
                         <div className="no-gutters col-sm-4">

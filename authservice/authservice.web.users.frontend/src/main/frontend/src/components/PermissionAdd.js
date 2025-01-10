@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { usePostPermissionAddMutation } from '../api';
 import {
     PERMISSION_CLEAR,
     PERMISSION_DESCRIPTION_FIELD_MODIFIED,
     PERMISSIONNAME_FIELD_MODIFIED,
-    ADD_NEW_PERMISSION_BUTTON_CLICKED,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -17,6 +17,8 @@ export default function PermissionAdd() {
     const permissionname = useSelector(state => state.permissionname);
     const description = useSelector(state => state.permissionDescription);
     const dispatch = useDispatch();
+    const [ postPermissionAdd ] = usePostPermissionAddMutation();
+    const onAddPermissionClicked = async () => await postPermissionAdd({ permissionname, description });
 
     useEffect(() => {
        dispatch(PERMISSION_CLEAR());
@@ -59,7 +61,7 @@ export default function PermissionAdd() {
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={() => dispatch(ADD_NEW_PERMISSION_BUTTON_CLICKED())}>
+                            onClick={onAddPermissionClicked}>
                             Add new permission</button>
                     </FormRow>
                 </Container>

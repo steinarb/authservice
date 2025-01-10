@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useGetUsersQuery, usePostPasswordUpdateMutation } from '../api';
 import {
-    USERS_REQUEST,
     SELECT_USER,
     PASSWORD1_FIELD_MODIFIED,
     PASSWORD2_FIELD_MODIFIED,
-    CHANGE_PASSWORD_BUTTON_CLICKED,
-    USER_CLEAR,
     PASSWORDS_CLEAR,
+    USER_CLEAR,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -19,14 +18,16 @@ import { findSelectedUser } from './common';
 
 export default function UserChangePasswords() {
     const userid = useSelector(state => state.userid);
-    const users = useSelector(state => state.users);
+    const user = { userid };
+    const { data: users = [] } = useGetUsersQuery();
     const password1 = useSelector(state => state.password1);
     const password2 = useSelector(state => state.password2);
     const passwordsNotIdentical = useSelector(state => state.passwordsNotIdentical);
     const dispatch = useDispatch();
+    const [ postPasswordUpdate ] = usePostPasswordUpdateMutation();
+    const onChangePasswordsClicked = async () => await postPasswordUpdate({ user, password1, password2 });
 
     useEffect(() => {
-        dispatch(USERS_REQUEST());
         dispatch(USER_CLEAR());
         dispatch(PASSWORDS_CLEAR());
     },[]);
@@ -81,7 +82,7 @@ export default function UserChangePasswords() {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(CHANGE_PASSWORD_BUTTON_CLICKED())}>
+                                onClick={onChangePasswordsClicked}>
                                 Change password</button>
                         </FormField>
                     </FormRow>

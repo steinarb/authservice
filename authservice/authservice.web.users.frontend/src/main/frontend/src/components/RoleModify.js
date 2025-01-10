@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useGetRolesQuery, usePostRoleModifyMutation } from '../api';
 import {
-    ROLES_REQUEST,
     ROLE_CLEAR,
     SELECT_ROLE,
     ROLENAME_FIELD_MODIFIED,
     ROLE_DESCRIPTION_FIELD_MODIFIED,
-    MODIFY_ROLE_BUTTON_CLICKED,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -17,14 +16,15 @@ import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedRole } from './common';
 
 export default function RoleModify() {
-    const roles = useSelector(state => state.roles);
+    const { data: roles = [] } = useGetRolesQuery();
     const roleid = useSelector(state => state.roleid);
     const rolename = useSelector(state => state.rolename);
     const description = useSelector(state => state.roleDescription);
     const dispatch = useDispatch();
+    const [ postRoleModify ] = usePostRoleModifyMutation();
+    const onModifyRoleClicked = async () => await postRoleModify({ id: roleid, rolename, description });
 
     useEffect(() => {
-        dispatch(ROLES_REQUEST());
         dispatch(ROLE_CLEAR());
     },[]);
 
@@ -77,7 +77,7 @@ export default function RoleModify() {
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={() => dispatch(MODIFY_ROLE_BUTTON_CLICKED())}>
+                            onClick={onModifyRoleClicked}>
                             Save changes to role</button>
                     </FormRow>
                 </Container>

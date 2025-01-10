@@ -3,10 +3,8 @@ import {
     SELECT_ROLE,
     ROLE_DESCRIPTION_FIELD_MODIFIED,
     ROLE_CLEAR,
-    SAVE_MODIFIED_ROLE_RECEIVE,
-    SAVE_PASSWORDS_MODIFY_RECEIVE,
-    SAVE_ADDED_ROLE_RECEIVE,
 } from '../actiontypes';
+import { isUsersLoaded, isRolesLoaded } from '../matchers';
 
 const defaultValue = '';
 
@@ -14,10 +12,9 @@ const roleDescriptionReducer = createReducer(defaultValue, builder => {
     builder
         .addCase(SELECT_ROLE, (state, action) => action.payload.description)
         .addCase(ROLE_DESCRIPTION_FIELD_MODIFIED, (state, action) => action.payload)
+        .addMatcher(isRolesLoaded, () => defaultValue)
         .addCase(ROLE_CLEAR, () => defaultValue)
-        .addCase(SAVE_MODIFIED_ROLE_RECEIVE, () => defaultValue)
-        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
-        .addCase(SAVE_ADDED_ROLE_RECEIVE, () => defaultValue);
+        .addMatcher(isUsersLoaded, () => defaultValue);
 });
 
 export default roleDescriptionReducer;

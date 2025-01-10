@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useGetUsersQuery, usePostUserModifyMutation } from '../api';
 import {
     SELECT_USER,
     USERNAME_FIELD_MODIFIED,
     EMAIL_FIELD_MODIFIED,
     FIRSTNAME_FIELD_MODIFIED,
     LASTNAME_FIELD_MODIFIED,
-    MODIFY_USER_BUTTON_CLICKED,
-    USERS_REQUEST,
     USER_CLEAR,
 } from '../actiontypes';
 import Container from './bootstrap/Container';
@@ -24,11 +23,12 @@ export default function UserModify() {
     const email = useSelector(state => state.email);
     const firstname = useSelector(state => state.firstname);
     const lastname = useSelector(state => state.lastname);
-    const users = useSelector(state => state.users);
+    const { data: users = [] } = useGetUsersQuery();
     const dispatch = useDispatch();
+    const [ postUserModify ] = usePostUserModifyMutation();
+    const onModifyUserClicked = async () => await postUserModify({ userid, username, email, firstname, lastname });
 
     useEffect(() => {
-        dispatch(USERS_REQUEST());
         dispatch(USER_CLEAR());
     },[]);
 
@@ -104,7 +104,7 @@ export default function UserModify() {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
-                                onClick={() => dispatch(MODIFY_USER_BUTTON_CLICKED())}>
+                                onClick={onModifyUserClicked}>
                                 Save changes to user</button>
                         </FormField>
                     </FormRow>

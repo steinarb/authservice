@@ -3,10 +3,8 @@ import {
     SELECT_PERMISSION,
     PERMISSION_DESCRIPTION_FIELD_MODIFIED,
     PERMISSION_CLEAR,
-    SAVE_MODIFIED_PERMISSION_RECEIVE,
-    SAVE_PASSWORDS_MODIFY_RECEIVE,
-    SAVE_ADDED_PERMISSION_RECEIVE,
 } from '../actiontypes';
+import { isUsersLoaded, isPermissionsLoaded } from '../matchers';
 
 const defaultValue = '';
 
@@ -15,9 +13,8 @@ const permissionDescriptionReducer = createReducer(defaultValue, builder => {
         .addCase(SELECT_PERMISSION, (state, action) => action.payload.description)
         .addCase(PERMISSION_DESCRIPTION_FIELD_MODIFIED, (state, action) => action.payload)
         .addCase(PERMISSION_CLEAR, () => defaultValue)
-        .addCase(SAVE_MODIFIED_PERMISSION_RECEIVE, () => defaultValue)
-        .addCase(SAVE_PASSWORDS_MODIFY_RECEIVE, () => defaultValue)
-        .addCase(SAVE_ADDED_PERMISSION_RECEIVE, () => defaultValue);
+        .addMatcher(isPermissionsLoaded, () => defaultValue)
+        .addMatcher(isUsersLoaded, () => defaultValue);
 });
 
 export default permissionDescriptionReducer;

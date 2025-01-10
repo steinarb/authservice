@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { usePostUserAddMutation } from '../api';
 import {
     USERNAME_FIELD_MODIFIED,
     EMAIL_FIELD_MODIFIED,
@@ -7,7 +8,6 @@ import {
     LASTNAME_FIELD_MODIFIED,
     PASSWORD1_FIELD_MODIFIED,
     PASSWORD2_FIELD_MODIFIED,
-    ADD_USER_BUTTON_CLICKED,
     USER_CLEAR,
     PASSWORDS_CLEAR,
 } from '../actiontypes';
@@ -23,10 +23,13 @@ export default function UserAdd() {
     const email = useSelector(state => state.email);
     const firstname = useSelector(state => state.firstname);
     const lastname = useSelector(state => state.lastname);
+    const user = { username, email, firstname, lastname };
     const password1 = useSelector(state => state.password1);
     const password2 = useSelector(state => state.password2);
     const passwordsNotIdentical = useSelector(state => state.passwordsNotIdentical);
     const dispatch = useDispatch();
+    const [ postUserAdd ] = usePostUserAddMutation();
+    const onAddButtonClicked = async () => await postUserAdd({ user, password1, password2, passwordsNotIdentical });
 
     useEffect(() => {
         dispatch(USER_CLEAR());
@@ -113,7 +116,7 @@ export default function UserAdd() {
                     <FormRow>
                         <button
                             className="btn btn-primary form-control"
-                            onClick={() => dispatch(ADD_USER_BUTTON_CLICKED())}>
+                            onClick={onAddButtonClicked}>
                             Opprett bruker</button>
                     </FormRow>
                 </Container>
