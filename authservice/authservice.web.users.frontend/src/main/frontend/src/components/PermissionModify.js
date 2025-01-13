@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetPermissionsQuery, usePostPermissionModifyMutation } from '../api';
-import {
-    SELECT_PERMISSION,
-    PERMISSION_CLEAR,
-    PERMISSION_DESCRIPTION_FIELD_MODIFIED,
-    PERMISSIONNAME_FIELD_MODIFIED,
-} from '../actiontypes';
+import { selectPermission, clearPermission, setPermissionPermissionname, setPermissionDescription } from '../reducers/permissionSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -17,15 +12,13 @@ import { findSelectedPermission } from './common';
 
 export default function PermissionModify() {
     const { data: permissions = [] } = useGetPermissionsQuery();
-    const permissionid = useSelector(state => state.permissionid);
-    const permissionname = useSelector(state => state.permissionname);
-    const description = useSelector(state => state.permissionDescription);
+    const permission = useSelector(state => state.permission);
     const dispatch = useDispatch();
     const [ postPermissionModify ] = usePostPermissionModifyMutation();
-    const onModifyPermissionClicked = async () => await postPermissionModify({ id: permissionid, permissionname, description });
+    const onModifyPermissionClicked = async () => await postPermissionModify(permission);
 
     useEffect(() => {
-        dispatch(PERMISSION_CLEAR());
+        dispatch(clearPermission());
     },[]);
 
     return (
@@ -46,8 +39,8 @@ export default function PermissionModify() {
                             <select
                                 id="permissions"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_PERMISSION(findSelectedPermission(e, permissions)))}
-                                value={permissionid}
+                                onChange={e => dispatch(selectPermission(findSelectedPermission(e, permissions)))}
+                                value={permission.id}
                             >
                                 <option key="-1" value="-1" />
                                 {permissions.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
@@ -61,8 +54,8 @@ export default function PermissionModify() {
                                 id="permissionname"
                                 className="form-control"
                                 type="text"
-                                value={permissionname}
-                                onChange={e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={permission.permissionname}
+                                onChange={e => dispatch(setPermissionPermissionname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -72,8 +65,8 @@ export default function PermissionModify() {
                                 id="description"
                                 className="form-control"
                                 type="text"
-                                value={description}
-                                onChange={e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
+                                value={permission.description}
+                                onChange={e => dispatch(setPermissionDescription(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>

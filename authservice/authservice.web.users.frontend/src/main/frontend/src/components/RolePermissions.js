@@ -7,12 +7,8 @@ import {
     usePostRoleAddpermissionsMutation,
     usePostRoleRemovepermissionsMutation,
 } from '../api';
-import {
-    SELECT_ROLE,
-    ROLE_CLEAR,
-    SELECT_PERMISSIONS_NOT_ON_ROLE,
-    SELECT_PERMISSIONS_ON_ROLE,
-} from '../actiontypes';
+import { selectRole, clearRole } from '../reducers/roleSlice';
+import { SELECT_PERMISSIONS_NOT_ON_ROLE, SELECT_PERMISSIONS_ON_ROLE } from '../actiontypes';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import ChevronLeft from './bootstrap/ChevronLeft';
@@ -26,12 +22,10 @@ import { findSelectedRole } from './common';
 
 export default function RolePermissions() {
     const { data: roles = [] } = useGetRolesQuery();
-    const roleid = useSelector(state => state.roleid);
-    const rolename = useSelector(state => state.rolename);
-    const role = { id: roleid, rolename };
+    const role = useSelector(state => state.role);
     const { data: rolePermissions = {} } = useGetRolePermissionsQuery();
     const { data: permissions = [] } = useGetPermissionsQuery();
-    const permissionsOnRole = rolePermissions[rolename] || [];
+    const permissionsOnRole = rolePermissions[role.rolename] || [];
     const permissionsNotOnRole = permissions.filter(p => !permissionsOnRole.find(r => r.id === p.id));
     const selectedInPermissionsNotOnRole = useSelector(state => state.selectedInPermissionsNotOnRole);
     const selectedInPermissionsOnRole = useSelector(state => state.selectedInPermissionsOnRole);
@@ -42,7 +36,7 @@ export default function RolePermissions() {
     const onRemovePermissionClicked = async () => await postRoleRemovepermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissionsOnRole) });
 
     useEffect(() => {
-        dispatch(ROLE_CLEAR());
+        dispatch(clearRole());
     },[]);
 
     const addPermissionDisabled = isUnselected(selectedInPermissionsNotOnRole);
@@ -64,8 +58,8 @@ export default function RolePermissions() {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_ROLE(findSelectedRole(e, roles)))}
-                                value={roleid}
+                                onChange={e => dispatch(selectRole(findSelectedRole(e, roles)))}
+                                value={role.id}
                             >
                                 <option key="-1" value="-1" />
                                 {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}

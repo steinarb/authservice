@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUsersQuery, usePostUserModifyMutation } from '../api';
-import {
-    SELECT_USER,
-    USERNAME_FIELD_MODIFIED,
-    EMAIL_FIELD_MODIFIED,
-    FIRSTNAME_FIELD_MODIFIED,
-    LASTNAME_FIELD_MODIFIED,
-    USER_CLEAR,
-} from '../actiontypes';
+import { selectUser, clearUser, setUserUsername, setUserEmail, setUserFirstname, setUserLastname } from '../reducers/userSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -18,18 +11,14 @@ import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedUser } from './common';
 
 export default function UserModify() {
-    const userid = useSelector(state => state.userid);
-    const username = useSelector(state => state.username);
-    const email = useSelector(state => state.email);
-    const firstname = useSelector(state => state.firstname);
-    const lastname = useSelector(state => state.lastname);
+    const user = useSelector(state => state.user);
     const { data: users = [] } = useGetUsersQuery();
     const dispatch = useDispatch();
     const [ postUserModify ] = usePostUserModifyMutation();
-    const onModifyUserClicked = async () => await postUserModify({ userid, username, email, firstname, lastname });
+    const onModifyUserClicked = async () => await postUserModify(user);
 
     useEffect(() => {
-        dispatch(USER_CLEAR());
+        dispatch(clearUser());
     },[]);
 
     return (
@@ -48,8 +37,8 @@ export default function UserModify() {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_USER(findSelectedUser(e, users)))}
-                                value={userid}>
+                                onChange={e => dispatch(selectUser(findSelectedUser(e, users)))}
+                                value={user.userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
@@ -62,8 +51,8 @@ export default function UserModify() {
                                 id="username"
                                 className="form-control"
                                 type="text"
-                                value={username}
-                                onChange={e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.username}
+                                onChange={e => dispatch(setUserUsername(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -73,8 +62,8 @@ export default function UserModify() {
                                 id="email"
                                 className="form-control"
                                 type="text"
-                                value={email}
-                                onChange={e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value))} />
+                                value={user.email}
+                                onChange={e => dispatch(setUserEmail(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -84,8 +73,8 @@ export default function UserModify() {
                                 id="firstname"
                                 className="form-control"
                                 type="text"
-                                value={firstname}
-                                onChange={e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.firstname}
+                                onChange={e => dispatch(setUserFirstname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -95,8 +84,8 @@ export default function UserModify() {
                                 id="lastname"
                                 className="form-control"
                                 type="text"
-                                value={lastname}
-                                onChange={e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.lastname}
+                                onChange={e => dispatch(setUserLastname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>

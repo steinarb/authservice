@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { usePostUserAddMutation } from '../api';
-import {
-    USERNAME_FIELD_MODIFIED,
-    EMAIL_FIELD_MODIFIED,
-    FIRSTNAME_FIELD_MODIFIED,
-    LASTNAME_FIELD_MODIFIED,
-    PASSWORD1_FIELD_MODIFIED,
-    PASSWORD2_FIELD_MODIFIED,
-    USER_CLEAR,
-    PASSWORDS_CLEAR,
-} from '../actiontypes';
+import { selectUser, clearUser, setUserUsername, setUserEmail, setUserFirstname, setUserLastname } from '../reducers/userSlice';
+import { clearPassword, setPassword1, setPassword2 } from '../reducers/passwordSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -19,21 +11,15 @@ import FormField from './bootstrap/FormField';
 import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 
 export default function UserAdd() {
-    const username = useSelector(state => state.username);
-    const email = useSelector(state => state.email);
-    const firstname = useSelector(state => state.firstname);
-    const lastname = useSelector(state => state.lastname);
-    const user = { username, email, firstname, lastname };
-    const password1 = useSelector(state => state.password1);
-    const password2 = useSelector(state => state.password2);
-    const passwordsNotIdentical = useSelector(state => state.passwordsNotIdentical);
+    const user = useSelector(state => state.user);
+    const password = useSelector(state => state.password);
     const dispatch = useDispatch();
     const [ postUserAdd ] = usePostUserAddMutation();
-    const onAddButtonClicked = async () => await postUserAdd({ user, password1, password2, passwordsNotIdentical });
+    const onAddButtonClicked = async () => await postUserAdd({ user, ...password });
 
     useEffect(() => {
-        dispatch(USER_CLEAR());
-        dispatch(PASSWORDS_CLEAR());
+        dispatch(clearUser());
+        dispatch(clearPassword());
     },[]);
 
     return (
@@ -53,8 +39,8 @@ export default function UserAdd() {
                                 id="username"
                                 className="form-control"
                                 type="text"
-                                value={username}
-                                onChange={e => dispatch(USERNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.username}
+                                onChange={e => dispatch(setUserUsername(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -64,8 +50,8 @@ export default function UserAdd() {
                                 id="email"
                                 className="form-control"
                                 type="text"
-                                value={email}
-                                onChange={e => dispatch(EMAIL_FIELD_MODIFIED(e.target.value))} />
+                                value={user.email}
+                                onChange={e => dispatch(setUserEmail(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -75,8 +61,8 @@ export default function UserAdd() {
                                 id="firstname"
                                 className="form-control"
                                 type="text"
-                                value={firstname}
-                                onChange={e => dispatch(FIRSTNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.firstname}
+                                onChange={e => dispatch(setUserFirstname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -86,8 +72,8 @@ export default function UserAdd() {
                                 id="lastname"
                                 className="form-control"
                                 type="text"
-                                value={lastname}
-                                onChange={e => dispatch(LASTNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={user.lastname}
+                                onChange={e => dispatch(setUserLastname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -97,8 +83,8 @@ export default function UserAdd() {
                                 id="password"
                                 className="form-control"
                                 type="password"
-                                value={password1}
-                                onChange={e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value))} />
+                                value={password.password1}
+                                onChange={e => dispatch(setPassword1(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -108,9 +94,9 @@ export default function UserAdd() {
                                 id="password2"
                                 className="form-control"
                                 type="password"
-                                value={password2}
-                                onChange={e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value))} />
-                            { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                                value={password.password2}
+                                onChange={e => dispatch(setPassword2(e.target.value))} />
+                            { password.passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>

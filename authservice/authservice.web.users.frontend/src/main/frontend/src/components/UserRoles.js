@@ -7,9 +7,8 @@ import {
     usePostUserAddrolesMutation,
     usePostUserRemoverolesMutation,
 } from '../api';
+import { selectUser, clearUser } from '../reducers/userSlice';
 import {
-    USER_CLEAR,
-    SELECT_USER,
     SELECT_ROLES_NOT_ON_USER,
     SELECT_ROLES_ON_USER,
 } from '../actiontypes';
@@ -26,12 +25,10 @@ import { isUnselected } from '../reducers/common';
 
 export default function UserRoles() {
     const { data: users = [] } = useGetUsersQuery();
-    const userid = useSelector(state => state.userid);
-    const username = useSelector(state => state.username);
-    const user = { userid, username };
+    const user = useSelector(state => state.user);
     const { data: userRoles = {} } = useGetUserRolesQuery();
     const { data: roles = [] } = useGetRolesQuery();
-    const rolesOnUser = userRoles[username] || [];
+    const rolesOnUser = userRoles[user.username] || [];
     const rolesNotOnUser = roles.filter(r => !rolesOnUser.find(u => u.id === r.id));
     const selectedInRolesNotOnUser = useSelector(state => state.selectedInRolesNotOnUser);
     const selectedInRolesOnUser = useSelector(state => state.selectedInRolesOnUser);
@@ -42,7 +39,7 @@ export default function UserRoles() {
     const onRemoveRoleClicked = async () => await postUserRemoveroles({ user, roles: roles.filter(r => r.id===selectedInRolesOnUser) });
 
     useEffect(() => {
-        dispatch(USER_CLEAR());
+        dispatch(clearUser());
     }, []);
 
     const addRoleDisabled = isUnselected(selectedInRolesNotOnUser);
@@ -64,7 +61,7 @@ export default function UserRoles() {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_USER(findSelectedUser(e, users)))} value={userid}>
+                                onChange={e => dispatch(selectUser(findSelectedUser(e, users)))} value={user.userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>

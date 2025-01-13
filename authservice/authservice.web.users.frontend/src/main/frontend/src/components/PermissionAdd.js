@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { usePostPermissionAddMutation } from '../api';
-import {
-    PERMISSION_CLEAR,
-    PERMISSION_DESCRIPTION_FIELD_MODIFIED,
-    PERMISSIONNAME_FIELD_MODIFIED,
-} from '../actiontypes';
+import { clearPermission, setPermissionPermissionname, setPermissionDescription } from '../reducers/permissionSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -14,14 +10,13 @@ import FormField from './bootstrap/FormField';
 import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 
 export default function PermissionAdd() {
-    const permissionname = useSelector(state => state.permissionname);
-    const description = useSelector(state => state.permissionDescription);
+    const permission = useSelector(state => state.permission);
     const dispatch = useDispatch();
     const [ postPermissionAdd ] = usePostPermissionAddMutation();
-    const onAddPermissionClicked = async () => await postPermissionAdd({ permissionname, description });
+    const onAddPermissionClicked = async () => await postPermissionAdd(permission);
 
     useEffect(() => {
-       dispatch(PERMISSION_CLEAR());
+       dispatch(clearPermission());
     },[]);
 
     return (
@@ -43,8 +38,8 @@ export default function PermissionAdd() {
                                 id="permissionname"
                                 className="form-control"
                                 type="text"
-                                value={permissionname}
-                                onChange={e => dispatch(PERMISSIONNAME_FIELD_MODIFIED(e.target.value))} />
+                                value={permission.permissionname}
+                                onChange={e => dispatch(setPermissionPermissionname(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -54,8 +49,8 @@ export default function PermissionAdd() {
                                 id="description"
                                 className="form-control"
                                 type="text"
-                                value={description}
-                                onChange={e => dispatch(PERMISSION_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
+                                value={permission.description}
+                                onChange={e => dispatch(setPermissionDescription(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>

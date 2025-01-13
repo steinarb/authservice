@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUsersQuery, usePostPasswordUpdateMutation } from '../api';
-import {
-    SELECT_USER,
-    PASSWORD1_FIELD_MODIFIED,
-    PASSWORD2_FIELD_MODIFIED,
-    PASSWORDS_CLEAR,
-    USER_CLEAR,
-} from '../actiontypes';
+import { selectUser, clearUser } from '../reducers/userSlice';
+import { clearPassword, setPassword1, setPassword2 } from '../reducers/passwordSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -17,19 +12,16 @@ import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 import { findSelectedUser } from './common';
 
 export default function UserChangePasswords() {
-    const userid = useSelector(state => state.userid);
-    const user = { userid };
+    const user = useSelector(state => state.user);
     const { data: users = [] } = useGetUsersQuery();
-    const password1 = useSelector(state => state.password1);
-    const password2 = useSelector(state => state.password2);
-    const passwordsNotIdentical = useSelector(state => state.passwordsNotIdentical);
+    const password = useSelector(state => state.password);
     const dispatch = useDispatch();
     const [ postPasswordUpdate ] = usePostPasswordUpdateMutation();
-    const onChangePasswordsClicked = async () => await postPasswordUpdate({ user, password1, password2 });
+    const onChangePasswordsClicked = async () => await postPasswordUpdate({ user, ...password });
 
     useEffect(() => {
-        dispatch(USER_CLEAR());
-        dispatch(PASSWORDS_CLEAR());
+        dispatch(clearUser());
+        dispatch(clearPassword());
     },[]);
 
     return (
@@ -48,8 +40,8 @@ export default function UserChangePasswords() {
                             <select
                                 id="users"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_USER(findSelectedUser(e, users)))}
-                                value={userid}>
+                                onChange={e => dispatch(selectUser(findSelectedUser(e, users)))}
+                                value={user.userid}>
                                 <option key="-1" value="-1" />
                                 {users.map((val) => <option key={val.userid} value={val.userid}>{val.firstname} {val.lastname}</option>)}
                             </select>
@@ -62,8 +54,8 @@ export default function UserChangePasswords() {
                                 id="password"
                                 className="form-control"
                                 type="password"
-                                value={password1}
-                                onChange={e => dispatch(PASSWORD1_FIELD_MODIFIED(e.target.value))} />
+                                value={password.password1}
+                                onChange={e => dispatch(setPassword1(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -73,9 +65,9 @@ export default function UserChangePasswords() {
                                 id="password2"
                                 className="form-control"
                                 type="password"
-                                value={password2}
-                                onChange={e => dispatch(PASSWORD2_FIELD_MODIFIED(e.target.value))} />
-                            { passwordsNotIdentical && <span>Passwords are not identical!</span> }
+                                value={password.password2}
+                                onChange={e => dispatch(setPassword2(e.target.value))} />
+                            { password.passwordsNotIdentical && <span>Passwords are not identical!</span> }
                         </FormField>
                     </FormRow>
                     <FormRow>

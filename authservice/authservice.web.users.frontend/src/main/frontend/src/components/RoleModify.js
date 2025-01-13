@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetRolesQuery, usePostRoleModifyMutation } from '../api';
-import {
-    ROLE_CLEAR,
-    SELECT_ROLE,
-    ROLENAME_FIELD_MODIFIED,
-    ROLE_DESCRIPTION_FIELD_MODIFIED,
-} from '../actiontypes';
+import { selectRole, clearRole, setRoleRolename, setRoleDescription } from '../reducers/roleSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -17,15 +12,13 @@ import { findSelectedRole } from './common';
 
 export default function RoleModify() {
     const { data: roles = [] } = useGetRolesQuery();
-    const roleid = useSelector(state => state.roleid);
-    const rolename = useSelector(state => state.rolename);
-    const description = useSelector(state => state.roleDescription);
+    const role = useSelector(state => state.role);
     const dispatch = useDispatch();
     const [ postRoleModify ] = usePostRoleModifyMutation();
-    const onModifyRoleClicked = async () => await postRoleModify({ id: roleid, rolename, description });
+    const onModifyRoleClicked = async () => await postRoleModify(role);
 
     useEffect(() => {
-        dispatch(ROLE_CLEAR());
+        dispatch(clearRole());
     },[]);
 
     return (
@@ -44,8 +37,8 @@ export default function RoleModify() {
                             <select
                                 id="roles"
                                 className="form-control"
-                                onChange={e => dispatch(SELECT_ROLE(findSelectedRole(e, roles)))}
-                                value={roleid}
+                                onChange={e => dispatch(selectRole(findSelectedRole(e, roles)))}
+                                value={role.id}
                             >
                                 <option key="-1" value="-1" />
                                 {roles.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
@@ -59,8 +52,8 @@ export default function RoleModify() {
                                 id="rolename"
                                 className="form-control"
                                 type="text"
-                                value={rolename}
-                                onChange={e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value))} />
+                                value={role.rolename}
+                                onChange={e => dispatch(setRoleRolename(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -70,8 +63,8 @@ export default function RoleModify() {
                                 id="description"
                                 className="form-control"
                                 type="text"
-                                value={description}
-                                onChange={e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
+                                value={role.description}
+                                onChange={e => dispatch(setRoleDescription(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>

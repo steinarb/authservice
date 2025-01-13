@@ -6,10 +6,10 @@ export const emptyUser = {
     lastname: '',
 };
 
-export const emptyUserAndPasswords = {
-    user: { ...emptyUser },
+export const emptyPasswords = {
     password1: '',
     password2: '',
+    passwordsNotIdentical: false,
 };
 
 export const emptyRole = {

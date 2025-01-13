@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { usePostRoleAddMutation } from '../api';
-import {
-    ROLE_CLEAR,
-    ROLENAME_FIELD_MODIFIED,
-    ROLE_DESCRIPTION_FIELD_MODIFIED,
-} from '../actiontypes';
+import { clearRole, setRoleRolename, setRoleDescription } from '../reducers/roleSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -14,14 +10,13 @@ import FormField from './bootstrap/FormField';
 import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 
 export default function RoleAdd() {
-    const rolename = useSelector(state => state.rolename);
-    const description = useSelector(state => state.roleDescription);
+    const role = useSelector(state => state.role);
     const dispatch = useDispatch();
     const [ postRoleAdd ] = usePostRoleAddMutation();
-    const onAddRoleClicked = async () => await postRoleAdd({ rolename, description });
+    const onAddRoleClicked = async () => await postRoleAdd(role);
 
     useEffect(() => {
-        dispatch(ROLE_CLEAR());
+        dispatch(clearRole());
     },[]);
 
     return (
@@ -41,8 +36,8 @@ export default function RoleAdd() {
                                 id="rolename"
                                 className="form-control"
                                 type="text"
-                                value={rolename}
-                                onChange={e => dispatch(ROLENAME_FIELD_MODIFIED(e.target.value))} />
+                                value={role.rolename}
+                                onChange={e => dispatch(setRoleRolename(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -52,8 +47,8 @@ export default function RoleAdd() {
                                 id="description"
                                 className="form-control"
                                 type="text"
-                                value={description}
-                                onChange={e => dispatch(ROLE_DESCRIPTION_FIELD_MODIFIED(e.target.value))} />
+                                value={role.description}
+                                onChange={e => dispatch(setRoleDescription(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
