@@ -5,8 +5,7 @@ import user from './userSlice';
 import selectedInRoles from './selectedInRolesSlice';
 import password from './passwordSlice';
 import role from './roleSlice';
-import selectedInPermissionsNotOnRole from './selectedInPermissionsNotOnRoleReducer';
-import selectedInPermissionsOnRole from './selectedInPermissionsOnRoleReducer';
+import selectedInPermissions from './selectedInPermissionsSlice';
 import permission from './permissionSlice';
 import modifyFailedError from './modifyFailedErrorReducer';
 import errors from './errorsReducer';
@@ -17,8 +16,7 @@ export default (basename) => combineReducers({
     selectedInRoles,
     password,
     role,
-    selectedInPermissionsNotOnRole,
-    selectedInPermissionsOnRole,
+    selectedInPermissions,
     permission,
     modifyFailedError,
     errors,

@@ -8,7 +8,7 @@ import {
     usePostRoleRemovepermissionsMutation,
 } from '../api';
 import { selectRole, clearRole } from '../reducers/roleSlice';
-import { SELECT_PERMISSIONS_NOT_ON_ROLE, SELECT_PERMISSIONS_ON_ROLE } from '../actiontypes';
+import { clearSelectedInPermissions, selectPermissionNotOnRole, selectPermissionOnRole } from '../reducers/selectedInPermissionsSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import ChevronLeft from './bootstrap/ChevronLeft';
@@ -27,20 +27,20 @@ export default function RolePermissions() {
     const { data: permissions = [] } = useGetPermissionsQuery();
     const permissionsOnRole = rolePermissions[role.rolename] || [];
     const permissionsNotOnRole = permissions.filter(p => !permissionsOnRole.find(r => r.id === p.id));
-    const selectedInPermissionsNotOnRole = useSelector(state => state.selectedInPermissionsNotOnRole);
-    const selectedInPermissionsOnRole = useSelector(state => state.selectedInPermissionsOnRole);
+    const selectedInPermissions = useSelector(state => state.selectedInPermissions);
     const dispatch = useDispatch();
     const [ postRoleAddpermissions ] = usePostRoleAddpermissionsMutation();
-    const onAddPermissionClicked = async () => await postRoleAddpermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissionsNotOnRole) });
+    const onAddPermissionClicked = async () => await postRoleAddpermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissions.notOnRole) });
     const [ postRoleRemovepermissions ] = usePostRoleRemovepermissionsMutation();
-    const onRemovePermissionClicked = async () => await postRoleRemovepermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissionsOnRole) });
+    const onRemovePermissionClicked = async () => await postRoleRemovepermissions({ role, permissions: permissions.filter(r => r.id===selectedInPermissions.onRole) });
 
     useEffect(() => {
         dispatch(clearRole());
+        dispatch(clearSelectedInPermissions());
     },[]);
 
-    const addPermissionDisabled = isUnselected(selectedInPermissionsNotOnRole);
-    const removePermissionDisabled = isUnselected(selectedInPermissionsOnRole);
+    const addPermissionDisabled = isUnselected(selectedInPermissions.notOnRole);
+    const removePermissionDisabled = isUnselected(selectedInPermissions.onRole);
 
     return (
         <div>
@@ -73,8 +73,8 @@ export default function RolePermissions() {
                                 id="permissionsnotonrole"
                                 className="form-control"
                                 size="10"
-                                onChange={e => dispatch(SELECT_PERMISSIONS_NOT_ON_ROLE(parseInt(e.target.value, 10)))}
-                                value={selectedInPermissionsNotOnRole}
+                                onChange={e => dispatch(selectPermissionNotOnRole(parseInt(e.target.value, 10)))}
+                                value={selectedInPermissions.notOnRole}
                             >
                                 <option key="-1" value="-1" />
                                 {permissionsNotOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
@@ -98,8 +98,8 @@ export default function RolePermissions() {
                                 id="permissionsonrole"
                                 className="form-control"
                                 size="10"
-                                onChange={e => dispatch(SELECT_PERMISSIONS_ON_ROLE(parseInt(e.target.value, 10)))}
-                                value={selectedInPermissionsOnRole}>
+                                onChange={e => dispatch(selectPermissionOnRole(parseInt(e.target.value, 10)))}
+                                value={selectedInPermissions.onRole}>
                                 <option key="-1" value="-1" />
                                 {permissionsOnRole.map((val) => <option key={val.id} value={val.id}>{val.permissionname}</option>)}
                             </select>
