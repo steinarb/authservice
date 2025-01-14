@@ -8,10 +8,7 @@ import {
     usePostUserRemoverolesMutation,
 } from '../api';
 import { selectUser, clearUser } from '../reducers/userSlice';
-import {
-    SELECT_ROLES_NOT_ON_USER,
-    SELECT_ROLES_ON_USER,
-} from '../actiontypes';
+import { clearSelectedInRoles, selectRoleNotOnUser, selectRoleOnUser } from '../reducers/selectedInRolesSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import ChevronLeft from './bootstrap/ChevronLeft';
@@ -30,20 +27,20 @@ export default function UserRoles() {
     const { data: roles = [] } = useGetRolesQuery();
     const rolesOnUser = userRoles[user.username] || [];
     const rolesNotOnUser = roles.filter(r => !rolesOnUser.find(u => u.id === r.id));
-    const selectedInRolesNotOnUser = useSelector(state => state.selectedInRolesNotOnUser);
-    const selectedInRolesOnUser = useSelector(state => state.selectedInRolesOnUser);
+    const selectedInRoles = useSelector(state => state.selectedInRoles);
     const dispatch = useDispatch();
     const [ postUserAddroles ] = usePostUserAddrolesMutation();
-    const onAddRoleClicked = async () => await postUserAddroles({ user, roles: roles.filter(r => r.id===selectedInRolesNotOnUser) });
+    const onAddRoleClicked = async () => await postUserAddroles({ user, roles: roles.filter(r => r.id===selectedInRoles.notOnUser) });
     const [ postUserRemoveroles ] = usePostUserRemoverolesMutation();
-    const onRemoveRoleClicked = async () => await postUserRemoveroles({ user, roles: roles.filter(r => r.id===selectedInRolesOnUser) });
+    const onRemoveRoleClicked = async () => await postUserRemoveroles({ user, roles: roles.filter(r => r.id===selectedInRoles.onUser) });
 
     useEffect(() => {
         dispatch(clearUser());
+        dispatch(clearSelectedInRoles());
     }, []);
 
-    const addRoleDisabled = isUnselected(selectedInRolesNotOnUser);
-    const removeRoleDisabled = isUnselected(selectedInRolesOnUser);
+    const addRoleDisabled = isUnselected(selectedInRoles.notOnUser);
+    const removeRoleDisabled = isUnselected(selectedInRoles.onUser);
 
     return (
         <div>
@@ -74,8 +71,8 @@ export default function UserRoles() {
                                 id="rolesnotonuser"
                                 className="form-control"
                                 size="10"
-                                onChange={e => dispatch(SELECT_ROLES_NOT_ON_USER(parseInt(e.target.value, 10)))}
-                                value={selectedInRolesNotOnUser}>
+                                onChange={e => dispatch(selectRoleNotOnUser(parseInt(e.target.value, 10)))}
+                                value={selectedInRoles.notOnUser}>
                                 <option key="-1" value="-1" />
                                 {rolesNotOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
@@ -98,8 +95,8 @@ export default function UserRoles() {
                                 id="rolesonuser"
                                 className="form-control"
                                 size="10"
-                                onChange={e => dispatch(SELECT_ROLES_ON_USER(parseInt(e.target.value, 10)))}
-                                value={selectedInRolesOnUser}>
+                                onChange={e => dispatch(selectRoleOnUser(parseInt(e.target.value, 10)))}
+                                value={selectedInRoles.onUser}>
                                 <option key="-1" value="-1" />
                                 {rolesOnUser.map((val) => <option key={val.id} value={val.id}>{val.rolename}</option>)}
                             </select>
