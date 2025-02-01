@@ -190,9 +190,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         var username = "jad";
         var password = "wrong";
         var redirectUrl = "https://myserver.com/resource";
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.postLogin(username, password, redirectUrl);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.postLogin(username, password, redirectUrl));
     }
 
     @Test
@@ -280,9 +278,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         var logservice = new MockLogService();
         resource.setLogservice(logservice);
 
-        assertThrows(InternalServerErrorException.class, () -> {
-                resource.loadHtmlFile("nonexistingfile.html", logservice);
-            });
+        assertThrows(InternalServerErrorException.class, () -> resource.loadHtmlFile("nonexistingfile.html", logservice));
     }
 
     @Test
