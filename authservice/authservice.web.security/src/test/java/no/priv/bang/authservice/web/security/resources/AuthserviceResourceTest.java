@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,27 +44,33 @@ import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
-    void testGetIndex() {
+    void testGetIndex() throws Exception {
         var resource = new AuthserviceResource();
         var htmlfile = resource.getIndex();
-        var html = new BufferedReader(new InputStreamReader(htmlfile)).lines().collect(Collectors.joining("+n"));
-        assertThat(html).startsWith("<html");
+        try(var reader = new BufferedReader(new InputStreamReader(htmlfile))) {
+            var html = reader.lines().collect(Collectors.joining("+n"));
+            assertThat(html).startsWith("<html");
+        }
     }
 
     @Test
-    void testGetOpenIconicCss() {
+    void testGetOpenIconicCss() throws Exception {
         var resource = new AuthserviceResource();
         var cssfile = resource.getOpenIconicCss();
-        var html = new BufferedReader(new InputStreamReader(cssfile)).lines().collect(Collectors.joining("+n"));
-        assertThat(html).startsWith("@font-face");
+        try(var reader = new BufferedReader(new InputStreamReader(cssfile))) {
+            var css = reader.lines().collect(Collectors.joining("+n"));
+            assertThat(css).startsWith("@font-face");
+        }
     }
 
     @Test
-    void testGetOpenIconicWoff() {
+    void testGetOpenIconicWoff() throws Exception {
         var resource = new AuthserviceResource();
         var wofffile = resource.getOpenIconicWoff();
-        var html = new BufferedReader(new InputStreamReader(wofffile)).lines().collect(Collectors.joining("+n"));
-        assertThat(html).startsWith("wOFF");
+        try(var reader = new BufferedReader(new InputStreamReader(wofffile))) {
+            var woff = reader.lines().collect(Collectors.joining("+n"));
+            assertThat(woff).startsWith("wOFF");
+        }
     }
 
     @Test
@@ -280,11 +286,13 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
-    void testUnauthorized() {
+    void testUnauthorized() throws Exception {
         var resource = new AuthserviceResource();
         var htmlfile = resource.getUnauthorized();
-        var html = new BufferedReader(new InputStreamReader(htmlfile)).lines().collect(Collectors.joining("+n"));
-        assertThat(html).contains("You are logged in, but do not have access to this URL");
+        try(var reader = new BufferedReader(new InputStreamReader(htmlfile))) {
+            var html = reader.lines().collect(Collectors.joining("+n"));
+            assertThat(html).contains("You are logged in, but do not have access to this URL");
+        }
     }
 
     private void lockAccount(String username) {
