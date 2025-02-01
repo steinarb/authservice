@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package no.priv.bang.authservice.db.liquibase;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.db.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,6 +29,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Properties;
 import java.util.logging.LogManager;
 
+import javax.sql.DataSource;
+
+import org.assertj.db.type.AssertDbConnectionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
@@ -50,37 +54,78 @@ class AuthserviceLiquibaseTest {
     @Test
     void testCreateSchema() throws Exception {
         var authserviceLiquibase = new AuthserviceLiquibase();
+        var datasource = createDataSource("authservice");
+        var assertjConnection = AssertDbConnectionFactory.of(datasource).create();
 
-        authserviceLiquibase.createInitialSchema(createConnection("authservice"));
+        authserviceLiquibase.createInitialSchema(datasource.getConnection());
 
+        // Check existence of created tables with user admin with role useradmin in place and empty permissions
+        var initialUsersTable = assertjConnection.table("users").build();
+        assertThat(initialUsersTable).exists().hasNumberOfRows(1).column("username").value().isEqualTo("admin");
+        var initalRolesTable = assertjConnection.table("roles").build();
+        assertThat(initalRolesTable).exists().hasNumberOfRows(1).column("role_name").value().isEqualTo("useradmin");
+        var initialUserrolesTable = assertjConnection.table("user_roles").build();
+        assertThat(initialUserrolesTable).exists().hasNumberOfRows(1)
+            .column("username").value().isEqualTo("admin")
+            .column("role_name").value().isEqualTo("useradmin");
+        var initalPermissionsTable = assertjConnection.table("permissions").build();
+        assertThat(initalPermissionsTable).exists().isEmpty();
+        var initalRolepermissionsTable = assertjConnection.table("roles_permissions").build();
+        assertThat(initalRolepermissionsTable).exists().isEmpty();
+
+        // Add user
+        var username = "jad";
+        var password = "1ad";
+        var salt = "pepper";
+        var email = "jad@gmail.com";
+        var firstname = "Jane";
+        var lastname = "Doe";
         try(var connection = createConnection("authservice")) {
-            var username = "jad";
-            var password = "1ad";
-            var salt = "pepper";
-            var email = "jad@gmail.com";
-            var firstname = "Jane";
-            var lastname = "Doe";
             addUser(connection, username, password, salt, email, firstname, lastname);
-            assertUser(connection, username);
-            var rolename = "admin";
+        }
+        var usersTableWithAddedUser = assertjConnection.table("users").build();
+        assertThat(usersTableWithAddedUser).exists().hasNumberOfRows(2).column("username")
+            .value().isEqualTo("admin")
+            .value().isEqualTo(username);
+
+        // Add role and set on user
+        var rolename = "admin";
+        try(var connection = createConnection("authservice")) {
             addRole(connection, rolename, "Test role");
             addUserRole(connection, rolename, username);
-            assertUserRole(connection, rolename, username);
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                addUserRole(connection, "notarole", username);
-            });
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                addUserRole(connection, rolename, "notauser");
-            });
-            var permission = "user_admin_api_write";
+        }
+        var rolesTableAfterAddingRole = assertjConnection.table("roles").build();
+        assertThat(rolesTableAfterAddingRole).exists().hasNumberOfRows(2).column("role_name")
+            .value().isEqualTo("useradmin")
+            .value().isEqualTo(rolename);
+        var userrolesTableAfterSettingRoleOnUser = assertjConnection.table("user_roles").build();
+        assertThat(userrolesTableAfterSettingRoleOnUser).exists().hasNumberOfRows(2)
+            .column("username").value().isEqualTo("admin").value().isEqualTo(username)
+            .column("role_name").value().isEqualTo("useradmin").value().isEqualTo(rolename);
+
+        // Verify database constraints on user and roles relation
+        try(var connection = createConnection("authservice")) {
+            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(connection, "notarole", username));
+            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(connection, rolename, "notauser"));
+        }
+
+        // Add permission and connect to role
+        var permission = "user_admin_api_write";
+        try(var connection = createConnection("authservice")) {
             addPermission(connection, permission, "User admin REST API write access");
             addRolePermission(connection, rolename, permission);
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                addRolePermission(connection, "notarole", permission);
-            });
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-                addRolePermission(connection, rolename, "notapermission");
-            });
+        }
+        var permissionsTableWithPermissionAdded = assertjConnection.table("permissions").build();
+        assertThat(permissionsTableWithPermissionAdded).exists().hasNumberOfRows(1).column("permission_name").value().isEqualTo(permission);
+        var rolepermissionsTableWithRoleConnectedToPermission = assertjConnection.table("roles_permissions").build();
+        assertThat(rolepermissionsTableWithRoleConnectedToPermission).exists().hasNumberOfRows(1)
+            .column("role_name").value().isEqualTo(rolename)
+            .column("permission_name").value().isEqualTo(permission);
+
+        // Verify database constraints on users and permissions relation
+        try(var connection = createConnection("authservice")) {
+            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(connection, "notarole", permission));
+            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(connection, rolename, "notapermission"));
         }
 
         authserviceLiquibase.updateSchema(createConnection("authservice"));
@@ -89,20 +134,23 @@ class AuthserviceLiquibaseTest {
     @Test
     void testApplyChangelist() throws Exception {
         var authserviceLiquibase = new AuthserviceLiquibase();
+        var datasource = createDataSource("authservice2");
+        var assertjConnection = AssertDbConnectionFactory.of(datasource).create();
 
-        authserviceLiquibase.createInitialSchema(createConnection("authservice2"));
+        authserviceLiquibase.createInitialSchema(datasource.getConnection());
         authserviceLiquibase.applyLiquibaseChangelist(
-            createConnection("authservice2"),
+            datasource.getConnection(),
             "test-db-changelog/db-changelog.xml",
             getClass().getClassLoader());
 
 
-        try(var connection = createConnection("authservice2")) {
-            var username = "jad";
-            assertUser(connection, username);
-            var rolename = "caseworker";
-            assertUserRole(connection, rolename, username);
-        }
+        var usersTable = assertjConnection.table("users").build();
+        assertThat(usersTable).exists().hasNumberOfRows(5)
+            .column("username").hasValues("admin", "on", "kn", "jad", "jod");
+        var userrolesTable = assertjConnection.table("user_roles").build();
+        assertThat(userrolesTable).exists().hasNumberOfRows(7)
+            .column("username").containsValues("admin", "admin", "on", "kn", "on", "jad", "jod")
+            .column("role_name").hasValues("useradmin", "admin", "admin", "admin", "caseworker", "caseworker", "caseworker");
     }
 
     @Test
@@ -151,23 +199,6 @@ class AuthserviceLiquibaseTest {
         }
     }
 
-    private void assertUser(Connection connection, String username) throws SQLException {
-        try (var statement = connection.prepareStatement("select * from users where username=?")) {
-            statement.setString(1, username);
-            var results = statement.executeQuery();
-            assertTrue(results.next(), "Expected at least one match");
-        }
-    }
-
-    private void assertUserRole(Connection connection, String rolename, String username) throws Exception {
-        try (var statement = connection.prepareStatement("select * from user_roles where role_name=? and username=?")) {
-            statement.setString(1, rolename);
-            statement.setString(2, username);
-            var results = statement.executeQuery();
-            assertTrue(results.next(), "Expected at least one match");
-        }
-    }
-
     private void addPermission(Connection connection, String permission, String description) throws Exception {
         try (var statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
             statement.setString(1, permission);
@@ -185,10 +216,15 @@ class AuthserviceLiquibaseTest {
     }
 
     private Connection createConnection(String dbname) throws Exception {
+        var dataSource = createDataSource(dbname);
+        return dataSource.getConnection();
+    }
+
+    private DataSource createDataSource(String dbname) throws SQLException {
         var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:" + dbname + ";create=true");
         var dataSource = derbyDataSourceFactory.createDataSource(properties);
-        return dataSource.getConnection();
+        return dataSource;
     }
 
     Connection createMockConnection() throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package no.priv.bang.authservice.db.liquibase.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.db.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import java.sql.SQLException;
@@ -24,6 +25,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.assertj.db.type.AssertDbConnectionFactory;
 import org.junit.jupiter.api.Test;
 import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
@@ -38,31 +40,13 @@ class TestLiquibaseRunnerTest {
         var runner = new TestLiquibaseRunner();
         runner.activate();
         var datasource = createDatasource();
+        var assertjConnection = AssertDbConnectionFactory.of(datasource).create();
         runner.prepare(datasource);
 
-        try(var connection = datasource.getConnection()) {
-            try(var statment = connection.prepareStatement("select * from users")) {
-                var results = statment.executeQuery();
-                var usercount = 0;
-                while(results.next()) {
-                    ++usercount;
-                }
-
-                assertEquals(5, usercount);
-            }
-        }
-
-        try(var connection = datasource.getConnection()) {
-            try(var statment = connection.prepareStatement("select * from roles")) {
-                var results = statment.executeQuery();
-                var rolecount = 0;
-                while(results.next()) {
-                    ++rolecount;
-                }
-
-                assertEquals(4, rolecount);
-            }
-        }
+        var usersTable = assertjConnection.table("users").build();
+        assertThat(usersTable).exists().hasNumberOfRows(5);
+        var rolesTable = assertjConnection.table("roles").build();
+        assertThat(rolesTable).exists().hasNumberOfRows(4);
     }
 
     @Test
