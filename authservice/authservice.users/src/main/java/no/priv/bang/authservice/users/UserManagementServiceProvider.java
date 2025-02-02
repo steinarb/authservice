@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,8 @@ public class UserManagementServiceProvider implements UserManagementService {
     private Logger logger;
     private DataSource datasource;
 
+    int excessiveFailedLoginLimit = 3;
+
     @Reference
     public void setLogservice(LogService logservice) {
         this.logger = logservice.getLogger(getClass());
@@ -82,7 +84,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public User getUser(String username) {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users where username=?")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname, failed_login_count, is_locked from users where username=?")) {
                 statement.setString(1, username);
                 try(var results = statement.executeQuery()) {
                     while(results.next()) {
@@ -144,7 +146,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public List<User> getUsers() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users order by user_id")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname, failed_login_count, is_locked from users order by user_id")) {
                 var users = new ArrayList<User>();
                 try(var results = statement.executeQuery()) {
                     while(results.next()) {
@@ -240,7 +242,7 @@ public class UserManagementServiceProvider implements UserManagementService {
                 statement.executeUpdate();
             }
 
-            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname from users where username=? order by user_id")) {
+            try(var statement = connection.prepareStatement("select user_id, username, email, firstname, lastname, failed_login_count, is_locked from users where username=? order by user_id")) {
                 statement.setString(1, newUser.username());
                 try (var results = statement.executeQuery()) {
                     if (results.next()) {
@@ -262,6 +264,101 @@ public class UserManagementServiceProvider implements UserManagementService {
             .password2(newUserWithPasswords.password2())
             .build();
         return updatePassword(passwords);
+    }
+
+    @Override
+    public User loginFailed(String username) {
+        try(var connection = datasource.getConnection()) {
+            int existingNumberOfFailedLogins = 0;
+            try(var statement = connection.prepareStatement("select failed_login_count from users where username=?")) {
+                statement.setString(1, username);
+                try(var results = statement.executeQuery()) {
+                    while(results.next()) {
+                        existingNumberOfFailedLogins = results.getInt("failed_login_count");
+                    }
+                }
+            }
+            ++existingNumberOfFailedLogins;
+            try(var statement = connection.prepareStatement("update users set failed_login_count=? where username=?")) {
+                statement.setInt(1, existingNumberOfFailedLogins);
+                statement.setString(2, username);
+                statement.executeUpdate();
+            }
+
+            // Lock user if excessive failed login limit is reached
+            if (existingNumberOfFailedLogins > excessiveFailedLoginLimit) {
+                try(var statement = connection.prepareStatement("update users set is_locked=? where username=?")) {
+                    statement.setBoolean(1, true);
+                    statement.setString(2, username);
+                    statement.executeUpdate();
+                }
+
+            }
+        } catch (SQLException e) {
+            var message = String.format("Unable to register failed login for user \"%s\" in the database", username);
+            logger.error(message, e);
+            throw new AuthserviceException(message);
+        }
+
+        return getUser(username);
+    }
+
+    @Override
+    public User successfulLogin(String username) {
+        try(var connection = datasource.getConnection()) {
+            try(var statement = connection.prepareStatement("update users set failed_login_count=0 where username=?")) {
+                statement.setString(1, username);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            var message = String.format("Unable to register failed login for user \"%s\" in the database", username);
+            logger.error(message, e);
+            throw new AuthserviceException(message);
+        }
+
+        return getUser(username);
+    }
+
+    @Override
+    public int setExcessiveFailedLoginLimit(int limit) {
+        excessiveFailedLoginLimit = limit;
+        return excessiveFailedLoginLimit;
+    }
+
+    @Override
+    public List<User> unlockUser(String username) {
+        try(var connection = datasource.getConnection()) {
+            try(var statement = connection.prepareStatement("update users set failed_login_count=0, is_locked=? where username=?")) {
+                statement.setBoolean(1, false);
+                statement.setString(2, username);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            var message = String.format("Unable to unlock user \"%s\" in the database", username);
+            logger.error(message, e);
+            throw new AuthserviceException(message);
+        }
+
+        return getUsers();
+    }
+
+    @Override
+    public boolean userIsLocked(String username) {
+        try(var connection = datasource.getConnection()) {
+            try(var statement = connection.prepareStatement("select is_locked from users where username=?")) {
+                statement.setString(1, username);
+                try(var results = statement.executeQuery()) {
+                    while(results.next()) {
+                        return results.getBoolean("is_locked");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            var message = String.format("Unable to check locked state of user \"%s\" in the database", username);
+            logger.error(message, e);
+        }
+
+        return false;
     }
 
     @Override
@@ -385,7 +482,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     @Override
     public Map<String, List<Role>> getUserRoles() {
         try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select u.user_id, u.username, u.email, u.firstname, u.lastname, r.role_id, r.role_name, r.description from users u join user_roles on user_roles.username=u.username join roles r on r.role_name=user_roles.role_name")) {
+            try(var statement = connection.prepareStatement("select u.user_id, u.username, u.email, u.firstname, u.lastname, u.failed_login_count, u.is_locked, r.role_id, r.role_name, r.description from users u join user_roles on user_roles.username=u.username join roles r on r.role_name=user_roles.role_name")) {
                 try(var results = statement.executeQuery()) {
                     var userroles = new HashMap<String, List<Role>>();
                     while(results.next()) {
@@ -598,6 +695,8 @@ public class UserManagementServiceProvider implements UserManagementService {
             .email(results.getString("email"))
             .firstname(results.getString("firstname"))
             .lastname(results.getString("lastname"))
+            .numberOfFailedLogins(results.getInt("failed_login_count"))
+            .isLocked(results.getBoolean("is_locked"))
             .build();
     }
 
