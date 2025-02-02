@@ -689,12 +689,7 @@ delete =
 start |= addColumn
 addColumn =
   element addColumn {
-    element column {
-      columnType,
-      attribute beforeColumn { xsd:string }?,
-      attribute afterColumn { xsd:string }?,
-      attribute position { xsd:integer }?
-    }+,
+    column+,
     tableNameAttribute
   }
 start |= rollback
