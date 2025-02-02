@@ -8,8 +8,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeAll;
@@ -48,6 +50,33 @@ class AuthserviceDbRealmTest {
         var token = new UsernamePasswordToken("jad", "1ad".toCharArray());
         var authInfo = realm.getAuthenticationInfo(token);
         assertEquals(1, authInfo.getPrincipals().asList().size());
+    }
+
+    /***
+     * Test what happens when an SQLException is thrown
+     */
+    @Test
+    void testGetAuthenticationInfoWhenSQLExceptionIsThrown() throws Exception {
+        var realm = new AuthserviceDbRealm();
+        var mockdatasource = mock(DataSource.class);
+        when(mockdatasource.getConnection()).thenThrow(SQLException.class);
+        realm.setDataSource(mockdatasource);
+        realm.activate();
+        var token = new UsernamePasswordToken("jad", "1ad".toCharArray());
+        assertThrows(AuthenticationException.class, () -> realm.getAuthenticationInfo(token));
+    }
+
+    /***
+     * Test a successful authentication.
+     * @throws SQLException
+     */
+    @Test
+    void testGetAuthenticationInfoLockedUser() {
+        var realm = new AuthserviceDbRealm();
+        realm.setDataSource(datasource);
+        realm.activate();
+        var token = new UsernamePasswordToken("lu", "1ad".toCharArray());
+        assertThrows(LockedAccountException.class, () -> realm.getAuthenticationInfo(token));
     }
 
     /***
