@@ -55,6 +55,12 @@ public class TestLiquibaseRunner implements PreHook {
         } catch (Exception e) {
             throw new AuthserviceException("Failed to update schema of authservice Derby test database component", e);
         }
-    }
+
+        try (Connection connection = datasource.getConnection()) {
+            liquibase.applyLiquibaseChangelist(connection, "db-changelog/sql/locked_user.sql", getClass().getClassLoader());
+        } catch (Exception e) {
+            throw new AuthserviceException("Failed to insert mock data for locked user in authservice Derby test database component", e);
+        }
+   }
 
 }

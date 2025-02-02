@@ -3,4 +3,10 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
+    <changeSet author="sb" id="add-failed-login-count-and-locked-flag-to-user">
+        <addColumn tableName="users">
+            <column name="failed_login_count" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="is_locked" type="BOOLEAN" defaultValueBoolean="false" />
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

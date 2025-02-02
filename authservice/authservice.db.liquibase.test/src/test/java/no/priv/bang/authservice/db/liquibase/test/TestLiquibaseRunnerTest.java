@@ -44,7 +44,7 @@ class TestLiquibaseRunnerTest {
         runner.prepare(datasource);
 
         var usersTable = assertjConnection.table("users").build();
-        assertThat(usersTable).exists().hasNumberOfRows(5);
+        assertThat(usersTable).exists().hasNumberOfRows(6);
         var rolesTable = assertjConnection.table("roles").build();
         assertThat(rolesTable).exists().hasNumberOfRows(4);
     }

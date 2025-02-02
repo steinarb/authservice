@@ -128,7 +128,14 @@ class AuthserviceLiquibaseTest {
             assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(connection, rolename, "notapermission"));
         }
 
-        authserviceLiquibase.updateSchema(createConnection("authservice"));
+        authserviceLiquibase.updateSchema(datasource.getConnection());
+
+        var usersTableAfterSchemaUpdate = assertjConnection.table("users").build();
+
+        // Verify that columns have been added to users table with default value
+        assertThat(usersTableAfterSchemaUpdate).exists().hasNumberOfRows(2)
+            .column("failed_login_count").value().isEqualTo(0)
+            .column("is_locked").value().isEqualTo(false);
     }
 
     @Test
