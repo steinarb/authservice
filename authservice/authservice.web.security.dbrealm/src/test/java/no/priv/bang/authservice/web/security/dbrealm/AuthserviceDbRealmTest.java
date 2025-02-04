@@ -90,9 +90,7 @@ class AuthserviceDbRealmTest {
         realm.activate();
         var token = new UsernamePasswordToken("jad", "1add".toCharArray());
 
-        assertThrows(IncorrectCredentialsException.class, () -> {
-                realm.getAuthenticationInfo(token);
-            });
+        assertThrows(IncorrectCredentialsException.class, () -> realm.getAuthenticationInfo(token));
     }
 
     /***
@@ -107,9 +105,7 @@ class AuthserviceDbRealmTest {
         realm.activate();
         var token = new UsernamePasswordToken("jadd", "1ad".toCharArray());
 
-        assertThrows(UnknownAccountException.class, () -> {
-                realm.getAuthenticationInfo(token);
-            });
+        assertThrows(UnknownAccountException.class, () -> realm.getAuthenticationInfo(token));
     }
 
     /***
@@ -124,9 +120,7 @@ class AuthserviceDbRealmTest {
         when(token.getPrincipal()).thenReturn(username);
         when(token.getCredentials()).thenReturn(password);
 
-        assertThrows(ClassCastException.class, () -> {
-                realm.getAuthenticationInfo(token);
-            });
+        assertThrows(ClassCastException.class, () -> realm.getAuthenticationInfo(token));
     }
 
     /***
