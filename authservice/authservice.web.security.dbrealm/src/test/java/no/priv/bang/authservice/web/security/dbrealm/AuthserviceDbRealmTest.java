@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -20,6 +21,7 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
+import no.priv.bang.authservice.definitions.AuthserviceException;
 
 /***
  * Tests for class {@link AuthserviceDbRealm}.
@@ -77,6 +79,33 @@ class AuthserviceDbRealmTest {
         realm.activate();
         var token = new UsernamePasswordToken("lu", "1ad".toCharArray());
         assertThrows(LockedAccountException.class, () -> realm.getAuthenticationInfo(token));
+    }
+
+    /***
+     * Test authentication failing repeatedly because of a wrong password.
+     */
+    @Test
+    void testFailingBecauseOfExcessiveLoginFailuresAndThenForBeingLocked() {
+        var realm = new AuthserviceDbRealm();
+        realm.setDataSource(datasource);
+        realm.activate();
+        var token = new UsernamePasswordToken("jod", "1add".toCharArray());
+
+        assertThrows(IncorrectCredentialsException.class, () -> realm.getAuthenticationInfo(token));
+        assertThrows(IncorrectCredentialsException.class, () -> realm.getAuthenticationInfo(token));
+        assertThrows(ExcessiveAttemptsException.class, () -> realm.getAuthenticationInfo(token));
+        assertThrows(LockedAccountException.class, () -> realm.getAuthenticationInfo(token));
+    }
+
+    @Test
+    void testRegisterLoginFailure() throws Exception {
+        var mockedDatasource = mock(DataSource.class);
+        when(mockedDatasource.getConnection()).thenThrow(SQLException.class);
+        var realm = new AuthserviceDbRealm();
+        realm.setDataSource(mockedDatasource);
+        realm.activate();
+
+        assertThrows(AuthserviceException.class, () -> realm.registerLoginFailure("jad", null));
     }
 
     /***
