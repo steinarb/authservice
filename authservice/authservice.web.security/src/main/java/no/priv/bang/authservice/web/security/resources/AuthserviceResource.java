@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -116,6 +117,12 @@ public class AuthserviceResource extends HtmlTemplateResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
             var message = "locked account";
+            logger.warn(LOGIN_ERROR + message, e);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            fillFormValues(html, originalUri, username, password);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
+        } catch (ExcessiveAttemptsException e) {
+            var message = "too many failed logins, account will be locked, please contact administrator";
             logger.warn(LOGIN_ERROR + message, e);
             var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
             fillFormValues(html, originalUri, username, password);

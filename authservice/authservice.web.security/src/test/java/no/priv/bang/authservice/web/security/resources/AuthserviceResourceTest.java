@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.HttpHeaders;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
@@ -169,6 +170,20 @@ class AuthserviceResourceTest extends ShiroTestBase {
     }
 
     @Test
+    void testPostLoginWithExcessiveLoginFailures() {
+        createSubjectThrowingExceptionAndBindItToThread(ExcessiveAttemptsException.class);
+        var logservice = new MockLogService();
+        var resource = new AuthserviceResource();
+        resource.setLogservice(logservice);
+        var username = "jad";
+        var password = "wrong";
+        var redirectUrl = "https://myserver.com/resource";
+        var response = resource.postLogin(username, password, redirectUrl);
+        assertEquals(401, response.getStatus());
+        assertThat(response.getEntity().toString()).contains("too many failed logins, account will be locked, please contact administrator");
+    }
+
+    @Test
     void testPostLoginWithAuthenticationException() {
         createSubjectThrowingExceptionAndBindItToThread(AuthenticationException.class);
         var logservice = new MockLogService();
@@ -179,6 +194,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
         var redirectUrl = "https://myserver.com/resource";
         var response = resource.postLogin(username, password, redirectUrl);
         assertEquals(401, response.getStatus());
+        assertThat(response.getEntity().toString()).contains("general authentication error");
     }
 
     @Test
