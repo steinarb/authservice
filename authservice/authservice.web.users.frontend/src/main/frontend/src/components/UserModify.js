@@ -89,6 +89,28 @@ export default function UserModify() {
                         </FormField>
                     </FormRow>
                     <FormRow>
+                        <FormLabel htmlFor="numberOfFailedLogins">Failed logins</FormLabel>
+                        <FormField>
+                            <input
+                                id="numberOfFailedLogins"
+                                className="form-control"
+                                type="number"
+                                value={user.numberOfFailedLogins}
+                                readOnly={true} />
+                        </FormField>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel htmlFor="islocked">Locked</FormLabel>
+                        <div class="col-1">
+                            <input
+                                id="islocked"
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={user.isLocked}
+                                readOnly={true} />
+                        </div>
+                    </FormRow>
+                    <FormRow>
                         <div className="col-5"/>
                         <FormField>
                             <button
