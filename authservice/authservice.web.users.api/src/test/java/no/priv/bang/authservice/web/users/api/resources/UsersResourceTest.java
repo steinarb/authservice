@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
@@ -89,6 +91,35 @@ class UsersResourceTest {
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> resource.modifyUser(user));
+    }
+
+    @Test
+    void testUnlockUser() {
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
+        when(usermanagement.unlockUser(any())).thenReturn(originalUsers);
+        var resource = new UsersResource();
+        resource.setLogservice(logservice);
+        resource.usermanagement = usermanagement;
+
+        List<User> users = resource.unlockUser(user.username());
+        assertEquals(originalUsers.size(), users.size());
+    }
+
+    @Test
+    void testUnlockUserWithExceptionThrown() {
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
+        when(usermanagement.unlockUser(any())).thenThrow(AuthserviceException.class);
+        var resource = new UsersResource();
+        resource.setLogservice(logservice);
+        resource.usermanagement = usermanagement;
+
+        assertThrows(InternalServerErrorException.class, () -> resource.unlockUser(user.username()));
     }
 
     @Test

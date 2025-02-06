@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,27 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         var request = buildPostUrl("/user/modify");
         var postBody = mapper.writeValueAsString(user);
         request.setBodyContent(postBody);
+        var response = new MockHttpServletResponse();
+
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
+        servlet.service(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        var users = mapper.readValue(getBinaryContent(response), new TypeReference<List<User>>() {});
+        assertEquals(originalUsers.size(), users.size());
+    }
+
+    @Test
+    void testUnlockUser() throws Exception {
+        var logservice = new MockLogService();
+        var originalUsers = createUsers();
+        var user = originalUsers.stream().reduce((first, second) -> second).get();
+        var usermanagement = mock(UserManagementService.class);
+        when(usermanagement.unlockUser(any())).thenReturn(originalUsers);
+
+        var request = buildGetUrl("/user/unlock/" + user.username());
         var response = new MockHttpServletResponse();
 
         var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);

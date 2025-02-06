@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -77,6 +78,18 @@ public class UsersResource extends ResourceBase {
             return usermanagement.modifyUser(user);
         } catch (AuthserviceException e) {
             var message = String.format("User management service failed to modify user %s", user.username());
+            logger.error(message, e);
+            throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
+        }
+    }
+
+    @GET
+    @Path("/user/unlock/{username}")
+    public List<User> unlockUser(@PathParam("username") String username) {
+        try {
+            return usermanagement.unlockUser(username);
+        } catch (AuthserviceException e) {
+            var message = String.format("User management service failed to unlock user %s", username);
             logger.error(message, e);
             throw new InternalServerErrorException(message + SEE_LOG_FILE_FOR_DETAILS);
         }
