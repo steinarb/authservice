@@ -64,8 +64,6 @@ public class UserManagementServiceProvider implements UserManagementService {
     private Logger logger;
     private DataSource datasource;
 
-    int excessiveFailedLoginLimit = 3;
-
     @Reference
     public void setLogservice(LogService logservice) {
         this.logger = logservice.getLogger(getClass());
@@ -270,6 +268,7 @@ public class UserManagementServiceProvider implements UserManagementService {
     public User loginFailed(String username) {
         try(var connection = datasource.getConnection()) {
             int existingNumberOfFailedLogins = 0;
+            int excessiveFailedLoginLimit = 0;
             try(var statement = connection.prepareStatement("select failed_login_count from users where username=?")) {
                 statement.setString(1, username);
                 try(var results = statement.executeQuery()) {
@@ -321,8 +320,27 @@ public class UserManagementServiceProvider implements UserManagementService {
 
     @Override
     public int setExcessiveFailedLoginLimit(int limit) {
-        excessiveFailedLoginLimit = limit;
-        return excessiveFailedLoginLimit;
+        try {
+            try(var connection = datasource.getConnection()) {
+                try(var statement = connection.prepareStatement("update authservice_config set excessive_failed_login_limit=?")) {
+                    statement.setInt(1, limit);
+                    statement.executeUpdate();
+                }
+            }
+            try(var connection = datasource.getConnection()) {
+                try(var statement = connection.createStatement()) {
+                    try (var results = statement.executeQuery("select excessive_failed_login_limit from authservice_config")) {
+                        while (results.next()) {
+                            return results.getInt("excessive_failed_login_limit");
+                        }
+
+                        return -1;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new AuthserviceException("Unable to update failed login limit in the database", e);
+        }
     }
 
     @Override

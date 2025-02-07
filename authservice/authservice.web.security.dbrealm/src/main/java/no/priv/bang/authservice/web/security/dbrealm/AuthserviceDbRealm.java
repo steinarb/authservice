@@ -23,8 +23,6 @@ import no.priv.bang.authservice.definitions.AuthserviceException;
 @Component( service=Realm.class, immediate=true )
 public class AuthserviceDbRealm extends JdbcRealm {
 
-    int excessiveFailedLoginLimit = 3;
-
     @Override
     @Reference(target = "(osgi.jndi.service.name=jdbc/authservice)")
     public void setDataSource(DataSource datasource) {
@@ -77,11 +75,13 @@ public class AuthserviceDbRealm extends JdbcRealm {
     AuthenticationException registerLoginFailure(String username, IncorrectCredentialsException e) {
         try(var connection = dataSource.getConnection()) {
             int existingNumberOfFailedLogins = 0;
-            try(var statement = connection.prepareStatement("select failed_login_count from users where username=?")) {
+            int excessiveFailedLoginLimit = 0;
+            try(var statement = connection.prepareStatement("select failed_login_count, excessive_failed_login_limit from users, authservice_config where username=?")) {
                 statement.setString(1, username);
                 try(var results = statement.executeQuery()) {
                     while(results.next()) {
                         existingNumberOfFailedLogins = results.getInt("failed_login_count");
+                        excessiveFailedLoginLimit = results.getInt("excessive_failed_login_limit");
                     }
                 }
             }

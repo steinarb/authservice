@@ -9,4 +9,21 @@
             <column name="is_locked" type="BOOLEAN" defaultValueBoolean="false" />
         </addColumn>
     </changeSet>
+
+    <changeSet author="sb" id="authservice-excessivefailedloginlimit-config">
+        <preConditions onFail="CONTINUE" >
+            <not>
+                <tableExists tableName="authservice_config" />
+            </not>
+        </preConditions>
+
+        <createTable tableName="authservice_config">
+            <column name="excessive_failed_login_limit" type="INTEGER" />
+        </createTable>
+
+        <insert tableName="authservice_config">
+            <column name="excessive_failed_login_limit" valueNumeric="3" />
+        </insert>
+
+    </changeSet>
 </databaseChangeLog>

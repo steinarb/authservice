@@ -136,6 +136,10 @@ class AuthserviceLiquibaseTest {
         assertThat(usersTableAfterSchemaUpdate).exists().hasNumberOfRows(2)
             .column("failed_login_count").value().isEqualTo(0)
             .column("is_locked").value().isEqualTo(false);
+
+        // Verify that config table is in place with its single row
+        var configTable = assertjConnection.table("authservice_config").build();
+        assertThat(configTable).exists().column("excessive_failed_login_limit").value().isEqualTo(3);
     }
 
     @Test

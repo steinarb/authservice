@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
@@ -507,6 +508,39 @@ class UserManagementServiceProviderTest {
     }
 
     @Test
+    void testSetLockLimitAndFailWithSQLError() throws Exception {
+        var provider = new UserManagementServiceProvider();
+        var logservice = new MockLogService();
+        var mockedDatasource = mock(DataSource.class);
+        when(mockedDatasource.getConnection()).thenThrow(SQLException.class);
+        provider.setLogservice(logservice);
+        provider.setDataSource(mockedDatasource);
+        provider.activate();
+
+        assertThrows(AuthserviceException.class, () -> provider.setExcessiveFailedLoginLimit(2));
+    }
+
+    @Test
+    void testSetLockLimitWithEmptyResults() throws Exception {
+        var provider = new UserManagementServiceProvider();
+        var logservice = new MockLogService();
+        var mockedDatasource = mock(DataSource.class);
+        var connection = mock(Connection.class);
+        var preparedStatement = mock(PreparedStatement.class);
+        var statement = mock(Statement.class);
+        var results = mock(ResultSet.class);
+        when(statement.executeQuery(anyString())).thenReturn(results);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(connection.createStatement()).thenReturn(statement);
+        when(mockedDatasource.getConnection()).thenReturn(connection);
+        provider.setLogservice(logservice);
+        provider.setDataSource(mockedDatasource);
+        provider.activate();
+
+        assertThat(provider.setExcessiveFailedLoginLimit(2)).isEqualTo(-1);
+    }
+
+    @Test
     void testLoginFailedWhenSQLExceptionIsThrown() throws Exception {
         var logservice = new MockLogService();
         var provider = new UserManagementServiceProvider();
@@ -534,11 +568,11 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> provider.successfulLogin("jad"));
-        }
+    }
 
     @Test
     void testUnlockUserWhenSQLExceptionIsThrown() throws Exception {
-    var logservice = new MockLogService();
+        var logservice = new MockLogService();
         var provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
         var mockdatasource = mock(DataSource.class);
@@ -546,10 +580,10 @@ class UserManagementServiceProviderTest {
         when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
         when(mockdatasource.getConnection()).thenReturn(connection);
         provider.setDataSource(mockdatasource);
-             provider.activate();
+        provider.activate();
 
-                 assertThrows(AuthserviceException.class, () -> provider.unlockUser("jad"));
-        }
+        assertThrows(AuthserviceException.class, () -> provider.unlockUser("jad"));
+    }
 
     @Test
     void testUserIsLockedWhenSQLExceptionIsThrown() throws Exception {
