@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { isUsersLoaded } from '../matchers';
+import { api } from '../api';
 import { emptyUser } from '../constants';
 
 const initialState = { ...emptyUser };
@@ -18,6 +19,7 @@ export const userSlice = createSlice({
     extraReducers: builder => {
         builder
             .addMatcher(isUsersLoaded, () => initialState)
+            .addMatcher(api.endpoints.getUserUnlock.matchFulfilled, (state, action) => action.payload.find(u => u.username === state.username) || state)
     },
 });
 

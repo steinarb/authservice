@@ -22,6 +22,15 @@ export const api = createApi({
                 } catch {}
             },
         }),
+        getUserUnlock: builder.mutation({
+            query: username => ({ url: '/user/unlock/' + username, method: 'GET' }),
+            async onQueryStarted(username, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: usersAfterUserUnlock } = await queryFulfilled;
+                    dispatch(api.util.updateQueryData('getUsers', undefined, () => usersAfterUserUnlock));
+                } catch {}
+            },
+        }),
         postPasswordUpdate: builder.mutation({
             query: body => ({ url: '/passwords/update', method: 'POST', body }),
             async onQueryStarted(body, { dispatch, queryFulfilled }) {
@@ -123,6 +132,7 @@ export const {
     useGetRolePermissionsQuery,
     useGetPermissionsQuery,
     usePostUserModifyMutation,
+    useGetUserUnlockMutation,
     usePostPasswordUpdateMutation,
     usePostUserAddMutation,
     usePostUserAddrolesMutation,

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useGetUsersQuery, usePostUserModifyMutation } from '../api';
+import { useGetUsersQuery, usePostUserModifyMutation, useGetUserUnlockMutation } from '../api';
 import { selectUser, clearUser, setUserUsername, setUserEmail, setUserFirstname, setUserLastname } from '../reducers/userSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -12,10 +12,13 @@ import { findSelectedUser } from './common';
 
 export default function UserModify() {
     const user = useSelector(state => state.user);
+    const unlockButtonEnabled = user.userid != -1 && user.isLocked;
     const { data: users = [] } = useGetUsersQuery();
     const dispatch = useDispatch();
     const [ postUserModify ] = usePostUserModifyMutation();
     const onModifyUserClicked = async () => await postUserModify(user);
+    const [ getUserUnlock ] = useGetUserUnlockMutation();
+    const onUserUnlockClicked = async () => await getUserUnlock(user.username);
 
     useEffect(() => {
         dispatch(clearUser());
@@ -108,6 +111,13 @@ export default function UserModify() {
                                 type="checkbox"
                                 checked={user.isLocked}
                                 readOnly={true} />
+                        </div>
+                        <div class="col-3">
+                            <button
+                                className="btn btn-primary form-control"
+                                onClick={onUserUnlockClicked}
+                                disabled={!unlockButtonEnabled}
+                            >Unlock user</button>
                         </div>
                     </FormRow>
                     <FormRow>
