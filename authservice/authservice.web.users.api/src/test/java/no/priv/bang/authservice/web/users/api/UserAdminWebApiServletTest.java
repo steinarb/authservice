@@ -53,6 +53,7 @@ import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
+import no.priv.bang.osgiservice.users.UserManagementConfig;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
 class UserAdminWebApiServletTest extends ShiroTestBase {
@@ -467,6 +468,34 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         var permissions = mapper.readValue(getBinaryContent(response), new TypeReference<List<Permission>>() {});
         assertThat(permissions).isNotEmpty();
+    }
+
+    @Test
+    void testGetAndSetConfig() throws Exception {
+        var logservice = new MockLogService();
+        var usermanagement = mock(UserManagementService.class);
+        when(usermanagement.getConfig()).thenReturn(UserManagementConfig.with().excessiveFailedLoginLimit(3).build());
+        when(usermanagement.modifyConfig(any())).thenReturn(UserManagementConfig.with().excessiveFailedLoginLimit(4).build());
+
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        createSubjectAndBindItToThread();
+        loginUser("admin", "admin");
+
+        var request1 = buildGetUrl("/config");
+        var response1 = new MockHttpServletResponse();
+        servlet.service(request1, response1);
+        assertEquals(HttpServletResponse.SC_OK, response1.getStatus());
+        var config = mapper.readValue(getBinaryContent(response1), UserManagementConfig.class);
+        assertThat(config).hasFieldOrPropertyWithValue("excessiveFailedLoginLimit", 3);
+
+        var request2 = buildPostUrl("/config");
+        var postBody = mapper.writeValueAsString(UserManagementConfig.with().excessiveFailedLoginLimit(4).build());
+        request2.setBodyContent(postBody);
+        var response2 = new MockHttpServletResponse();
+        servlet.service(request2, response2);
+        assertEquals(HttpServletResponse.SC_OK, response2.getStatus());
+        var updatedConfig = mapper.readValue(getBinaryContent(response2), UserManagementConfig.class);
+        assertThat(updatedConfig).hasFieldOrPropertyWithValue("excessiveFailedLoginLimit", 4);
     }
 
     private HttpServletRequest buildGetUrl(String resource) {
