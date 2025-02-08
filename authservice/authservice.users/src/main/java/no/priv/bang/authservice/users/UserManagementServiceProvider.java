@@ -47,6 +47,7 @@ import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.RolePermissions;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
+import no.priv.bang.osgiservice.users.UserManagementConfig;
 import no.priv.bang.osgiservice.users.UserManagementService;
 import no.priv.bang.osgiservice.users.UserRoles;
 
@@ -694,6 +695,39 @@ public class UserManagementServiceProvider implements UserManagementService {
             logger.error(message, e);
             throw new AuthserviceException(message, e);
         }
+    }
+
+    @Override
+    public UserManagementConfig getConfig() {
+        try(var connection = datasource.getConnection()) {
+            try(var statement = connection.createStatement()) {
+                try (var results = statement.executeQuery("select excessive_failed_login_limit from authservice_config")) {
+                    while (results.next()) {
+                        return UserManagementConfig.with()
+                            .excessiveFailedLoginLimit(results.getInt("excessive_failed_login_limit"))
+                            .build();
+                    }
+
+                    return UserManagementConfig.with().build();
+                }
+            }
+        } catch (SQLException e) {
+            throw new AuthserviceException("Unable get user admin config from the database", e);
+        }
+    }
+
+    @Override
+    public UserManagementConfig modifyConfig(UserManagementConfig config) {
+        try(var connection = datasource.getConnection()) {
+            try(var statement = connection.prepareStatement("update authservice_config set excessive_failed_login_limit=?")) {
+                statement.setInt(1, config.excessiveFailedLoginLimit());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new AuthserviceException("Unable to update user admin config in the database", e);
+        }
+
+        return getConfig();
     }
 
     static String getNewSalt() {

@@ -50,6 +50,7 @@ import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.RolePermissions;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserAndPasswords;
+import no.priv.bang.osgiservice.users.UserManagementConfig;
 import no.priv.bang.osgiservice.users.UserRoles;
 
 class UserManagementServiceProviderTest {
@@ -872,6 +873,68 @@ class UserManagementServiceProviderTest {
 
         var rolepermissions = RolePermissions.with().role(Role.with().build()).permissions(Arrays.asList(Permission.with().build())).build();
         assertThrows(AuthserviceException.class, () -> provider.removeRolePermissions(rolepermissions));
+    }
+
+    @Test
+    void testGetAndSetConfig() throws Exception {
+        var logservice = new MockLogService();
+        var provider = new UserManagementServiceProvider();
+        provider.setLogservice(logservice);
+        provider.setDataSource(datasource);
+        provider.activate();
+
+        var config = provider.getConfig();
+        var configToSave = UserManagementConfig.with().excessiveFailedLoginLimit(config.excessiveFailedLoginLimit() +1).build();
+        var updatedConfig = provider.modifyConfig(configToSave);
+        assertThat(updatedConfig.excessiveFailedLoginLimit()).isGreaterThan(config.excessiveFailedLoginLimit());
+        provider.modifyConfig(config);
+    }
+
+    @Test
+    void testGetConfigWithSQLExceptionThrown() throws Exception {
+        var logservice = new MockLogService();
+        var mockedDatasource = mock(DataSource.class);
+        when(mockedDatasource.getConnection()).thenThrow(SQLException.class);
+        var provider = new UserManagementServiceProvider();
+        provider.setLogservice(logservice);
+        provider.setDataSource(mockedDatasource);
+        provider.activate();
+
+        assertThrows(AuthserviceException.class, () -> provider.getConfig());
+    }
+
+    @Test
+    void testGetConfigWithEmptyResults() throws Exception {
+        var logservice = new MockLogService();
+        var mockedDatasource = mock(DataSource.class);
+        var connection = mock(Connection.class);
+        var preparedStatement = mock(PreparedStatement.class);
+        var statement = mock(Statement.class);
+        var results = mock(ResultSet.class);
+        when(statement.executeQuery(anyString())).thenReturn(results);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(connection.createStatement()).thenReturn(statement);
+        when(mockedDatasource.getConnection()).thenReturn(connection);
+        var provider = new UserManagementServiceProvider();
+        provider.setLogservice(logservice);
+        provider.setDataSource(mockedDatasource);
+        provider.activate();
+
+        var emptyConfig = provider.getConfig();
+        assertThat(emptyConfig.excessiveFailedLoginLimit()).isEqualTo(0);
+    }
+
+    @Test
+    void testSetConfigWithSQLExceptionThrown() throws Exception {
+        var logservice = new MockLogService();
+        var mockedDatasource = mock(DataSource.class);
+        when(mockedDatasource.getConnection()).thenThrow(SQLException.class);
+        var provider = new UserManagementServiceProvider();
+        provider.setLogservice(logservice);
+        provider.setDataSource(mockedDatasource);
+        provider.activate();
+
+        assertThrows(AuthserviceException.class, () -> provider.modifyConfig(null));
     }
 
     private CredentialsMatcher createSha256HashMatcher(int iterations) {
