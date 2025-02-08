@@ -13,6 +13,7 @@ export const api = createApi({
         getRoles: builder.query({ query: () => '/roles' }),
         getRolePermissions: builder.query({ query: () => '/roles/permissions' }),
         getPermissions: builder.query({ query: () => '/permissions' }),
+        getConfig: builder.query({ query: () => '/config' }),
         postUserModify: builder.mutation({
             query: body => ({ url: '/user/modify', method: 'POST', body }),
             async onQueryStarted(body, { dispatch, queryFulfilled }) {
@@ -121,6 +122,15 @@ export const api = createApi({
                 } catch {}
             },
         }),
+        postConfigModify: builder.mutation({
+            query: body => ({ url: '/config', method: 'POST', body }),
+            async onQueryStarted(body, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: configAfterConfigModify } = await queryFulfilled;
+                    dispatch(api.util.updateQueryData('getConfig', undefined, () => configAfterConfigModify));
+                } catch {}
+            },
+        }),
    }),
 });
 console.log(api);
@@ -131,6 +141,7 @@ export const {
     useGetRolesQuery,
     useGetRolePermissionsQuery,
     useGetPermissionsQuery,
+    useGetConfigQuery,
     usePostUserModifyMutation,
     useGetUserUnlockMutation,
     usePostPasswordUpdateMutation,
@@ -143,4 +154,5 @@ export const {
     usePostRoleRemovepermissionsMutation,
     usePostPermissionModifyMutation,
     usePostPermissionAddMutation,
+    usePostConfigModifyMutation,
 } = api;

@@ -17,6 +17,7 @@ function Home() {
                 <StyledLinkRight to="/users">Adminstrate users</StyledLinkRight>
                 <StyledLinkRight to="/roles">Administrate roles</StyledLinkRight>
                 <StyledLinkRight to="/permissions">Administrate permissions</StyledLinkRight>
+                <StyledLinkRight to="/configuration">Configuration</StyledLinkRight>
             </Container>
         </div>
     );

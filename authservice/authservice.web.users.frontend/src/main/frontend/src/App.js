@@ -14,6 +14,7 @@ import RoleAdd from './components/RoleAdd';
 import Permissions from './components/Permissions';
 import PermissionModify from './components/PermissionModify';
 import PermissionAdd from './components/PermissionAdd';
+import Configuration from './components/Configuration';
 
 export default function App(props) {
     const { basename } = props;
@@ -34,6 +35,7 @@ export default function App(props) {
                 <Route path="/permissions/modify" element={<PermissionModify/>} />
                 <Route path="/permissions/add" element={<PermissionAdd/>} />
                 <Route path="/permissions" element={<Permissions/>} />
+                <Route path="/configuration" element={<Configuration/>} />
             </Routes>
         </Router>
     );

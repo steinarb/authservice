@@ -49,7 +49,8 @@ public class UserAdminServlet extends FrontendServlet {
             "/roles/add",
             "/permissions",
             "/permissions/modify",
-            "/permissions/add");
+            "/permissions/add",
+            "/configuration");
     }
 
     @Override
