@@ -456,119 +456,23 @@ class UserManagementServiceProviderTest {
     }
 
     @Test
-    void testRegisterFailedAndSuccessfulLogins() {
+    void testUnlockUser() {
         var provider = new UserManagementServiceProvider();
         var logservice = new MockLogService();
         provider.setLogservice(logservice);
         provider.setDataSource(datasource);
         provider.activate();
 
-        var username = "jod";
-        var user = provider.getUser(username);
-        var numberOfFailedLoginsBefore = user.numberOfFailedLogins();
-
-        // Verify that registering a failed login will increment the count
-        var numberOfFailedLoginsAfter = provider.loginFailed(username).numberOfFailedLogins();
-        assertThat(numberOfFailedLoginsAfter).isGreaterThan(numberOfFailedLoginsBefore);
-
-        // Verify that registering a successful login will set the login count to 0
-        var numberOfFailedLoginsAfterSuccessfulLogin = provider.successfulLogin(username).numberOfFailedLogins();
-        assertThat(numberOfFailedLoginsAfterSuccessfulLogin).isEqualTo(0);
-    }
-
-    @Test
-    void testSetLockLimitAndTriggerFailedLogin() {
-        var provider = new UserManagementServiceProvider();
-        var logservice = new MockLogService();
-        provider.setLogservice(logservice);
-        provider.setDataSource(datasource);
-        provider.activate();
-
-        var username = "jod";
-        // Set failed login count to 0 to start with a known state
-        var userBaseState = provider.successfulLogin(username);
-        assertThat(userBaseState.numberOfFailedLogins()).isEqualTo(0);
-
-        // set lock on two failed logins
-        provider.setExcessiveFailedLoginLimit(2);
-
-        // Fail three times to lock the user
-        provider.loginFailed(username);
-        provider.loginFailed(username);
-        var lockedUser = provider.loginFailed(username);
-        assertThat(provider.userIsLocked(username)).isTrue();
+        var username = "lu";
+        var lockedUser = provider.getUser(username);
         assertThat(lockedUser.isLocked()).isTrue();
         assertThat(lockedUser.numberOfFailedLogins()).isEqualTo(3);
 
         // Unlock the user
         var usersWithUnlockedUser = provider.unlockUser(username);
         var unlockedUser = usersWithUnlockedUser.stream().filter(u -> u.username().equals(username)).findFirst().get();
-        assertThat(provider.userIsLocked(username)).isFalse();
         assertThat(unlockedUser.isLocked()).isFalse();
         assertThat(unlockedUser.numberOfFailedLogins()).isEqualTo(0);
-    }
-
-    @Test
-    void testSetLockLimitAndFailWithSQLError() throws Exception {
-        var provider = new UserManagementServiceProvider();
-        var logservice = new MockLogService();
-        var mockedDatasource = mock(DataSource.class);
-        when(mockedDatasource.getConnection()).thenThrow(SQLException.class);
-        provider.setLogservice(logservice);
-        provider.setDataSource(mockedDatasource);
-        provider.activate();
-
-        assertThrows(AuthserviceException.class, () -> provider.setExcessiveFailedLoginLimit(2));
-    }
-
-    @Test
-    void testSetLockLimitWithEmptyResults() throws Exception {
-        var provider = new UserManagementServiceProvider();
-        var logservice = new MockLogService();
-        var mockedDatasource = mock(DataSource.class);
-        var connection = mock(Connection.class);
-        var preparedStatement = mock(PreparedStatement.class);
-        var statement = mock(Statement.class);
-        var results = mock(ResultSet.class);
-        when(statement.executeQuery(anyString())).thenReturn(results);
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-        when(connection.createStatement()).thenReturn(statement);
-        when(mockedDatasource.getConnection()).thenReturn(connection);
-        provider.setLogservice(logservice);
-        provider.setDataSource(mockedDatasource);
-        provider.activate();
-
-        assertThat(provider.setExcessiveFailedLoginLimit(2)).isEqualTo(-1);
-    }
-
-    @Test
-    void testLoginFailedWhenSQLExceptionIsThrown() throws Exception {
-        var logservice = new MockLogService();
-        var provider = new UserManagementServiceProvider();
-        provider.setLogservice(logservice);
-        var mockdatasource = mock(DataSource.class);
-        var connection = mock(Connection.class);
-        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockdatasource.getConnection()).thenReturn(connection);
-        provider.setDataSource(mockdatasource);
-        provider.activate();
-
-        assertThrows(AuthserviceException.class, () -> provider.loginFailed("jad"));
-    }
-
-    @Test
-    void testSuccessfulLoginWhenSQLExceptionIsThrown() throws Exception {
-        var logservice = new MockLogService();
-        var provider = new UserManagementServiceProvider();
-        provider.setLogservice(logservice);
-        var mockdatasource = mock(DataSource.class);
-        var connection = mock(Connection.class);
-        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockdatasource.getConnection()).thenReturn(connection);
-        provider.setDataSource(mockdatasource);
-        provider.activate();
-
-        assertThrows(AuthserviceException.class, () -> provider.successfulLogin("jad"));
     }
 
     @Test
@@ -584,32 +488,6 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         assertThrows(AuthserviceException.class, () -> provider.unlockUser("jad"));
-    }
-
-    @Test
-    void testUserIsLockedWhenSQLExceptionIsThrown() throws Exception {
-        var logservice = new MockLogService();
-        var provider = new UserManagementServiceProvider();
-        provider.setLogservice(logservice);
-        var mockdatasource = mock(DataSource.class);
-        var connection = mock(Connection.class);
-        when(connection.prepareStatement(anyString())).thenThrow(SQLException.class);
-        when(mockdatasource.getConnection()).thenReturn(connection);
-        provider.setDataSource(mockdatasource);
-        provider.activate();
-
-        assertThat(provider.userIsLocked("jad")).isFalse();
-    }
-
-    @Test
-    void testUserIsLockedOnNonExistingUser() throws Exception {
-        var provider = new UserManagementServiceProvider();
-        var logservice = new MockLogService();
-        provider.setLogservice(logservice);
-        provider.setDataSource(datasource);
-        provider.activate();
-
-        assertThat(provider.userIsLocked("nosuchuser")).isFalse();
     }
 
     @Test

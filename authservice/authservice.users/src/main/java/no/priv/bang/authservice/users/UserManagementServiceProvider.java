@@ -266,85 +266,6 @@ public class UserManagementServiceProvider implements UserManagementService {
     }
 
     @Override
-    public User loginFailed(String username) {
-        try(var connection = datasource.getConnection()) {
-            int existingNumberOfFailedLogins = 0;
-            int excessiveFailedLoginLimit = 0;
-            try(var statement = connection.prepareStatement("select failed_login_count from users where username=?")) {
-                statement.setString(1, username);
-                try(var results = statement.executeQuery()) {
-                    while(results.next()) {
-                        existingNumberOfFailedLogins = results.getInt("failed_login_count");
-                    }
-                }
-            }
-            ++existingNumberOfFailedLogins;
-            try(var statement = connection.prepareStatement("update users set failed_login_count=? where username=?")) {
-                statement.setInt(1, existingNumberOfFailedLogins);
-                statement.setString(2, username);
-                statement.executeUpdate();
-            }
-
-            // Lock user if excessive failed login limit is reached
-            if (existingNumberOfFailedLogins > excessiveFailedLoginLimit) {
-                try(var statement = connection.prepareStatement("update users set is_locked=? where username=?")) {
-                    statement.setBoolean(1, true);
-                    statement.setString(2, username);
-                    statement.executeUpdate();
-                }
-
-            }
-        } catch (SQLException e) {
-            var message = String.format("Unable to register failed login for user \"%s\" in the database", username);
-            logger.error(message, e);
-            throw new AuthserviceException(message);
-        }
-
-        return getUser(username);
-    }
-
-    @Override
-    public User successfulLogin(String username) {
-        try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("update users set failed_login_count=0 where username=?")) {
-                statement.setString(1, username);
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            var message = String.format("Unable to register failed login for user \"%s\" in the database", username);
-            logger.error(message, e);
-            throw new AuthserviceException(message);
-        }
-
-        return getUser(username);
-    }
-
-    @Override
-    public int setExcessiveFailedLoginLimit(int limit) {
-        try {
-            try(var connection = datasource.getConnection()) {
-                try(var statement = connection.prepareStatement("update authservice_config set excessive_failed_login_limit=?")) {
-                    statement.setInt(1, limit);
-                    statement.executeUpdate();
-                }
-            }
-            try(var connection = datasource.getConnection()) {
-                try(var statement = connection.createStatement()) {
-                    try (var results = statement.executeQuery("select excessive_failed_login_limit from authservice_config")) {
-                        while (results.next()) {
-                            return results.getInt("excessive_failed_login_limit");
-                        }
-
-                        return -1;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new AuthserviceException("Unable to update failed login limit in the database", e);
-        }
-    }
-
-    @Override
     public List<User> unlockUser(String username) {
         try(var connection = datasource.getConnection()) {
             try(var statement = connection.prepareStatement("update users set failed_login_count=0, is_locked=? where username=?")) {
@@ -359,25 +280,6 @@ public class UserManagementServiceProvider implements UserManagementService {
         }
 
         return getUsers();
-    }
-
-    @Override
-    public boolean userIsLocked(String username) {
-        try(var connection = datasource.getConnection()) {
-            try(var statement = connection.prepareStatement("select is_locked from users where username=?")) {
-                statement.setString(1, username);
-                try(var results = statement.executeQuery()) {
-                    while(results.next()) {
-                        return results.getBoolean("is_locked");
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            var message = String.format("Unable to check locked state of user \"%s\" in the database", username);
-            logger.error(message, e);
-        }
-
-        return false;
     }
 
     @Override
