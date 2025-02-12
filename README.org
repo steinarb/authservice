@@ -217,7 +217,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/karaf/2.0.4/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/2.0.5/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -432,7 +432,8 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                               |
 |--------------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [2024-12-13] |   2.0.4 | Use  liquibase 4.30.0, postgresql jdbc 42.7.4, shiro 2.0.2, bang-servlet 1.8.1                                                                        |
+| [2025-02-12] |   2.0.5 | Add support for locking users on failed login and unlocking users in admin UI, built with karaf 4.4.7, use postgresql jdbc 42.7.5                     |
+| [2024-12-13] |   2.0.4 | Use liquibase 4.30.0, postgresql jdbc 42.7.4, shiro 2.0.2, bang-servlet 1.8.1                                                                         |
 | [2024-08-03] |   2.0.3 | Use jersey 2.44 and jackson 2.17.2                                                                                                                    |
 | [2024-07-31] |   2.0.2 | Use liquibase 4.29.0 and jsoup 1.18.1                                                                                                                 |
 | [2024-07-04] |   2.0.1 | Use liquibase 4.28.0                                                                                                                                  |
