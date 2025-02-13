@@ -57,7 +57,7 @@ public class AuthserviceDbRealm extends JdbcRealm {
         return authinfo;
     }
 
-    private boolean isLocked(String username) {
+    boolean isLocked(String username) {
         try(var connection = dataSource.getConnection()) {
             try(var statement = connection.prepareStatement("select is_locked from users where username=?")) {
                 statement.setString(1, username);

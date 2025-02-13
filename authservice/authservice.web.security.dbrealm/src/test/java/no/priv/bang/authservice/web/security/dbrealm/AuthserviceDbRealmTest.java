@@ -1,5 +1,7 @@
 package no.priv.bang.authservice.web.security.dbrealm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -188,6 +190,26 @@ class AuthserviceDbRealmTest {
 
         var onHasRoleAdministrator = realm.hasRole(authenticationInfoForUser.getPrincipals(), "admin");
         assertTrue(onHasRoleAdministrator);
+    }
+
+    @Test
+    void testIsLockedWhenSQLExceptionIsThrown() throws Exception {
+        var realm = new AuthserviceDbRealm();
+        var mockdatasource = mock(DataSource.class);
+        when(mockdatasource.getConnection()).thenThrow(SQLException.class);
+        realm.setDataSource(mockdatasource);
+        realm.activate();
+        assertThat(realm.isLocked("someuser")).isFalse();
+    }
+
+    @Test
+    void testRegisterLoginFailureWhenSQLExceptionIsThrown() throws Exception {
+        var realm = new AuthserviceDbRealm();
+        var mockdatasource = mock(DataSource.class);
+        when(mockdatasource.getConnection()).thenThrow(SQLException.class);
+        realm.setDataSource(mockdatasource);
+        realm.activate();
+        assertThatThrownBy(() -> realm.registerLoginFailure("someuser", null)).isInstanceOf(AuthserviceException.class);
     }
 
 }
