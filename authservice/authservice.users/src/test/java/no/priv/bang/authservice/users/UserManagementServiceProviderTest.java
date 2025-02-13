@@ -472,7 +472,7 @@ class UserManagementServiceProviderTest {
         var usersWithUnlockedUser = provider.unlockUser(username);
         var unlockedUser = usersWithUnlockedUser.stream().filter(u -> u.username().equals(username)).findFirst().get();
         assertThat(unlockedUser.isLocked()).isFalse();
-        assertThat(unlockedUser.numberOfFailedLogins()).isEqualTo(0);
+        assertThat(unlockedUser.numberOfFailedLogins()).isZero();
     }
 
     @Test
@@ -799,7 +799,7 @@ class UserManagementServiceProviderTest {
         provider.activate();
 
         var emptyConfig = provider.getConfig();
-        assertThat(emptyConfig.excessiveFailedLoginLimit()).isEqualTo(0);
+        assertThat(emptyConfig.excessiveFailedLoginLimit()).isZero();
     }
 
     @Test
