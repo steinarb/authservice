@@ -95,6 +95,24 @@ class TestLiquibaseRunnerTest {
         assertThat(ex.getMessage()).startsWith("Failed to update schema of authservice Derby test database component");
     }
 
+    @Test
+    void testFailWhenInsertingMockDataForLockedUser() throws Exception {
+        var runner = new TestLiquibaseRunner();
+        var realdb = createDatasource();
+        var datasource = spy(realdb);
+        when(datasource.getConnection())
+            .thenCallRealMethod()
+            .thenCallRealMethod()
+            .thenCallRealMethod()
+            .thenThrow(SQLException.class);
+
+        runner.activate();
+        var ex = assertThrows(
+            AuthserviceException.class,
+            () -> runner.prepare(datasource));
+        assertThat(ex.getMessage()).startsWith("Failed to insert mock data for locked user in authservice Derby test database component");
+    }
+
     private DataSource createDatasource() throws SQLException {
         var properties = new Properties();
         properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
