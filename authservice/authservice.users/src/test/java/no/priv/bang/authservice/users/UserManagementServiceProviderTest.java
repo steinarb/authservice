@@ -778,7 +778,7 @@ class UserManagementServiceProviderTest {
         provider.setDataSource(mockedDatasource);
         provider.activate();
 
-        assertThrows(AuthserviceException.class, () -> provider.getConfig());
+        assertThrows(AuthserviceException.class, provider::getConfig);
     }
 
     @Test

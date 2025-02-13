@@ -54,7 +54,7 @@ class ConfigResourceTest {
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
-        assertThatThrownBy(() -> resource.getConfig()).isInstanceOf(InternalServerErrorException.class);
+        assertThatThrownBy(resource::getConfig).isInstanceOf(InternalServerErrorException.class);
     }
 
     @Test
