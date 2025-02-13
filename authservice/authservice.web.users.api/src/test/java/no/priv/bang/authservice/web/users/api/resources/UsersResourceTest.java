@@ -118,8 +118,9 @@ class UsersResourceTest {
         var resource = new UsersResource();
         resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
+        var username = user.username();
 
-        assertThrows(InternalServerErrorException.class, () -> resource.unlockUser(user.username()));
+        assertThrows(InternalServerErrorException.class, () -> resource.unlockUser(username));
     }
 
     @Test
