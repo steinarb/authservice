@@ -754,7 +754,7 @@ class UserManagementServiceProviderTest {
     }
 
     @Test
-    void testGetAndSetConfig() throws Exception {
+    void testGetAndSetConfig() {
         var logservice = new MockLogService();
         var provider = new UserManagementServiceProvider();
         provider.setLogservice(logservice);
