@@ -120,6 +120,7 @@ class UserManagementServiceProviderTest {
 
         var username = "jod";
         assertThrows(AuthserviceException.class, () -> provider.getUser(username));
+        assertThat(logservice.getLogmessages().get(0)).contains("SQLException");
     }
 
     @Test

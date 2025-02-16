@@ -97,7 +97,7 @@ public class UserManagementServiceProvider implements UserManagementService {
             }
         } catch (SQLException e) {
             var message = String.format("Unable to fetch user \"%s\" from the database", username);
-            logger.error(message);
+            logger.error(message, e);
             throw new AuthserviceException(message);
         }
     }
