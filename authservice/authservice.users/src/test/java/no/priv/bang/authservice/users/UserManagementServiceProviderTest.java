@@ -77,7 +77,14 @@ class UserManagementServiceProviderTest {
 
         var username = "jod";
         var user = provider.getUser(username);
-        assertEquals(username, user.username());
+        assertThat(user)
+            .hasFieldOrProperty("userid")
+            .hasFieldOrPropertyWithValue("username", username)
+            .hasFieldOrPropertyWithValue("firstname", "John")
+            .hasFieldOrPropertyWithValue("lastname", "Doe")
+            .hasFieldOrPropertyWithValue("email", "johndoe6789@gmail.com")
+            .hasFieldOrPropertyWithValue("numberOfFailedLogins", 0)
+            .hasFieldOrPropertyWithValue("isLocked", false);
     }
 
     @Test
