@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Steinar Bang
+ * Copyright 2019-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,12 @@ import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelec
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardServletName;
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardServletPattern;
 import static org.osgi.service.http.whiteboard.HttpWhiteboardConstants.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.osgi.service.log.LogService;
 
+import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.servlet.frontend.FrontendServlet;
 
 @Component(service=Servlet.class, immediate=true)
@@ -36,27 +40,22 @@ public class UserAdminServlet extends FrontendServlet {
 
     public UserAdminServlet() {
         super();
-        setRoutes(
-            "/",
-            "/users",
-            "/users/modify",
-            "/users/roles",
-            "/users/passwords",
-            "/users/add",
-            "/roles",
-            "/roles/modify",
-            "/roles/permissions",
-            "/roles/add",
-            "/permissions",
-            "/permissions/modify",
-            "/permissions/add",
-            "/configuration");
+        setRoutes(readLinesFromClasspath("assets/routes.txt"));
     }
 
     @Override
     @Reference
     public void setLogService(LogService logservice) {
         super.setLogService(logservice);
+    }
+
+    String[] readLinesFromClasspath(String fileName) {
+        try (var reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName)))) {
+            var lines = reader.lines().toList();
+            return lines.toArray(new String[0]);
+        } catch (Exception e) {
+            throw new AuthserviceException("Failed to read routes list from classpath resource", e);
+        }
     }
 
 }
