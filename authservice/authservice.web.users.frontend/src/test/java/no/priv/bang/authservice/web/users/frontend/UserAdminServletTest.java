@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
-import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 import static org.mockito.Mockito.*;
@@ -129,28 +128,6 @@ class UserAdminServletTest {
         servlet.service(request, response);
 
         assertEquals(404, response.getErrorCode());
-    }
-
-    @Test
-    void readLinesFromClasspath() {
-        var logservice = new MockLogService();
-
-        var servlet = new UserAdminServlet();
-        servlet.setLogService(logservice);
-
-        var routes = servlet.readLinesFromClasspath("testroutes.txt");
-
-        assertThat(routes).isNotEmpty().hasSize(4);
-    }
-
-    @Test
-    void readLinesFromClasspathWithFileNotFound() {
-        var logservice = new MockLogService();
-
-        var servlet = new UserAdminServlet();
-        servlet.setLogService(logservice);
-
-        assertThrows(AuthserviceException.class, () -> servlet.readLinesFromClasspath("notfound.txt"));
     }
 
 }
