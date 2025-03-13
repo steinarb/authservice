@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useGetConfigQuery, usePostConfigModifyMutation, api } from '../api';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
@@ -7,7 +7,6 @@ import FormRow from './bootstrap/FormRow';
 import FormLabel from './bootstrap/FormLabel';
 import FormField from './bootstrap/FormField';
 import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
-import { findSelectedUser } from './common';
 
 export default function Configuration() {
     const { data: config = {} } = useGetConfigQuery();
