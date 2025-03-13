@@ -1,6 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useGetConfigQuery, usePostConfigModifyMutation, api } from '../api';
+import { useSelector, useDispatch } from 'react-redux';
+import { useGetConfigQuery, usePostConfigModifyMutation } from '../api';
+import { setExcessiveFailedLoginLimit } from '../reducers/configurationSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';
 import FormRow from './bootstrap/FormRow';
@@ -9,10 +10,11 @@ import FormField from './bootstrap/FormField';
 import ModifyFailedErrorAlert from './ModifyFailedErrorAlert';
 
 export default function Configuration() {
-    const { data: config = {} } = useGetConfigQuery();
+    const { isSuccess: configIsLoaded } = useGetConfigQuery();
+    const configuration = useSelector(state => state.configuration);
     const dispatch = useDispatch();
     const [ postConfigModify ] = usePostConfigModifyMutation();
-    const onModifyConfigClicked = async () => await postConfigModify(config);
+    const onModifyConfigClicked = async () => await postConfigModify(configuration);
 
     return (
         <div>
@@ -31,8 +33,8 @@ export default function Configuration() {
                                 id="excessiveFailedLoginLimit"
                                 className="form-control"
                                 type="text"
-                                value={config.excessiveFailedLoginLimit}
-                                onChange={e => dispatch(api.util.updateQueryData('getConfig', undefined, () => ({ ...config, excessiveFailedLoginLimit: e.target.value })))} />
+                                value={configuration.excessiveFailedLoginLimit}
+                                onChange={e => dispatch(setExcessiveFailedLoginLimit(e.target.value))} />
                         </FormField>
                     </FormRow>
                     <FormRow>
@@ -40,6 +42,7 @@ export default function Configuration() {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
+                                disabled={!configIsLoaded}
                                 onClick={onModifyConfigClicked}>
                                 Modify configuration</button>
 '                        </FormField>

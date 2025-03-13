@@ -7,6 +7,7 @@ import password from './passwordSlice';
 import role from './roleSlice';
 import selectedInPermissions from './selectedInPermissionsSlice';
 import permission from './permissionSlice';
+import configuration from './configurationSlice';
 import modifyFailedError from './modifyFailedErrorReducer';
 import errors from './errorsReducer';
 
@@ -18,6 +19,7 @@ export default (basename) => combineReducers({
     role,
     selectedInPermissions,
     permission,
+    configuration,
     modifyFailedError,
     errors,
     basename: createReducer(basename, (builder) => builder),

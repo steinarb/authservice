@@ -1,6 +1,11 @@
 import { isAnyOf } from '@reduxjs/toolkit';
 import { api } from './api';
 
+export const isConfigurationLoaded = isAnyOf(
+    api.endpoints.getConfig.matchFulfilled,
+    api.endpoints.postConfigModify.matchFulfilled,
+);
+
 export const isUsersLoaded = isAnyOf(
     api.endpoints.getUsers.matchFulfilled,
     api.endpoints.postUserModify.matchFulfilled,

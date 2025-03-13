@@ -122,15 +122,7 @@ export const api = createApi({
                 } catch {}
             },
         }),
-        postConfigModify: builder.mutation({
-            query: body => ({ url: '/config', method: 'POST', body }),
-            async onQueryStarted(body, { dispatch, queryFulfilled }) {
-                try {
-                    const { data: configAfterConfigModify } = await queryFulfilled;
-                    dispatch(api.util.updateQueryData('getConfig', undefined, () => configAfterConfigModify));
-                } catch {}
-            },
-        }),
+        postConfigModify: builder.mutation({ query: body => ({ url: '/config', method: 'POST', body }) }),
    }),
 });
 console.log(api);
