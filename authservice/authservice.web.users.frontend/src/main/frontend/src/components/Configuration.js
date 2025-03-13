@@ -14,7 +14,7 @@ export default function Configuration() {
     const configuration = useSelector(state => state.configuration);
     const dispatch = useDispatch();
     const [ postConfigModify ] = usePostConfigModifyMutation();
-    const onModifyConfigClicked = async () => await postConfigModify(configuration);
+    const onModifyConfigClicked = async () => await postConfigModify(removeIsModifiedFlag(configuration));
 
     return (
         <div>
@@ -42,7 +42,7 @@ export default function Configuration() {
                         <FormField>
                             <button
                                 className="btn btn-primary form-control"
-                                disabled={!configIsLoaded}
+                                disabled={!(configIsLoaded && configuration.isModified)}
                                 onClick={onModifyConfigClicked}>
                                 Modify configuration</button>
 '                        </FormField>
@@ -51,4 +51,10 @@ export default function Configuration() {
             </form>
         </div>
     );
+}
+
+function removeIsModifiedFlag(configuration) {
+    const copyOfConfiguration = { ...configuration };
+    delete copyOfConfiguration.isModified;
+    return copyOfConfiguration;
 }
