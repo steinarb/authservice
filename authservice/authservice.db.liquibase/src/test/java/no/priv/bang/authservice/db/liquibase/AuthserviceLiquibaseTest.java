@@ -80,9 +80,7 @@ class AuthserviceLiquibaseTest {
         var email = "jad@gmail.com";
         var firstname = "Jane";
         var lastname = "Doe";
-        try(var connection = createConnection("authservice")) {
-            addUser(connection, username, password, salt, email, firstname, lastname);
-        }
+        addUser(datasource, username, password, salt, email, firstname, lastname);
         var usersTableWithAddedUser = assertjConnection.table("users").build();
         assertThat(usersTableWithAddedUser).exists().hasNumberOfRows(2).column("username")
             .value().isEqualTo("admin")
@@ -90,10 +88,8 @@ class AuthserviceLiquibaseTest {
 
         // Add role and set on user
         var rolename = "admin";
-        try(var connection = createConnection("authservice")) {
-            addRole(connection, rolename, "Test role");
-            addUserRole(connection, rolename, username);
-        }
+        addRole(datasource, rolename, "Test role");
+        addUserRole(datasource, rolename, username);
         var rolesTableAfterAddingRole = assertjConnection.table("roles").build();
         assertThat(rolesTableAfterAddingRole).exists().hasNumberOfRows(2).column("role_name")
             .value().isEqualTo("useradmin")
@@ -104,17 +100,13 @@ class AuthserviceLiquibaseTest {
             .column("role_name").value().isEqualTo("useradmin").value().isEqualTo(rolename);
 
         // Verify database constraints on user and roles relation
-        try(var connection = createConnection("authservice")) {
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(connection, "notarole", username));
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(connection, rolename, "notauser"));
-        }
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(datasource, "notarole", username));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> addUserRole(datasource, rolename, "notauser"));
 
         // Add permission and connect to role
         var permission = "user_admin_api_write";
-        try(var connection = createConnection("authservice")) {
-            addPermission(connection, permission, "User admin REST API write access");
-            addRolePermission(connection, rolename, permission);
-        }
+        addPermission(datasource, permission, "User admin REST API write access");
+        addRolePermission(datasource, rolename, permission);
         var permissionsTableWithPermissionAdded = assertjConnection.table("permissions").build();
         assertThat(permissionsTableWithPermissionAdded).exists().hasNumberOfRows(1).column("permission_name").value().isEqualTo(permission);
         var rolepermissionsTableWithRoleConnectedToPermission = assertjConnection.table("roles_permissions").build();
@@ -123,10 +115,8 @@ class AuthserviceLiquibaseTest {
             .column("permission_name").value().isEqualTo(permission);
 
         // Verify database constraints on users and permissions relation
-        try(var connection = createConnection("authservice")) {
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(connection, "notarole", permission));
-            assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(connection, rolename, "notapermission"));
-        }
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(datasource, "notarole", permission));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> addRolePermission(datasource, rolename, "notapermission"));
 
         authserviceLiquibase.updateSchema(datasource.getConnection());
 
@@ -182,47 +172,57 @@ class AuthserviceLiquibaseTest {
         assertThat(ex.getMessage()).contains("The file test-db-changelog/db-changelog-not-present.xml was not found in the configured search path");
     }
 
-    private void addUser(Connection connection, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
-        try (var statement = connection.prepareStatement("insert into users (username, password, password_salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setString(3, salt);
-            statement.setString(4, email);
-            statement.setString(5, firstname);
-            statement.setString(6, lastname);
-            statement.executeUpdate();
+    private void addUser(DataSource datasource, String username, String password, String salt, String email, String firstname, String lastname) throws SQLException {
+        try(var connection = datasource.getConnection()) {
+            try (var statement = connection.prepareStatement("insert into users (username, password, password_salt, email, firstname, lastname) values (?, ?, ?, ?, ?, ?)")) {
+                statement.setString(1, username);
+                statement.setString(2, password);
+                statement.setString(3, salt);
+                statement.setString(4, email);
+                statement.setString(5, firstname);
+                statement.setString(6, lastname);
+                statement.executeUpdate();
+            }
         }
     }
 
-    private void addRole(Connection connection, String rolename, String description) throws Exception {
-        try (var statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
-            statement.setString(1, rolename);
-            statement.setString(2, description);
-            statement.executeUpdate();
+    private void addRole(DataSource datasource, String rolename, String description) throws Exception {
+        try(var connection = datasource.getConnection()) {
+            try (var statement = connection.prepareStatement("insert into roles (role_name, description) values (?, ?)")) {
+                statement.setString(1, rolename);
+                statement.setString(2, description);
+                statement.executeUpdate();
+            }
         }
     }
 
-    private void addUserRole(Connection connection, String rolename, String username) throws Exception {
-        try (var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
-            statement.setString(1, rolename);
-            statement.setString(2, username);
-            statement.executeUpdate();
+    private void addUserRole(DataSource datasource, String rolename, String username) throws Exception {
+        try(var connection = datasource.getConnection()) {
+            try (var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
+                statement.setString(1, rolename);
+                statement.setString(2, username);
+                statement.executeUpdate();
+            }
         }
     }
 
-    private void addPermission(Connection connection, String permission, String description) throws Exception {
-        try (var statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
-            statement.setString(1, permission);
-            statement.setString(2, description);
-            statement.executeUpdate();
+    private void addPermission(DataSource datasource, String permission, String description) throws Exception {
+        try(var connection = datasource.getConnection()) {
+            try (var statement = connection.prepareStatement("insert into permissions (permission_name, description) values (?, ?)")) {
+                statement.setString(1, permission);
+                statement.setString(2, description);
+                statement.executeUpdate();
+            }
         }
     }
 
-    private void addRolePermission(Connection connection, String rolename, String permission) throws Exception {
-        try (var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
-            statement.setString(1, rolename);
-            statement.setString(2, permission);
-            statement.executeUpdate();
+    private void addRolePermission(DataSource datasource, String rolename, String permission) throws Exception {
+        try(var connection = datasource.getConnection()) {
+            try (var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
+                statement.setString(1, rolename);
+                statement.setString(2, permission);
+                statement.executeUpdate();
+            }
         }
     }
 
