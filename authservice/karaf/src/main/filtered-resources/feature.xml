@@ -19,6 +19,7 @@
     <repository>mvn:no.priv.bang.authservice/authservice.db.liquibase.production/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.dbrealm/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security.memorysession/${project.version}/xml/features</repository>
+    <repository>mvn:no.priv.bang.authservice/authservice.web.security.cipherkey/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.security/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.users/${project.version}/xml/features</repository>
     <repository>mvn:no.priv.bang.authservice/authservice.web.users.api/${project.version}/xml/features</repository>
@@ -26,6 +27,7 @@
     <feature version="${project.version}" name="authservice-with-dbrealm-and-session">
         <feature version="${project.version}">authservice-web-security-dbrealm</feature>
         <feature version="${project.version}">authservice-web-security-memorysession</feature>
+        <feature version="${project.version}">authservice-web-security-cipherkey</feature>
         <feature version="${project.version}">authservice-users</feature>
     </feature>
     <feature version="${project.version}" name="authservice-with-webcontext-dbrealm-and-session">

@@ -34,6 +34,7 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
+import no.priv.bang.authservice.definitions.CipherKeyService;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 
 class AuthserviceShiroFilterTest {
@@ -60,10 +61,12 @@ class AuthserviceShiroFilterTest {
 
     @Test
     void testAuthenticationSucceed() throws Exception {
+        var cipherKeyService = mock(CipherKeyService.class);
         var filter = new AuthserviceShiroFilter();
         filter.setServletContext(context);
         filter.setRealm(realm);
         filter.setSession(session);
+        filter.setCipherKeyService(cipherKeyService);
         filter.activate();
 
         var request = mock(HttpServletRequest.class);

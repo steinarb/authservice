@@ -22,6 +22,7 @@
         <module>authservice.db.liquibase.production</module>
         <module>authservice.web.security.dbrealm</module>
         <module>authservice.web.security.memorysession</module>
+        <module>authservice.web.security.cipherkey</module>
         <module>authservice.web.security</module>
         <module>authservice.users</module>
         <module>authservice.web.users.api</module>

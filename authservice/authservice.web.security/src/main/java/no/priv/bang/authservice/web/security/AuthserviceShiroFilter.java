@@ -19,6 +19,7 @@ import static org.osgi.service.http.whiteboard.HttpWhiteboardConstants.*;
 
 import javax.servlet.Filter;
 import org.apache.shiro.config.Ini;
+import org.apache.shiro.mgt.AbstractRememberMeManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.web.env.IniWebEnvironment;
@@ -30,6 +31,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelect;
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardFilterPattern;
+
+import no.priv.bang.authservice.definitions.CipherKeyService;
 
 
 /***
@@ -45,6 +48,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     private Realm realm;
     private SessionDAO session;
+    private CipherKeyService cipherKeyService;
     private static final Ini INI_FILE = new Ini();
     static {
         // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
@@ -61,6 +65,11 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
         this.session = session;
     }
 
+    @Reference
+    public void setCipherKeyService(CipherKeyService cipherKeyService) {
+        this.cipherKeyService = cipherKeyService;
+    }
+
     @Activate
     public void activate() {
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader()); // Set class loader that can find PassThruAuthenticationFilter for the Shiro INI parser
@@ -74,6 +83,8 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
         var securityManager = DefaultWebSecurityManager.class.cast(environment.getWebSecurityManager());
         securityManager.setSessionManager(sessionmanager);
         securityManager.setRealm(realm);
+        var remembermeManager = (AbstractRememberMeManager)securityManager.getRememberMeManager();
+        remembermeManager.setCipherKey(cipherKeyService.getCipherKey());
         setSecurityManager(securityManager);
         setFilterChainResolver(environment.getFilterChainResolver());
     }
