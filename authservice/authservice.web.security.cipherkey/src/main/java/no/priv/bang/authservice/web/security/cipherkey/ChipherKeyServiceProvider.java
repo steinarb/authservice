@@ -23,12 +23,33 @@ import java.util.Optional;
 
 import org.apache.karaf.config.core.ConfigRepository;
 import org.apache.shiro.crypto.cipher.AesCipherService;
+import org.apache.shiro.mgt.RememberMeManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import no.priv.bang.authservice.definitions.CipherKeyService;
 
+/***
+ * The rememberme functionality of apache shiro requires a cipher key, that:
+ * <ol>
+ * <li>Should be identical across all invocations and all applications using the same {@link SessionDAO}</li>
+ * <li>Should not be configured in a visible place (because then remembered sessions can be hijacked)</li>
+ * </ol>
+ *
+ * The default implementation of apache shiro creates a new cipherkey on component restarts which avoids
+ * risk of hijacking, but also stops rememberme functionality from working properly, especially with
+ * multiple applications sharing the same {@link SessionDAO}.
+ *
+ * This SCR component tries to solve the problem by
+ * <ol>
+ * <li>Creating a cipherkey on first component startup and store the key in apache config</li>
+ * <li>Provide the OSGi service {@link CipherKeyService} which has a method returning the key</li>
+ * </ol>
+ *
+ * The {@link CipherKeyService#getCipherKey()} method is used to set the cipher key of the {@link RememberMeManager}
+ */
 @Component( immediate=true )
 public class ChipherKeyServiceProvider implements CipherKeyService {
 
