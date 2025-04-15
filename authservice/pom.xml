@@ -23,6 +23,7 @@
         <module>authservice.web.security.dbrealm</module>
         <module>authservice.web.security.memorysession</module>
         <module>authservice.web.security.cipherkey</module>
+        <module>authservice.web.security.shirofilter</module>
         <module>authservice.web.security</module>
         <module>authservice.users</module>
         <module>authservice.web.users.api</module>
@@ -100,6 +101,11 @@
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>open-iconic</artifactId>
                 <version>${open-iconic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-logging.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

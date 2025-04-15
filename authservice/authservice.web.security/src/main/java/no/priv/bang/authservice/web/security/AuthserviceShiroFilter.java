@@ -19,13 +19,8 @@ import static org.osgi.service.http.whiteboard.HttpWhiteboardConstants.*;
 
 import javax.servlet.Filter;
 import org.apache.shiro.config.Ini;
-import org.apache.shiro.mgt.AbstractRememberMeManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
-import org.apache.shiro.web.env.IniWebEnvironment;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.AbstractShiroFilter;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,6 +28,7 @@ import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelec
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardFilterPattern;
 
 import no.priv.bang.authservice.definitions.CipherKeyService;
+import no.priv.bang.authservice.web.security.shirofilter.AuthserviceShiroFilterBase;
 
 
 /***
@@ -44,11 +40,8 @@ import no.priv.bang.authservice.definitions.CipherKeyService;
 @Component(service=Filter.class, immediate=true)
 @HttpWhiteboardContextSelect("(" + HTTP_WHITEBOARD_CONTEXT_NAME + "=authservice)")
 @HttpWhiteboardFilterPattern("/*")
-public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
+public class AuthserviceShiroFilter extends AuthserviceShiroFilterBase { // NOSONAR
 
-    private Realm realm;
-    private SessionDAO session;
-    private CipherKeyService cipherKeyService;
     private static final Ini INI_FILE = new Ini();
     static {
         // Can't use the Ini.fromResourcePath(String) method because it can't find "shiro.ini" on the classpath in an OSGi context
@@ -72,21 +65,7 @@ public class AuthserviceShiroFilter extends AbstractShiroFilter { // NOSONAR
 
     @Activate
     public void activate() {
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader()); // Set class loader that can find PassThruAuthenticationFilter for the Shiro INI parser
-        var environment = new IniWebEnvironment();
-        environment.setIni(INI_FILE);
-        environment.setServletContext(getServletContext());
-        environment.init();
-        var sessionmanager = new DefaultWebSessionManager();
-        sessionmanager.setSessionDAO(session);
-        sessionmanager.setSessionIdUrlRewritingEnabled(false);
-        var securityManager = DefaultWebSecurityManager.class.cast(environment.getWebSecurityManager());
-        securityManager.setSessionManager(sessionmanager);
-        securityManager.setRealm(realm);
-        var remembermeManager = (AbstractRememberMeManager)securityManager.getRememberMeManager();
-        remembermeManager.setCipherKey(cipherKeyService.getCipherKey());
-        setSecurityManager(securityManager);
-        setFilterChainResolver(environment.getFilterChainResolver());
+        createShiroWebEnvironmentFromIniFile(getClass().getClassLoader(), INI_FILE);
     }
 
 }
