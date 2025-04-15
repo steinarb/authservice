@@ -47,7 +47,7 @@ class AuthserviceShiroFilterTest {
     static void setup() throws SQLException {
         var dataSourceFactory = new DerbyDataSourceFactory();
         var properties = new Properties();
-        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:ukelonn;create=true");
+        properties.setProperty(DataSourceFactory.JDBC_URL, "jdbc:derby:memory:authservice;create=true");
         var datasource = dataSourceFactory.createDataSource(properties);
         var runner = new TestLiquibaseRunner();
         runner.activate();
