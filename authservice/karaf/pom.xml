@@ -59,6 +59,13 @@
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
+            <artifactId>authservice.web.security.cipherkey</artifactId>
+            <version>${project.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.web.security</artifactId>
             <version>${project.version}</version>
             <type>xml</type>
