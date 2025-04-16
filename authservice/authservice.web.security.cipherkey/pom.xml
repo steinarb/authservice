@@ -8,7 +8,7 @@
 
     <artifactId>authservice.web.security.cipherkey</artifactId>
 
-    <name>Service delivering a cipherkey to shiro rememberme</name>
+    <name>Authentication webapp rememberme cipherkey provider</name>
 
     <properties>
         <karaf-feature-name>authservice-web-security-cipherkey</karaf-feature-name>
