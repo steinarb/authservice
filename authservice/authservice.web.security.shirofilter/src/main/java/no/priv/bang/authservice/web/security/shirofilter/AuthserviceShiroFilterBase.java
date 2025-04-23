@@ -16,6 +16,7 @@
 package no.priv.bang.authservice.web.security.shirofilter;
 
 import org.apache.shiro.config.Ini;
+import org.apache.shiro.lang.util.ClassUtils;
 import org.apache.shiro.mgt.AbstractRememberMeManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -46,9 +47,8 @@ public class AuthserviceShiroFilterBase extends AbstractShiroFilter {
      * @param iniFile an {@link Ini} instance holding a parsed shiro ini file
      */
     protected void createShiroWebEnvironmentFromIniFile(ClassLoader classLoader, Ini iniFile) {
-        var originalThreadContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(classLoader); // Set class loader that can find PassThruAuthenticationFilter for the Shiro INI parser
+            ClassUtils.setAdditionalClassLoader(classLoader); // Set class loader that can find PassThruAuthenticationFilter for the Shiro INI parser
             var environment = createShiroIniWebEnvironment();
             environment.setIni(iniFile);
             environment.setServletContext(getServletContext());
@@ -64,7 +64,7 @@ public class AuthserviceShiroFilterBase extends AbstractShiroFilter {
             setSecurityManager(securityManager);
             setFilterChainResolver(environment.getFilterChainResolver());
         } finally {
-            Thread.currentThread().setContextClassLoader(originalThreadContextClassLoader); // Restore original class loader
+            ClassUtils.removeAdditionalClassLoader();
         }
     }
 
