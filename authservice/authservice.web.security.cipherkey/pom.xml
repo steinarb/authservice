@@ -18,7 +18,6 @@
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.definitions</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.karaf.config</groupId>

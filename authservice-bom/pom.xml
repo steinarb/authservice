@@ -28,56 +28,46 @@
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.definitions</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.definitions</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase.test</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.users</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.dbrealm</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.memorysession</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.shirofilter</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.shirofilter</artifactId>
-                <version>2.3.2-SNAPSHOT</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>

@@ -20,7 +20,6 @@
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.definitions</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <!-- Shiro WebIniSecurityManager requires commons-beanutils and the shiro features don't pull commons-beanutils in -->
         <dependency>
@@ -39,19 +38,16 @@
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.web.security.memorysession</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.web.security.dbrealm</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.db.liquibase.test</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -62,7 +58,6 @@
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.db.liquibase</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

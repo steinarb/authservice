@@ -97,19 +97,16 @@
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.db.liquibase</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.db.liquibase.test</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>
             <artifactId>authservice.definitions</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
