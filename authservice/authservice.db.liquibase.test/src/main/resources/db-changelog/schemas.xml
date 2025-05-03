@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
-    <namespace ns="http://www.liquibase.org/xml/ns/dbchangelog" uri="dbchangelog-4.31.rnc" />
+    <include rules="../../../../../authservice.db.liquibase/src/main/resources/authservice-db-changelog/schemas.xml" />
 </locatingRules>
