@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2024 Steinar Bang
+ * Copyright 2016-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,21 @@
 package no.priv.bang.authservice.web.security.memorysession;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.junit.jupiter.api.Test;
+import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class MemorySessionTest {
 
     @Test
     void testCreateComponent() {
         var component = new MemorySession();
+        var logservice = new MockLogService();
+        component.setLogService(logservice);
         component.activate();
+        assertThat(logservice.getLogmessages()).isNotEmpty();
         var session = new SimpleSession();
         var sessionid = component.create(session);
         assertNotNull(sessionid);

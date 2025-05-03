@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Steinar Bang
+ * Copyright 2016-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,23 @@ import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 @Component( service=SessionDAO.class, immediate=true )
 public class MemorySession extends MemorySessionDAO {
 
+    private Logger logger;
+
+    @Reference
+    public void setLogService(LogService logservice) {
+        logger = logservice.getLogger(getClass());
+    }
+
     @Activate
     public void activate() {
-        // Nothing to do yet
+        logger.info("Starting up");
     }
 
 }
