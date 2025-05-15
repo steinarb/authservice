@@ -44,7 +44,7 @@ import no.priv.bang.authservice.definitions.CipherKeyService;
  *
  * This SCR component tries to solve the problem by
  * <ol>
- * <li>Creating a cipherkey on first component startup and store the key in apache config</li>
+ * <li>Creating a cipherkey on first component startup and store the key in apache karaf config</li>
  * <li>Provide the OSGi service {@link CipherKeyService} which has a method returning the key</li>
  * </ol>
  *
