@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardContextSelect;
 import org.osgi.service.http.whiteboard.propertytypes.HttpWhiteboardFilterPattern;
 
+import no.priv.bang.authservice.definitions.AuthserviceShiroConfigService;
 import no.priv.bang.authservice.definitions.CipherKeyService;
 import no.priv.bang.authservice.web.security.shirofilter.AuthserviceShiroFilterBase;
 
@@ -61,6 +62,11 @@ public class AuthserviceShiroFilter extends AuthserviceShiroFilterBase { // NOSO
     @Reference
     public void setCipherKeyService(CipherKeyService cipherKeyService) {
         this.cipherKeyService = cipherKeyService;
+    }
+
+    @Reference
+    public void setShiroConfigService(AuthserviceShiroConfigService shiroConfigService) {
+        this.shiroConfigService = shiroConfigService;
     }
 
     @Activate

@@ -211,6 +211,18 @@
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
+                <artifactId>authservice.web.security.shiroconfig</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.priv.bang.authservice</groupId>
+                <artifactId>authservice.web.security.shiroconfig</artifactId>
+                <version>${project.version}</version>
+                <type>xml</type>
+                <classifier>features</classifier>
+            </dependency>
+            <dependency>
+                <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.shirofilter</artifactId>
                 <version>${project.version}</version>
             </dependency>

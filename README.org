@@ -68,6 +68,27 @@ Instructions:
     #+END_EXAMPLE
  8. Open a browser on the URL http://localhost:8181/authservice/useradmin and test adding/modifying users, roles and permissions
 
+** Configuration
+*** Configuring rememberme timeout
+
+Shiro rememberme sessions by default last for 30 minutes (1800000 milliseconds).
+
+If you would like a longer lifetime for the sessions, say e.g. 7 days, then you would need to:
+ 1. Find the number of milliseconds in 7 days
+    #+begin_example
+      numberOfMillisInASecond = 1000
+      numberOfMillisInAMinute = numberOfMillisInASecond * 60 = 60000
+      numberOfMillisInAnHour = numberOfMillisInAMinute * 60 = 3600000
+      numberOfMillisInADay = numberOfMillisInAnHour * 24 = 86400000
+      numberOfMillisInADay * 7 = 604800000
+    #+end_example
+ 2. Set the rememberme timeout configuration by doing the following commands from the karaf console command line:
+    #+begin_example
+      config:edit no.priv.bang.authservice.web.security.shiroconfig.ShiroConfigServiceProvider
+      config:property-set globalSessionTimeout 604800000
+      config:update
+    #+end_example
+
 ** Forms based login for nginx
 
 The webapp installed by the above installation instructions offers two URLs for use by the [[http://nginx.org/en/docs/http/ngx_http_auth_request_module.html][NGINX auth_request module]]:

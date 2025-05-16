@@ -16,6 +16,17 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>no.priv.bang.authservice</groupId>
+            <artifactId>authservice.web.security.shiroconfig</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.priv.bang.authservice</groupId>
+            <artifactId>authservice.web.security.shiroconfig</artifactId>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
         <!-- dependencies with compile scope, added to karaf feature as runtime dependencies -->
         <dependency>
             <groupId>no.priv.bang.authservice</groupId>

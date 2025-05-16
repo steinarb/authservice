@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 Steinar Bang
+ * Copyright 2018-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
+import no.priv.bang.authservice.definitions.AuthserviceShiroConfigService;
 import no.priv.bang.authservice.definitions.CipherKeyService;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 
@@ -62,11 +63,13 @@ class AuthserviceShiroFilterTest {
     @Test
     void testAuthenticationSucceed() throws Exception {
         var cipherKeyService = mock(CipherKeyService.class);
+        var shiroConfigService = mock(AuthserviceShiroConfigService.class);
         var filter = new AuthserviceShiroFilter();
         filter.setServletContext(context);
         filter.setRealm(realm);
         filter.setSession(session);
         filter.setCipherKeyService(cipherKeyService);
+        filter.setShiroConfigService(shiroConfigService);
         filter.activate();
 
         var request = mock(HttpServletRequest.class);

@@ -37,6 +37,7 @@ import org.ops4j.pax.jdbc.derby.impl.DerbyDataSourceFactory;
 import org.osgi.service.jdbc.DataSourceFactory;
 
 import no.priv.bang.authservice.db.liquibase.test.TestLiquibaseRunner;
+import no.priv.bang.authservice.definitions.AuthserviceShiroConfigService;
 import no.priv.bang.authservice.definitions.CipherKeyService;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 
@@ -66,10 +67,12 @@ public class AuthserviceShiroFilterBaseTest {
     @Test
     void testCreateShiroFilter() throws Exception {
         var cipherKeyService = mock(CipherKeyService.class);
+        var shiroConfigService = mock(AuthserviceShiroConfigService.class);
         var filter = new AuthserviceShiroFilterBase();
         filter.realm = realm;
         filter.session = session;
         filter.cipherKeyService = cipherKeyService;
+        filter.shiroConfigService = shiroConfigService;
         var classLoader = getClass().getClassLoader();
         var ini = new Ini();
         ini.load(classLoader.getResourceAsStream("test.shiro.ini"));

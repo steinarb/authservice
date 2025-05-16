@@ -25,6 +25,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 
+import no.priv.bang.authservice.definitions.AuthserviceShiroConfigService;
 import no.priv.bang.authservice.definitions.CipherKeyService;
 
 /***
@@ -39,6 +40,7 @@ public class AuthserviceShiroFilterBase extends AbstractShiroFilter {
     protected Realm realm;
     protected SessionDAO session;
     protected CipherKeyService cipherKeyService;
+    protected AuthserviceShiroConfigService shiroConfigService;
 
     /***
      * Create a {@link IniWebEnvironment} from an INI file and connect it to the current web context.
@@ -56,6 +58,7 @@ public class AuthserviceShiroFilterBase extends AbstractShiroFilter {
             var sessionmanager = new DefaultWebSessionManager();
             sessionmanager.setSessionDAO(session);
             sessionmanager.setSessionIdUrlRewritingEnabled(false);
+            sessionmanager.setGlobalSessionTimeout(shiroConfigService.getGlobalSessionTimeout());
             var securityManager = DefaultWebSecurityManager.class.cast(environment.getWebSecurityManager());
             securityManager.setSessionManager(sessionmanager);
             securityManager.setRealm(realm);
