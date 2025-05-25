@@ -263,7 +263,6 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/target/dependency/META-INF/resources/webjars/open-iconic/1.1.1</directory>
-                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
