@@ -50,13 +50,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>no.priv.bang.beans</groupId>
                 <artifactId>beans-bom</artifactId>
                 <version>${beans.version}</version>
