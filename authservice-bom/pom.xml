@@ -17,7 +17,7 @@
     <parent>
         <groupId>no.priv.bang.authservice</groupId>
         <artifactId>authservice-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.1</version>
     </parent>
     <artifactId>authservice-bom</artifactId>
 
@@ -28,63 +28,63 @@
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.definitions</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.definitions</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.db.liquibase.test</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.users</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.dbrealm</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.memorysession</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.shirofilter</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>authservice.web.security.shirofilter</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
             <dependency>
                 <groupId>no.priv.bang.authservice</groupId>
                 <artifactId>karaf</artifactId>
-                <version>3.0.1-SNAPSHOT</version>
+                <version>3.0.1</version>
                 <type>xml</type>
                 <classifier>features</classifier>
             </dependency>
