@@ -18,6 +18,8 @@
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@vitejs/plugin-react": "^4.6.0",
+        "eslint": "^9.30.1",
+        "eslint-plugin-react": "^7.37.5",
         "vite": "^6.3.5",
         "vite-plugin-simple-html": "^1.0.1"
     }
