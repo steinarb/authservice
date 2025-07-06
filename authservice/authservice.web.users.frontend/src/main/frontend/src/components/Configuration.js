@@ -45,7 +45,7 @@ export default function Configuration() {
                                 disabled={!(configIsLoaded && configuration.isModified)}
                                 onClick={onModifyConfigClicked}>
                                 Modify configuration</button>
-'                        </FormField>
+                        </FormField>
                     </FormRow>
                 </Container>
             </form>
