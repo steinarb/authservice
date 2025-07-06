@@ -104,7 +104,7 @@ export default function UserModify() {
                     </FormRow>
                     <FormRow>
                         <FormLabel htmlFor="islocked">Locked</FormLabel>
-                        <div class="col-1">
+                        <div className="col-1">
                             <input
                                 id="islocked"
                                 className="form-check-input"
@@ -112,7 +112,7 @@ export default function UserModify() {
                                 checked={user.isLocked}
                                 readOnly={true} />
                         </div>
-                        <div class="col-3">
+                        <div className="col-3">
                             <button
                                 className="btn btn-primary form-control"
                                 onClick={onUserUnlockClicked}
