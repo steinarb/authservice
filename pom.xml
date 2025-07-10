@@ -63,6 +63,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
