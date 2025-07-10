@@ -67,34 +67,6 @@
                             <goal>javadoc-no-fork</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>aggregate-javadocs</id>
-                        <goals>
-                            <goal>aggregate-no-fork</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                        <inherited>false</inherited>
-                        <configuration>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-aggregate-javadoc</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <classesDirectory>${project.build.directory}/site/apidocs</classesDirectory>
-                            <classifier>javadoc</classifier>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
