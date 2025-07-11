@@ -238,7 +238,7 @@ Do the following steps:
        #+BEGIN_SRC nxml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
          <features xmlns="http://karaf.apache.org/xmlns/features/v1.5.0" name="authservice.bundle">
-             <repository>mvn:no.priv.bang.authservice/karaf/3.0.1/xml/features</repository>
+             <repository>mvn:no.priv.bang.authservice/karaf/3.0.2/xml/features</repository>
              <feature name="${karaf-feature-name}">
                  <feature>user-admin-with-productiondb</feature>
              </feature>
@@ -453,6 +453,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                               |
 |--------------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [2025-07-11] |   3.0.2 | Use liquibase-4.33.0                                                                                                                                  |
 | [2025-06-18] |   3.0.1 | Use jersey 2.47 and jackson 2.19.1                                                                                                                    |
 | [2025-06-14] |   3.0.0 | Build for java 21 (reason for major version bump), use PostgreSQL 42.7.7                                                                              |
 | [2025-05-17] |   2.4.0 | Add support for karaf config of rememberme session timeout                                                                                            |
