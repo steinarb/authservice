@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2025 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class HtmlTemplateResource {
     }
 
     protected Document loadHtmlFile(String htmlFile, LogService logservice) {
-        try (InputStream body = getClasspathResource(htmlFile)) {
+        try (var body = getClasspathResource(htmlFile)) {
             return Jsoup.parse(body, "UTF-8", "");
         } catch (IOException e) {
             var logger = logservice.getLogger(getClass());
