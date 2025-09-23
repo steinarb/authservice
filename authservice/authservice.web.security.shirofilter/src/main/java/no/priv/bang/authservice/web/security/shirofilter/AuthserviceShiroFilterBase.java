@@ -34,7 +34,7 @@ import no.priv.bang.authservice.definitions.CipherKeyService;
  * The {@link #createShiroWebEnvironmentFromIniFile} method must be called by the subclass
  * after {@link #realm}, {@link #session} and {@link #cipherKeyService} have been set
  */
-public class AuthserviceShiroFilterBase extends AbstractShiroFilter {
+public class AuthserviceShiroFilterBase extends AbstractShiroFilter { // NOSONAR we don't control the shiro inheritance structure
 
     // Dependency injected shiro services
     protected Realm realm;
