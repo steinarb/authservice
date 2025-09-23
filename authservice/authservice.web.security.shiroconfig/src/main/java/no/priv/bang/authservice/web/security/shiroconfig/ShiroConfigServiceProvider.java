@@ -41,7 +41,7 @@ public class ShiroConfigServiceProvider implements AuthserviceShiroConfigService
     @Activate
     public void activate(Map<String, Object> config) {
         globalSessionTimeout = Optional.ofNullable((String)config.get(TIMEOUT_CONFIG_KEY))
-            .map(c -> Long.valueOf(c))
+            .map(Long::valueOf)
             .orElse(AbstractSessionManager.DEFAULT_GLOBAL_SESSION_TIMEOUT);
     }
 
