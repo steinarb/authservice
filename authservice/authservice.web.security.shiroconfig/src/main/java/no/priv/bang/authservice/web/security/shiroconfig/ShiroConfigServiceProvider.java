@@ -15,7 +15,6 @@
  */
 package no.priv.bang.authservice.web.security.shiroconfig;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +39,7 @@ public class ShiroConfigServiceProvider implements AuthserviceShiroConfigService
     public ConfigRepository configRepository;
 
     @Activate
-    public void activate(Map<String, Object> config) throws IOException {
+    public void activate(Map<String, Object> config) {
         globalSessionTimeout = Optional.ofNullable((String)config.get(TIMEOUT_CONFIG_KEY))
             .map(c -> Long.valueOf(c))
             .orElse(AbstractSessionManager.DEFAULT_GLOBAL_SESSION_TIMEOUT);
