@@ -41,7 +41,7 @@ import no.priv.bang.authservice.definitions.AuthserviceShiroConfigService;
 import no.priv.bang.authservice.definitions.CipherKeyService;
 import no.priv.bang.authservice.web.security.dbrealm.AuthserviceDbRealm;
 
-public class AuthserviceShiroFilterBaseTest {
+class AuthserviceShiroFilterBaseTest {
 
     private static MemorySessionDAO session = new MemorySessionDAO();
     private static AuthserviceDbRealm realm;
