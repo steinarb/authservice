@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 class ShiroConfigServiceProviderTest {
 
     @Test
-    void testUncofiguredComponent() throws Exception {
+    void testUnconfiguredComponent() {
         var configRepository = mock(ConfigRepository.class);
         var component = new ShiroConfigServiceProvider();
         component.configRepository = configRepository;
@@ -39,7 +39,7 @@ class ShiroConfigServiceProviderTest {
     }
 
     @Test
-    void testConfiguredComponent() throws Exception {
+    void testConfiguredComponent() {
         var millisPerSecond = 1000L;
         var millisPerMinute = millisPerSecond * 60L;
         var millisPerHour = millisPerMinute * 60L;
