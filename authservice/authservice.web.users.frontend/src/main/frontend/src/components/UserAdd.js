@@ -103,7 +103,7 @@ export default function UserAdd() {
                         <button
                             className="btn btn-primary form-control"
                             onClick={onAddButtonClicked}>
-                            Opprett bruker</button>
+                            Create user</button>
                     </FormRow>
                 </Container>
             </form>
