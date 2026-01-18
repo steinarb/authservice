@@ -21,7 +21,7 @@ It also creates a simple self-service GUI for logged in users to change their us
 [[https://github.com/steinarb/authservice/actions/workflows/authservice-maven-ci-build.yml][file:https://github.com/steinarb/authservice/actions/workflows/authservice-maven-ci-build.yml/badge.svg]]
 [[https://coveralls.io/github/steinarb/authservice][file:https://coveralls.io/repos/github/steinarb/authservice/badge.svg]]
 [[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_authservice&metric=alert_status#.svg]]
-[[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.authservice/authservice/badge.svg]]
+[[https://maven-badges.sml.io/sonatype-central/no.priv.bang.authservice/authservice][file:https://maven-badges.sml.io/sonatype-central/no.priv.bang.authservice/authservice/badge.svg]]
 [[https://www.javadoc.io/doc/no.priv.bang.authservice/authservice-parent][file:https://www.javadoc.io/badge/no.priv.bang.authservice/authservice-parent.svg]]
 
 [[https://sonarcloud.io/summary/new_code?id=steinarb_authservice][file:https://sonarcloud.io/images/project_badges/sonarcloud-white.svg]]
