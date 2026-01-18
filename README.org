@@ -454,7 +454,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 | Date         | Version | Comment                                                                                                                                               |
 |--------------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [2025-12-23] |   3.0.6 | Built with karaf 4.4.9 BOM                                                                                                                            |
-| [2025-11-06] |   3.0.5  | Use shiro 2.0.6, bang-servlet 3.0.2 (which uses shiro 2.0.6)                                                                                          |
+| [2025-11-06] |   3.0.5 | Use shiro 2.0.6, bang-servlet 3.0.2 (which uses shiro 2.0.6)                                                                                          |
 | [2025-09-20] |   3.0.4 | use PostgreSQL 42.7.8                                                                                                                                 |
 | [2025-07-16] |   3.0.3 | Use shiro 2.0.5, bang-servlet 3.0.1 (which uses shiro 2.0.5)                                                                                          |
 | [2025-07-11] |   3.0.2 | Use liquibase-4.33.0                                                                                                                                  |
