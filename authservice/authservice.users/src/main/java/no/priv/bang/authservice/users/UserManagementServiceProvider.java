@@ -454,11 +454,16 @@ public class UserManagementServiceProvider implements UserManagementService {
         var user = userroles.user();
         var roles = userroles.roles();
         if (!roles.isEmpty()) {
-            var roleSet = roles.stream().map(r -> "\'" + r.rolename() + "\'").collect(Collectors.joining(","));
-            var sql = String.format("delete from user_roles where username=? and role_name in (%s)", roleSet);
+            var roleSet = roles.stream().map(r -> "?").collect(Collectors.joining(","));
+            var sql = "delete from user_roles where username=? and role_name in (" + roleSet + ")";
             try(var connection = datasource.getConnection()) {
-                try(var statement = connection.prepareStatement(sql)) {
+                try(var statement = connection.prepareStatement(sql)) { // NOSONAR the dynamic string is created from text constants so no risk of SQL injection
                     statement.setString(1, user.username());
+                    int roleIndex = 2;
+                    for (var role : roles) {
+                        statement.setString(roleIndex++, role.rolename());
+                    }
+
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
@@ -529,11 +534,16 @@ public class UserManagementServiceProvider implements UserManagementService {
         var role = rolepermissions.role();
         var permissions = rolepermissions.permissions();
         if (!permissions.isEmpty()) {
-            var roleSet = permissions.stream().map(p -> "\'" + p.permissionname() + "\'").collect(Collectors.joining(","));
-            var sql = String.format("delete from roles_permissions where role_name=? and permission_name in (%s)", roleSet);
+            var permissionSet = permissions.stream().map(r -> "?").collect(Collectors.joining(","));
+            var sql = "delete from roles_permissions where role_name=? and permission_name in (" + permissionSet + ")";
             try(var connection = datasource.getConnection()) {
-                try(var statement = connection.prepareStatement(sql)) {
+                try(var statement = connection.prepareStatement(sql)) { // NOSONAR the dynamic string is created from text constants so no risk of SQL injection
                     statement.setString(1, role.rolename());
+                    int permissionIndex = 2;
+                    for (var permission : permissions) {
+                        statement.setString(permissionIndex++, permission.permissionname());
+                    }
+
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
