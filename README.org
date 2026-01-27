@@ -453,7 +453,7 @@ Authservice uses XML syntax liquibase to set up the schema, straightforward SQL 
 
 | Date         | Version | Comment                                                                                                                                               |
 |--------------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [2026-01-26] |   3.0.8 | Use liqibase 5.0.1                                                                                                                                    |
+| [2026-01-26] |   3.0.8 | Use liquibase 5.0.1                                                                                                                                   |
 | [2026-01-21] |   3.0.7 | Use postgresql 42.7.9 and jsoup 1.22.1                                                                                                                |
 | [2025-12-23] |   3.0.6 | Built with karaf 4.4.9 BOM                                                                                                                            |
 | [2025-11-06] |   3.0.5 | Use shiro 2.0.6, bang-servlet 3.0.2 (which uses shiro 2.0.6)                                                                                          |
