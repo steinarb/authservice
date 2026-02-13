@@ -3,7 +3,7 @@
     <parent>
         <artifactId>authservice</artifactId>
         <groupId>no.priv.bang.authservice</groupId>
-        <version>3.0.9-SNAPSHOT</version>
+        <version>3.0.9</version>
     </parent>
 
     <artifactId>authservice.web.security.dbrealm</artifactId>
