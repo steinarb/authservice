@@ -20,7 +20,7 @@ const errorsReducer = createReducer({}, builder => {
             return { ...state, rolepermissions };
         })
         .addMatcher(isPermissionsFailure, (state, action) => {
-            const rolepermissions = action.payload;
+            const permissions = action.payload;
             return { ...state, permissions };
         });
 });
