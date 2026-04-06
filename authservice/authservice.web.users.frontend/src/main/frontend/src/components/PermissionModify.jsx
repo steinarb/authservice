@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetPermissionsQuery, usePostPermissionModifyMutation } from '../api';
 import { selectPermission, clearPermission, setPermissionPermissionname, setPermissionDescription } from '../reducers/permissionSlice';

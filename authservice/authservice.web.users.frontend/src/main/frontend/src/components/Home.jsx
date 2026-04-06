@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from './bootstrap/Container';
 import ChevronLeft from './bootstrap/ChevronLeft';
 import StyledLinkRight from './bootstrap/StyledLinkRight';

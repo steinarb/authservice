@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUsersQuery, usePostPasswordUpdateMutation } from '../api';
 import { selectUser, clearUser } from '../reducers/userSlice';

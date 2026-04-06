@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { isConfigurationLoaded } from '../matchers';
-import { emptyRole } from '../constants';
 
 const initialState = {
     excessiveFailedLoginLimit: 3,

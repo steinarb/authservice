@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { usePostUserAddMutation } from '../api';
-import { selectUser, clearUser, setUserUsername, setUserEmail, setUserFirstname, setUserLastname } from '../reducers/userSlice';
+import { clearUser, setUserUsername, setUserEmail, setUserFirstname, setUserLastname } from '../reducers/userSlice';
 import { clearPassword, setPassword1, setPassword2 } from '../reducers/passwordSlice';
 import Container from './bootstrap/Container';
 import StyledLinkLeft from './bootstrap/StyledLinkLeft';

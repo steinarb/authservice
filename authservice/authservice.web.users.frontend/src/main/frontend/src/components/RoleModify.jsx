@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetRolesQuery, usePostRoleModifyMutation } from '../api';
 import { selectRole, clearRole, setRoleRolename, setRoleDescription } from '../reducers/roleSlice';

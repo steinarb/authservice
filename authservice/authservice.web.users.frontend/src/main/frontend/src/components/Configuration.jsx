@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetConfigQuery, usePostConfigModifyMutation } from '../api';
 import { setExcessiveFailedLoginLimit } from '../reducers/configurationSlice';
