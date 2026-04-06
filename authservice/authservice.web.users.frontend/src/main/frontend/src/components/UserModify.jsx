@@ -22,7 +22,7 @@ export default function UserModify() {
 
     useEffect(() => {
         dispatch(clearUser());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

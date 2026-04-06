@@ -19,7 +19,7 @@ export default function PermissionModify() {
 
     useEffect(() => {
         dispatch(clearPermission());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

@@ -20,7 +20,7 @@ export default function UserAdd() {
     useEffect(() => {
         dispatch(clearUser());
         dispatch(clearPassword());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

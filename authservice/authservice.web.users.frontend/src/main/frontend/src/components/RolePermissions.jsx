@@ -37,7 +37,7 @@ export default function RolePermissions() {
     useEffect(() => {
         dispatch(clearRole());
         dispatch(clearSelectedInPermissions());
-    },[]);
+    },[dispatch]);
 
     const addPermissionDisabled = isUnselected(selectedInPermissions.notOnRole);
     const removePermissionDisabled = isUnselected(selectedInPermissions.onRole);

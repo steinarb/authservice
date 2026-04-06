@@ -17,7 +17,7 @@ export default function PermissionAdd() {
 
     useEffect(() => {
        dispatch(clearPermission());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

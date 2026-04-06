@@ -17,7 +17,7 @@ export default function RoleAdd() {
 
     useEffect(() => {
         dispatch(clearRole());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

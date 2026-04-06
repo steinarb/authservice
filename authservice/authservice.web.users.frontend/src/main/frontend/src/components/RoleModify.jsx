@@ -19,7 +19,7 @@ export default function RoleModify() {
 
     useEffect(() => {
         dispatch(clearRole());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

@@ -22,7 +22,7 @@ export default function UserChangePasswords() {
     useEffect(() => {
         dispatch(clearUser());
         dispatch(clearPassword());
-    },[]);
+    },[dispatch]);
 
     return (
         <div>

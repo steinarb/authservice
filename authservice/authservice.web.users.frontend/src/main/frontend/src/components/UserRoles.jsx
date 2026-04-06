@@ -37,7 +37,7 @@ export default function UserRoles() {
     useEffect(() => {
         dispatch(clearUser());
         dispatch(clearSelectedInRoles());
-    }, []);
+    }, [dispatch]);
 
     const addRoleDisabled = isUnselected(selectedInRoles.notOnUser);
     const removeRoleDisabled = isUnselected(selectedInRoles.onUser);
