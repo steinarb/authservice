@@ -20,7 +20,9 @@ export const api = createApi({
                 try {
                     const { data: usersAfterUserModify } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUsers', undefined, () => usersAfterUserModify));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         getUserUnlock: builder.mutation({
@@ -29,7 +31,9 @@ export const api = createApi({
                 try {
                     const { data: usersAfterUserUnlock } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUsers', undefined, () => usersAfterUserUnlock));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postPasswordUpdate: builder.mutation({
@@ -38,7 +42,9 @@ export const api = createApi({
                 try {
                     const { data: usersAfterPasswordUpdate } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUsers', undefined, () => usersAfterPasswordUpdate));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postUserAdd: builder.mutation({
@@ -47,7 +53,9 @@ export const api = createApi({
                 try {
                     const { data: usersAfterUserAdd } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUsers', undefined, () => usersAfterUserAdd));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postUserAddroles: builder.mutation({
@@ -56,7 +64,9 @@ export const api = createApi({
                 try {
                     const { data: userRolesAfterUserAddroles } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUserRoles', undefined, () => userRolesAfterUserAddroles));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postUserRemoveroles: builder.mutation({
@@ -65,7 +75,9 @@ export const api = createApi({
                 try {
                     const { data: userRolesAfterUserRemoveroles } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getUserRoles', undefined, () => userRolesAfterUserRemoveroles));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postRoleModify: builder.mutation({
@@ -74,7 +86,9 @@ export const api = createApi({
                 try {
                     const { data: rolesAfterRoleModify } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getRoles', undefined, () => rolesAfterRoleModify));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postRoleAdd: builder.mutation({
@@ -83,7 +97,9 @@ export const api = createApi({
                 try {
                     const { data: rolesAfterRoleAdd } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getRoles', undefined, () => rolesAfterRoleAdd));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postRoleAddpermissions: builder.mutation({
@@ -92,7 +108,9 @@ export const api = createApi({
                 try {
                     const { data: rolePermissionsAfterRoleAddpermissions } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getRolePermissions', undefined, () => rolePermissionsAfterRoleAddpermissions));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postRoleRemovepermissions: builder.mutation({
@@ -101,7 +119,9 @@ export const api = createApi({
                 try {
                     const { data: rolePermissionsAfterRoleRemovepermissions } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getRolePermissions', undefined, () => rolePermissionsAfterRoleRemovepermissions));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postPermissionModify: builder.mutation({
@@ -110,7 +130,9 @@ export const api = createApi({
                 try {
                     const { data: permissionsAfterPermissionModify } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getPermissions', undefined, () => permissionsAfterPermissionModify));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postPermissionAdd: builder.mutation({
@@ -119,7 +141,9 @@ export const api = createApi({
                 try {
                     const { data: permissionsAfterPermissionAdd } = await queryFulfilled;
                     dispatch(api.util.updateQueryData('getPermissions', undefined, () => permissionsAfterPermissionAdd));
-                } catch {}
+                } catch {
+                    // Skip and continue
+                }
             },
         }),
         postConfigModify: builder.mutation({ query: body => ({ url: '/config', method: 'POST', body }) }),
