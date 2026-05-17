@@ -4,7 +4,7 @@
     <parent>
         <artifactId>authservice</artifactId>
         <groupId>no.priv.bang.authservice</groupId>
-        <version>3.0.13</version>
+        <version>3.0.14-SNAPSHOT</version>
     </parent>
 
     <artifactId>authservice.web.security</artifactId>
