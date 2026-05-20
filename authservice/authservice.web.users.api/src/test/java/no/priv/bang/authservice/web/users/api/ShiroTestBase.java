@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Steinar Bang
+ * Copyright 2024-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 package no.priv.bang.authservice.web.users.api;
 
 import static org.apache.shiro.web.util.WebUtils.SAVED_REQUEST_KEY;
+import static org.mockito.AdditionalAnswers.delegatesTo;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,9 +59,16 @@ public class ShiroTestBase {
     }
 
     protected void loginUser(HttpServletRequest request, HttpServletResponse response, String username, String password) {
-        var subject = createSubjectAndBindItToThread(request, response);
+        var subject = createSubjectAndBindItToThread(wrapRequestInMock(request), response);
         var token = new UsernamePasswordToken(username, password.toCharArray(), true);
         subject.login(token);
+    }
+
+    // Workaround for MockHttpServletRequest not implementing all methods of HttpServletRequest interface in classpath
+    private HttpServletRequest wrapRequestInMock(HttpServletRequest request) {
+        var wrapped = mock(HttpServletRequest.class, withSettings().defaultAnswer(delegatesTo(request)));
+        doReturn("").when(wrapped).changeSessionId();
+        return wrapped;
     }
 
     protected void removeWebSubjectFromThread() {
