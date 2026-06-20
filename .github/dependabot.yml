@@ -19,7 +19,7 @@ updates:
 - package-ecosystem: "npm"
   directory: "/authservice/authservice.web.users.frontend/src/main/frontend/"
   schedule:
-    !interval: "weekly"
+    interval: "weekly"
   groups:
     react-updates:
       applies-to: version-updates
