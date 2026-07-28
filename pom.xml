@@ -9,7 +9,7 @@
     </parent>
     <groupId>no.priv.bang.authservice</groupId>
     <artifactId>authservice-parent</artifactId>
-    <version>3.0.18-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <packaging>pom</packaging>
 
@@ -23,6 +23,7 @@
     </modules>
 
     <properties>
+        <revision>999-SNAPSHOT</revision>
         <junit.jupiter.version>6.1.2</junit.jupiter.version>
         <commons-logging.version>3.2.2</commons-logging.version>
         <snakeyaml.version>1.17</snakeyaml.version>
