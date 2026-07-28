@@ -71,14 +71,6 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <releaseProfiles>release-sign-artifact</releaseProfiles>
-                    <tagNameFormat>authservice-@{project.version}</tagNameFormat>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
