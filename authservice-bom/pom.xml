@@ -22,6 +22,7 @@ under the License.
         <version>3.0.18-SNAPSHOT</version>
     </parent>
     <artifactId>authservice-bom</artifactId>
+    <packaging>pom</packaging>
 
     <name>Authentication webapp Bill of Materials</name>
 
