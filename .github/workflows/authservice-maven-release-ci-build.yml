@@ -1,0 +1,41 @@
+name: Deploy Release to Maven Central Portal
+
+# Trigger only when semantic tag releases are pushed (e.g. v1.2.0)
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish-to-central:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v7
+
+      - name: Set up Java Environment
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21' # Adjust this to your specific runtime (e.g. 17, 21)
+          distribution: 'temurin'
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Setup Maven Settings
+        uses: s4u/maven-settings-action@v4.0.0
+        with:
+          servers: '[{"id": "central", "username": "${{secrets.CENTRAL_PORTAL_USERNAME}}", "password": "${{secrets.CENTRAL_PORTAL_PASSWORD}}"}]'
+
+      - name: Extract maven release version from tag into enviroment variable RELEASE_VERSION
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Compile, Sign and Publish Artifacts
+        env:
+          # Environment variable MAVEN_GPG_PASSPHRASE is picked up by maven-gpg-plugin 3.0.0+
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          mvn --batch-mode clean deploy -Prelease-sign-artifact -DskipTests \
+            -Drevision="${RELEASE_VERSION}"
