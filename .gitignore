@@ -1,5 +1,6 @@
 *.log
 .classpath
+.flattened-pom.xml
 .project
 .settings/
 /.metadata/
