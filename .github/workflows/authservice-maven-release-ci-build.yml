@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Java Environment
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: '21' # Adjust this to your specific runtime (e.g. 17, 21)
           distribution: 'temurin'
