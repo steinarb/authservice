@@ -433,12 +433,14 @@ public class UserManagementServiceProvider implements UserManagementService {
         var existingRoles = findExistingRolesForUser(user);
         try(var connection = datasource.getConnection()) {
             var rolesNotAlreadyOnUser = roles.stream().filter(r -> !existingRoles.contains(r.rolename())).toList();
-            for (var role : rolesNotAlreadyOnUser) {
-                try(var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
+            try(var statement = connection.prepareStatement("insert into user_roles (role_name, username) values (?, ?)")) {
+                for (var role : rolesNotAlreadyOnUser) {
                     statement.setString(1, role.rolename());
                     statement.setString(2, user.username());
-                    statement.executeUpdate();
+                    statement.addBatch();
                 }
+
+                statement.executeBatch();
             }
         } catch (SQLException e) {
             var message = String.format("UserManagmentService failed to add roles to user %s", user.username());
@@ -513,12 +515,14 @@ public class UserManagementServiceProvider implements UserManagementService {
         var existingPermissions = findExistingPermissionsForRole(role);
         try(var connection = datasource.getConnection()) {
             var permissionsNotAlreadyOnrole = permissions.stream().filter(p -> !existingPermissions.contains(p.permissionname())).toList();
-            for (var permission : permissionsNotAlreadyOnrole) {
-                try(var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
+            try(var statement = connection.prepareStatement("insert into roles_permissions (role_name, permission_name) values (?, ?)")) {
+                for (var permission : permissionsNotAlreadyOnrole) {
                     statement.setString(1, role.rolename());
                     statement.setString(2, permission.permissionname());
-                    statement.executeUpdate();
+                    statement.addBatch();
                 }
+
+                statement.executeBatch();
             }
         } catch (SQLException e) {
             var message = String.format("UserManagmentService failed to add roles to user %s", role.rolename());
