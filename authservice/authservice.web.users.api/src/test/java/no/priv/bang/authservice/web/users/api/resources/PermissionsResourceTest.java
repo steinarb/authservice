@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.users.api.resources;
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.users.api.resources;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +24,6 @@ import javax.ws.rs.InternalServerErrorException;
 
 import org.junit.jupiter.api.Test;
 import no.priv.bang.authservice.definitions.AuthserviceException;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import static no.priv.bang.authservice.web.users.api.resources.Testdata.*;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.UserManagementService;
@@ -33,11 +32,9 @@ class PermissionsResourceTest {
 
     @Test
     void testGetPermissions() {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenReturn(createPermissions());
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         var permissions = resource.getPermissions();
@@ -46,11 +43,9 @@ class PermissionsResourceTest {
 
     @Test
     void testGetPermissionsWhenExceptionIsThrown() {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenThrow(AuthserviceException.class);
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, resource::getPermissions);
@@ -58,13 +53,11 @@ class PermissionsResourceTest {
 
     @Test
     void testModifyPermission() {
-        var logservice = new MockLogService();
         var originalPermissions = createPermissions();
         var permission = originalPermissions.stream().findFirst().get();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenReturn(originalPermissions);
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         var permissions = resource.modifyPermission(permission);
@@ -73,13 +66,11 @@ class PermissionsResourceTest {
 
     @Test
     void testModifyPermissionWhenExceptionIsThrown() {
-        var logservice = new MockLogService();
         var originalPermissions = createPermissions();
         var permission = originalPermissions.stream().findFirst().get();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenThrow(AuthserviceException.class);
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> resource.modifyPermission(permission));
@@ -87,7 +78,6 @@ class PermissionsResourceTest {
 
     @Test
     void testAddPermission() {
-        var logservice = new MockLogService();
         var originalPermissions = createPermissions();
         var permission = Permission.with().build();
         var updatedPermissions = new ArrayList<Permission>(originalPermissions);
@@ -95,7 +85,6 @@ class PermissionsResourceTest {
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenReturn(updatedPermissions);
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         var permissions = resource.addPermission(permission);
@@ -104,12 +93,10 @@ class PermissionsResourceTest {
 
     @Test
     void testAddPermissionWhenExceptionIsThrown() {
-        var logservice = new MockLogService();
         var permission = Permission.with().build();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenThrow(AuthserviceException.class);
         var resource = new PermissionsResource();
-        resource.setLogservice(logservice);
         resource.usermanagement = usermanagement;
 
         assertThrows(InternalServerErrorException.class, () -> resource.addPermission(permission));

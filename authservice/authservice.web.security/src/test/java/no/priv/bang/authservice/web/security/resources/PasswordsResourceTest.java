@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2019-2025 Steinar Bang
+ * Copyright 2019-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordsNotIdenticalException;
 import no.priv.bang.authservice.web.security.ShiroTestBase;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
@@ -57,10 +56,8 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "secret";
@@ -79,11 +76,9 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordsNotIdenticalException.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "zecret";
@@ -102,11 +97,9 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         loginUser(username, "1ad");
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "";
         var password2 = "";
@@ -125,11 +118,9 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         ThreadContext.remove();
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "secret";
@@ -148,11 +139,9 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         createSubjectWithNullPrincipalAndBindItToThread();
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "secret";
@@ -171,11 +160,9 @@ class PasswordsResourceTest extends ShiroTestBase {
         var user = User.with().userid(userid).username(username).email(email).firstname(firstname).lastname(lastname).build();
         createSubjectAndBindItToThread();
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
         when(useradmin.getUsers()).thenReturn(Arrays.asList(user));
         when(useradmin.updatePassword(any())).thenThrow(AuthservicePasswordEmptyException.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "secret";
@@ -189,9 +176,7 @@ class PasswordsResourceTest extends ShiroTestBase {
         var username = "jad";
         loginUser(username, "1ad");
         var resource = new PasswordsResource();
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
-        resource.setLogservice(logservice);
         resource.useradmin = useradmin;
         var password1 = "secret";
         var password2 = "secret";

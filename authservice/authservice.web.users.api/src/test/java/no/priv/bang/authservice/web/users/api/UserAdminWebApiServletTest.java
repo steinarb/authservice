@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.users.api;
 /*
- * Copyright 2018-2025 Steinar Bang
+ * Copyright 2018-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.users.api;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +35,6 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.ServerProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.osgi.service.log.LogService;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -48,7 +47,6 @@ import com.mockrunner.mock.web.MockServletOutputStream;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import static no.priv.bang.authservice.web.users.api.resources.Testdata.*;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.Permission;
 import no.priv.bang.osgiservice.users.Role;
 import no.priv.bang.osgiservice.users.User;
@@ -67,14 +65,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetUsers() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenReturn(createUsers());
 
         var request = buildGetUrl("/users");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -86,14 +83,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetUsersWhenExceptionIsThrown() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUsers()).thenThrow(AuthserviceException.class);
 
         var request = buildGetUrl("/users");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -103,7 +99,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testModifyUser() throws Exception {
-        var logservice = new MockLogService();
         var originalUsers = createUsers();
         var user = originalUsers.stream().reduce((first, second) -> second).get();
         var usermanagement = mock(UserManagementService.class);
@@ -114,7 +109,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -126,7 +121,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testUnlockUser() throws Exception {
-        var logservice = new MockLogService();
         var originalUsers = createUsers();
         var user = originalUsers.stream().reduce((first, second) -> second).get();
         var usermanagement = mock(UserManagementService.class);
@@ -135,7 +129,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         var request = buildGetUrl("/user/unlock/" + user.username());
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -147,7 +141,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testModifyUserWithWrongTypeInPostData() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
 
         // Send a UserAndPasswords object where a User object is expected
@@ -160,7 +153,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -170,7 +163,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testUpdatePassword() throws Exception {
-        var logservice = new MockLogService();
         var originalUsers = createUsers();
         var user = originalUsers.stream().reduce((first, second) -> second).get();
         var usermanagement = mock(UserManagementService.class);
@@ -183,7 +175,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -195,7 +187,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testAddUser() throws Exception {
-        var logservice = new MockLogService();
         var originalUsers = createUsers();
         var user = User.with()
             .userid(-1)
@@ -220,7 +211,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -232,14 +223,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetUserRoles() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getUserRoles()).thenReturn(createUserroles());
 
         var request = buildGetUrl("/users/roles");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -251,14 +241,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testAddUserRoles() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addUserRoles(any())).thenReturn(createUserroles());
 
         var request = buildPostUrl("/user/addroles");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -270,14 +259,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testRemoveUserRoles() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeUserRoles(any())).thenReturn(createUserroles());
 
         var request = buildPostUrl("/user/removeroles");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -289,14 +277,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetRoles() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRoles()).thenReturn(createRoles());
 
         var request = buildGetUrl("/roles");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -308,7 +295,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testModifyRole() throws Exception {
-        var logservice = new MockLogService();
         var role = Role.with().id(1).rolename("somerole").description("Some role").build();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyRole(any())).thenReturn(Arrays.asList(role));
@@ -318,7 +304,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -330,7 +316,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testAddRole() throws Exception {
-        var logservice = new MockLogService();
         var role = Role.with().id(1).rolename("somerole").description("Some role").build();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRole(any())).thenReturn(Arrays.asList(role));
@@ -340,7 +325,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -352,14 +337,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetRolePermissions() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getRolesPermissions()).thenReturn(createRolesPermissions());
 
         var request = buildGetUrl("/roles/permissions");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -371,14 +355,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testAddRolePermissions() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addRolePermissions(any())).thenReturn(createRolesPermissions());
 
         var request = buildPostUrl("/role/addpermissions");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -390,14 +373,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testRemoveRolePermissions() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.removeRolePermissions(any())).thenReturn(createRolesPermissions());
 
         var request = buildPostUrl("/role/removepermissions");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -409,14 +391,13 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetPermissions() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getPermissions()).thenReturn(createPermissions());
 
         var request = buildGetUrl("/permissions");
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -428,7 +409,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testModifyPermission() throws Exception {
-        var logservice = new MockLogService();
         var permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.modifyPermission(any())).thenReturn(Arrays.asList(permission));
@@ -438,7 +418,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -450,7 +430,6 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testAddPermission() throws Exception {
-        var logservice = new MockLogService();
         var permission = Permission.with().id(1).permissionname("somepermission").description("Some permission").build();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.addPermission(any())).thenReturn(Arrays.asList(permission));
@@ -460,7 +439,7 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         request.setBodyContent(postBody);
         var response = new MockHttpServletResponse();
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
 
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
@@ -472,12 +451,11 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
 
     @Test
     void testGetAndSetConfig() throws Exception {
-        var logservice = new MockLogService();
         var usermanagement = mock(UserManagementService.class);
         when(usermanagement.getConfig()).thenReturn(UserManagementConfig.with().excessiveFailedLoginLimit(3).build());
         when(usermanagement.modifyConfig(any())).thenReturn(UserManagementConfig.with().excessiveFailedLoginLimit(4).build());
 
-        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement, logservice);
+        var servlet = simulateDSComponentActivationAndWebWhiteboardConfiguration(usermanagement);
         createSubjectAndBindItToThread();
         loginUser("admin", "admin");
 
@@ -525,9 +503,8 @@ class UserAdminWebApiServletTest extends ShiroTestBase {
         return request;
     }
 
-    private UserAdminWebApiServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(UserManagementService usermanagement, LogService logservice) throws Exception {
+    private UserAdminWebApiServlet simulateDSComponentActivationAndWebWhiteboardConfiguration(UserManagementService usermanagement) throws Exception {
         var servlet = new UserAdminWebApiServlet();
-        servlet.setLogService(logservice);
         servlet.setUserManagementService(usermanagement);
         servlet.activate();
         var config = createServletConfigWithApplicationAndPackagenameForJerseyResources();

@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2018-2025 Steinar Bang
+ * Copyright 2018-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +14,10 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import java.io.InputStream;
 import java.net.URI;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -41,25 +40,17 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("")
 public class AuthserviceResource extends HtmlTemplateResource {
     private static final String LOGIN_ERROR = "Login error: ";
     private static final String LOGIN_HTML = "web/login.html";
+    private Logger logger = LoggerFactory.getLogger(AuthserviceResource.class);
 
     @Context
     HttpHeaders httpHeaders;
-
-    private LogService logservice;
-    Logger logger;
-
-    @Inject
-    void setLogservice(LogService logservice) {
-        this.logservice = logservice;
-        this.logger = logservice.getLogger(getClass());
-    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -85,7 +76,7 @@ public class AuthserviceResource extends HtmlTemplateResource {
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
     public Response getLogin(@QueryParam("originalUri") String originalUri) {
-        var html = loadHtmlFile(LOGIN_HTML, logservice);
+        var html = loadHtmlFile(LOGIN_HTML);
         fillFormValues(html, originalUri);
 
         return Response.status(Response.Status.OK).entity(html.html()).build();
@@ -106,31 +97,31 @@ public class AuthserviceResource extends HtmlTemplateResource {
         } catch(UnknownAccountException e) {
             var message = "unknown user";
             logger.warn(LOGIN_ERROR + message, e);
-            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (IncorrectCredentialsException  e) {
             var message = "wrong password";
             logger.warn(LOGIN_ERROR + message, e);
-            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (LockedAccountException  e) {
             var message = "locked account";
             logger.warn(LOGIN_ERROR + message, e);
-            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (ExcessiveAttemptsException e) {
             var message = "too many failed logins, account will be locked, please contact administrator";
             logger.warn(LOGIN_ERROR + message, e);
-            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (AuthenticationException e) {
             var message = "general authentication error";
             logger.warn(LOGIN_ERROR + message, e);
-            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message, logservice);
+            var html = loadHtmlFileAndSetMessage(LOGIN_HTML, message);
             fillFormValues(html, originalUri, username, password);
             return Response.status(Response.Status.UNAUTHORIZED).entity(html.html()).build();
         } catch (Exception e) {

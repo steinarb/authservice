@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import java.io.InputStream;
 import javax.inject.Inject;
@@ -28,8 +28,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.definitions.AuthservicePasswordEmptyException;
@@ -39,21 +39,11 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 
 @Path("/password")
 public class PasswordsResource extends LoggedInUserResource {
-
     private static final String PASSWORD_HTML = "web/password.html"; // NOSONAR No variables holding secrets here, just the name of an HTML file
-
-    private LogService logservice;
-
-    Logger logger;
+    private Logger logger = LoggerFactory.getLogger(PasswordsResource.class);
 
     @Inject
     UserManagementService useradmin;
-
-    @Inject
-    void setLogservice(LogService logservice) {
-        this.logservice = logservice;
-        this.logger = logservice.getLogger(getClass());
-    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -65,7 +55,7 @@ public class PasswordsResource extends LoggedInUserResource {
     @Produces(MediaType.TEXT_HTML)
     public Response changePasswordForCurrentUser(@FormParam("password1") String password1, @FormParam("password2") String password2) {
         try {
-            var user = findLoggedInUser(logservice, useradmin);
+            var user = findLoggedInUser(useradmin);
             if (!user.isPresent()) {
                 logger.error("No user in the database matching the logged in user when changing password");
                 return createInternalServerErrorResponse();
@@ -78,15 +68,15 @@ public class PasswordsResource extends LoggedInUserResource {
                 .build();
             useradmin.updatePassword(passwords);
 
-            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Password successfully changed", logservice);
+            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Password successfully changed");
             fillFormValues(html, password1, password2);
             return Response.ok().entity(html.html()).build();
         } catch (AuthservicePasswordsNotIdenticalException e) {
-            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords not identical: password not changed", logservice);
+            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords not identical: password not changed");
             fillFormValues(html, password1, password2);
             return Response.status(Status.BAD_REQUEST).entity(html.html()).build();
         } catch (AuthservicePasswordEmptyException e) {
-            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords can't be empty: password not changed", logservice);
+            var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Passwords can't be empty: password not changed");
             fillFormValues(html, password1, password2);
             return Response.status(Status.BAD_REQUEST).entity(html.html()).build();
         } catch (AuthserviceException e) {
@@ -106,7 +96,7 @@ public class PasswordsResource extends LoggedInUserResource {
     }
 
     private Response createInternalServerErrorResponse() {
-        var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Internal Server Error: password not changed, see karaf.log for details", logservice);
+        var html = loadHtmlFileAndSetMessage(PASSWORD_HTML, "Internal Server Error: password not changed, see karaf.log for details");
         return Response.status(Status.INTERNAL_SERVER_ERROR).entity(html.html()).build();
     }
 

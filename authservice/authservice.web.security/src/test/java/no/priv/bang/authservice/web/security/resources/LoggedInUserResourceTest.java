@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +14,14 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
-import org.osgi.service.log.LogService;
-
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.authservice.web.security.ShiroTestBase;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
@@ -32,7 +29,6 @@ class LoggedInUserResourceTest extends ShiroTestBase {
 
     @Test
     void testFindLoggedInUser() {
-        LogService logservice = null;
         var useradmin = mock(UserManagementService.class);
         var username = "jad";
         var user = User.with().userid(1).username(username).email("jane@gmail.com").firstname("Jane").lastname("Doe").build();
@@ -40,31 +36,29 @@ class LoggedInUserResourceTest extends ShiroTestBase {
 
         loginUser(username, "1ad");
 
-        var loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
+        var loggedInUser = LoggedInUserResource.findLoggedInUser(useradmin);
         assertTrue(loggedInUser.isPresent());
     }
 
     @Test
     void testFindLoggedInUserWhenUserIsNotLoggedIn() {
-        LogService logservice = null;
         var useradmin = mock(UserManagementService.class);
 
         createSubjectWithNullPrincipalAndBindItToThread();
 
-        var loggedInUser = LoggedInUserResource.findLoggedInUser(logservice, useradmin);
+        var loggedInUser = LoggedInUserResource.findLoggedInUser(useradmin);
         assertFalse(loggedInUser.isPresent());
     }
 
     @Test
     void testFindLoggedInUserWhenShiroNotInitialized() {
-        var logservice = new MockLogService();
         var useradmin = mock(UserManagementService.class);
 
         createNullWebSubjectAndBindItToThread();
 
         assertThrows(AuthserviceException.class, () -> {
-                LoggedInUserResource.findLoggedInUser(logservice, useradmin);
-            });
+            LoggedInUserResource.findLoggedInUser(useradmin);
+        });
     }
 
 }

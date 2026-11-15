@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2018-2025 Steinar Bang
+ * Copyright 2018-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -40,7 +40,6 @@ import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
 import no.priv.bang.authservice.web.security.ShiroTestBase;
-import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class AuthserviceResourceTest extends ShiroTestBase {
 
@@ -85,14 +84,12 @@ class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
     void testPostLogin() {
-        var logservice = new MockLogService();
         var session = mock(HttpSession.class);
         var dummyrequest = new MockHttpServletRequest();
         dummyrequest.setSession(session);
         var dummyresponse = new MockHttpServletResponse();
         createSubjectAndBindItToThread(dummyrequest, dummyresponse);
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "admin";
         var password = "admin";
         var redirectUrl = "https://myserver.com/resource";
@@ -103,14 +100,12 @@ class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
     void testPostLoginWithNullRedirectUrl() {
-        var logservice = new MockLogService();
         var session = mock(HttpSession.class);
         var dummyrequest = new MockHttpServletRequest();
         dummyrequest.setSession(session);
         var dummyresponse = new MockHttpServletResponse();
         createSubjectAndBindItToThread(dummyrequest, dummyresponse);
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "admin";
         var password = "admin";
         var response = resource.postLogin(username, password, null);
@@ -120,12 +115,10 @@ class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
     void testPostLoginWithUnknownUser() {
-        var logservice = new MockLogService();
         var dummyrequest = new MockHttpServletRequest();
         var dummyresponse = new MockHttpServletResponse();
         createSubjectAndBindItToThread(dummyrequest, dummyresponse);
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "notauser";
         var password = "admin";
         var redirectUrl = "https://myserver.com/resource";
@@ -135,12 +128,10 @@ class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
     void testPostLoginWithWrongPassword() {
-        var logservice = new MockLogService();
         var dummyrequest = new MockHttpServletRequest();
         var dummyresponse = new MockHttpServletResponse();
         createSubjectAndBindItToThread(dummyrequest, dummyresponse);
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "admin";
         var password = "wrongpassword";
         var redirectUrl = "https://myserver.com/resource";
@@ -153,12 +144,10 @@ class AuthserviceResourceTest extends ShiroTestBase {
         try {
             lockAccount("jad");
             // Set up the request
-            var logservice = new MockLogService();
             var dummyrequest = new MockHttpServletRequest();
             var dummyresponse = new MockHttpServletResponse();
             createSubjectAndBindItToThread(dummyrequest, dummyresponse);
             var resource = new AuthserviceResource();
-            resource.setLogservice(logservice);
             var username = "jad";
             var password = "wrong";
             var redirectUrl = "https://myserver.com/resource";
@@ -172,9 +161,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     @Test
     void testPostLoginWithExcessiveLoginFailures() {
         createSubjectThrowingExceptionAndBindItToThread(ExcessiveAttemptsException.class);
-        var logservice = new MockLogService();
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "jad";
         var password = "wrong";
         var redirectUrl = "https://myserver.com/resource";
@@ -186,9 +173,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     @Test
     void testPostLoginWithAuthenticationException() {
         createSubjectThrowingExceptionAndBindItToThread(AuthenticationException.class);
-        var logservice = new MockLogService();
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "jad";
         var password = "wrong";
         var redirectUrl = "https://myserver.com/resource";
@@ -200,9 +185,7 @@ class AuthserviceResourceTest extends ShiroTestBase {
     @Test
     void testLoginWithUnexpectedException() {
         createSubjectThrowingExceptionAndBindItToThread(IllegalArgumentException.class);
-        var logservice = new MockLogService();
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
         var username = "jad";
         var password = "wrong";
         var redirectUrl = "https://myserver.com/resource";
@@ -211,14 +194,12 @@ class AuthserviceResourceTest extends ShiroTestBase {
 
     @Test
     void testCheckLogin() {
-        var logservice = new MockLogService();
         var session = mock(HttpSession.class);
         var dummyrequest = new MockHttpServletRequest();
         dummyrequest.setSession(session);
         var dummyresponse = new MockHttpServletResponse();
         createSubjectAndBindItToThread(dummyrequest, dummyresponse);
         var resource = new AuthserviceResource();
-        resource.setLogservice(logservice);
 
         // Log a user in
         var username = "admin";
@@ -291,10 +272,8 @@ class AuthserviceResourceTest extends ShiroTestBase {
                     return mockstream;
                 }
             };
-        var logservice = new MockLogService();
-        resource.setLogservice(logservice);
 
-        assertThrows(InternalServerErrorException.class, () -> resource.loadHtmlFile("nonexistingfile.html", logservice));
+        assertThrows(InternalServerErrorException.class, () -> resource.loadHtmlFile("nonexistingfile.html"));
     }
 
     @Test
