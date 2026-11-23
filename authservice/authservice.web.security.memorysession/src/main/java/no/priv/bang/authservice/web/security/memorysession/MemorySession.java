@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.memorysession;
 /*
- * Copyright 2016-2025 Steinar Bang
+ * Copyright 2016-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +14,17 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.memorysession;
 
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component( service=SessionDAO.class, immediate=true )
 public class MemorySession extends MemorySessionDAO {
-
-    private Logger logger;
-
-    @Reference
-    public void setLogService(LogService logservice) {
-        logger = logservice.getLogger(getClass());
-    }
+    private static final Logger logger = LoggerFactory.getLogger(MemorySession.class);
 
     @Activate
     public void activate() {

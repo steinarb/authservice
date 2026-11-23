@@ -1,5 +1,6 @@
+package no.priv.bang.authservice.web.security.resources;
 /*
- * Copyright 2019-2024 Steinar Bang
+ * Copyright 2019-2026 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-package no.priv.bang.authservice.web.security.resources;
 
 import java.io.IOException;
 import javax.inject.Inject;
@@ -28,8 +28,8 @@ import javax.ws.rs.core.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.FormElement;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
@@ -37,27 +37,18 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 
 @Path("/user")
 public class UserResource extends LoggedInUserResource {
+    private Logger logger = LoggerFactory.getLogger(UserResource.class);
 
     String htmlFile = "web/user.html";
 
     @Inject
     UserManagementService useradmin;
 
-    private LogService logservice;
-
-    Logger logger;
-
-    @Inject
-    void setLogservice(LogService logservice) {
-        this.logservice = logservice;
-        this.logger = logservice.getLogger(getClass());
-    }
-
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response get() {
         try {
-            var loggedInUser = findLoggedInUser(logservice, useradmin);
+            var loggedInUser = findLoggedInUser(useradmin);
             if (!loggedInUser.isPresent()) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
@@ -77,7 +68,7 @@ public class UserResource extends LoggedInUserResource {
     @Produces(MediaType.TEXT_HTML)
     public Response submit(@FormParam("email") String email, @FormParam("firstname") String firstname, @FormParam("lastname") String lastname) {
         try {
-            var loggedInUser = findLoggedInUser(logservice, useradmin);
+            var loggedInUser = findLoggedInUser(useradmin);
             if (!loggedInUser.isPresent()) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }

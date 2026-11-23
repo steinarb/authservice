@@ -25,8 +25,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
-import org.osgi.service.log.LogService;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.UserManagementConfig;
@@ -37,15 +37,10 @@ import no.priv.bang.osgiservice.users.UserManagementService;
 @RequiresUser
 @RequiresRoles("useradmin")
 public class ConfigResource extends ResourceBase {
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(ConfigResource.class);
 
     @Inject
     public UserManagementService usermanagement;
-
-    @Inject
-    public void setLogservice(LogService logservice) {
-        this.logger = logservice.getLogger(getClass());
-    }
 
     @GET
     @Path("/config")

@@ -18,21 +18,23 @@ package no.priv.bang.authservice.web.security.resources;
 import java.util.Optional;
 
 import org.apache.shiro.SecurityUtils;
-import org.osgi.service.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.priv.bang.authservice.definitions.AuthserviceException;
 import no.priv.bang.osgiservice.users.User;
 import no.priv.bang.osgiservice.users.UserManagementService;
 
 public class LoggedInUserResource extends HtmlTemplateResource {
+    private static Logger logger = LoggerFactory.getLogger(LoggedInUserResource.class);
 
-    protected static Optional<User> findLoggedInUser(LogService logservice, UserManagementService useradmin) {
+    protected static Optional<User> findLoggedInUser(UserManagementService useradmin) {
         try {
             var subject = SecurityUtils.getSubject();
             var username = (String) subject.getPrincipal();
             var users = useradmin.getUsers();
             return users.stream().filter(u -> username.equals(u.username())).findFirst();
         } catch (Exception e) {
-            var logger = logservice.getLogger(LoggedInUserResource.class);
             var message = "Failed to find the logged in user when changing the password";
             logger.error(message, e);
             throw new AuthserviceException(message, e);
